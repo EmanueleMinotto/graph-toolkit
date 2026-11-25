@@ -1,10 +1,10 @@
-import { Alert, AppShell, ScrollArea, Stack } from '@mantine/core';
+import { AppShell } from '@mantine/core';
 import { type Graph, type VertexId } from 'graph-toolkit';
 import { useMemo, useRef, useState } from 'react';
 import { AnalysisPanel } from './AnalysisPanel.js';
 import { OperationsPanel } from './OperationsPanel.js';
 import { LayoutPanel } from './LayoutPanel.js';
-import { PanelStack } from './PanelStack.js';
+import { Sidebar } from './Sidebar.js';
 import { EditPanel } from './EditPanel.js';
 import { GeneratePanel } from './GeneratePanel.js';
 import { GraphView, type GraphViewHandle } from './GraphView.js';
@@ -81,59 +81,59 @@ export function App() {
           onRedo={() => travel(history.redo)}
         />
       </AppShell.Header>
-      <AppShell.Navbar p="md">
-        <AppShell.Section grow component={ScrollArea}>
-          <Stack gap="md">
-            <PanelStack>
-              <GeneratePanel
-                onGenerate={(sample, size, options) =>
-                  replaceGraph(makeSample(sample, size, options))
-                }
-              />
-              <ImportPanel graph={graph} onReplace={replaceGraph} guarded={guarded} />
-              <LayoutPanel value={layoutKind} onChange={changeLayout} />
-              <OperationsPanel
-                graph={graph}
-                other={other}
-                picked={picked}
-                onOther={setOther}
-                onResult={replaceGraph}
-                guarded={guarded}
-              />
-              <EditPanel
-                mode={editor.mode}
-                from={from}
-                to={to}
-                weight={editor.weight}
-                allowParallel={editor.allowParallel}
-                onMode={editor.setMode}
-                onWeight={editor.setWeight}
-                onParallel={editor.setAllowParallel}
-                onRemoveVertex={editor.removeVertex}
-                onRemoveEdge={editor.removeEdge}
-                onSetWeight={editor.applyWeight}
-              />
-              <ValidationPanel graph={graph} />
-              <AnalysisPanel
-                kind={kind}
-                graph={graph}
-                from={from}
-                to={to}
-                result={analysis.result}
-                isPending={analysis.isPending}
-                count={count}
-                onCount={setCount}
-                onKind={choose}
-              />
-            </PanelStack>
-            {error === '' ? null : (
-              <Alert color="red" variant="light">
-                {error}
-              </Alert>
-            )}
-          </Stack>
-        </AppShell.Section>
-      </AppShell.Navbar>
+      <Sidebar
+        error={error}
+        panels={{
+          generate: (
+            <GeneratePanel
+              onGenerate={(sample, size, options) =>
+                replaceGraph(makeSample(sample, size, options))
+              }
+            />
+          ),
+          import: <ImportPanel graph={graph} onReplace={replaceGraph} guarded={guarded} />,
+          layout: <LayoutPanel value={layoutKind} onChange={changeLayout} />,
+          operations: (
+            <OperationsPanel
+              graph={graph}
+              other={other}
+              picked={picked}
+              onOther={setOther}
+              onResult={replaceGraph}
+              guarded={guarded}
+            />
+          ),
+          edit: (
+            <EditPanel
+              mode={editor.mode}
+              from={from}
+              to={to}
+              weight={editor.weight}
+              allowParallel={editor.allowParallel}
+              onMode={editor.setMode}
+              onWeight={editor.setWeight}
+              onParallel={editor.setAllowParallel}
+              onRemoveVertex={editor.removeVertex}
+              onRemoveEdge={editor.removeEdge}
+              onSetWeight={editor.applyWeight}
+            />
+          ),
+          validate: <ValidationPanel graph={graph} />,
+          analysis: (
+            <AnalysisPanel
+              kind={kind}
+              graph={graph}
+              from={from}
+              to={to}
+              result={analysis.result}
+              isPending={analysis.isPending}
+              count={count}
+              onCount={setCount}
+              onKind={choose}
+            />
+          ),
+        }}
+      />
       <AppShell.Main>
         <GraphView
           key={`${layoutKind}-${generation}`}

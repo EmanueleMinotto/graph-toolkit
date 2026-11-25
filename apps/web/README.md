@@ -24,7 +24,7 @@ pnpm --filter @graph-toolkit/web build   # static site in apps/web/dist
 
 - Layouts: force-directed, circular, grid, layered. **Undo / Redo** (header) step through up to 50 previous graphs.
 - Navigation: mouse wheel zooms around the cursor, dragging the background pans, dragging a vertex moves it (a plain click selects it), **Reset view** restores zoom and positions. Vertices are focusable buttons: Tab to one and press Enter or Space to select it.
-- Sidebar sections are collapsible, and which ones are open is remembered in the browser (`localStorage`, key `graph-toolkit.open-panels`). Every choice list is a Mantine Combobox with an icon per option, grouped where it helps (the Algorithm list is also searchable).
+- Sidebar sections are collapsible and sortable (drag the grip on the left, or focus it, press Space and use the arrow keys). Which ones are open and in what order is remembered in the browser (`localStorage`, keys `graph-toolkit.open-panels` and `graph-toolkit.panel-order`). Every choice list is a Mantine Combobox with an icon per option, grouped where it helps (the Algorithm list is also searchable).
 - Light and dark themes (follows the system, toggle in the header); the UI meets WCAG 2 A/AA contrast, checked with axe in the e2e tests.
 
 **Analyze it** (Algorithm menu; tools that do not fit the graph are listed but disabled with the reason)

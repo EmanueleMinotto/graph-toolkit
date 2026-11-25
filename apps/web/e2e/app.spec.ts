@@ -36,7 +36,7 @@ test('finds a shortest path between two clicked vertices', async ({ page }) => {
   await choose(page, 'Algorithm', 'Shortest path');
   await page.locator('svg.graph [data-testid=viewport] > g', { hasText: 'a' }).click();
   await page.locator('svg.graph [data-testid=viewport] > g', { hasText: 'c' }).click();
-  await expect(page.getByRole('status')).toContainText('Distance 2');
+  await expect(page.locator('output')).toContainText('Distance 2');
 });
 
 test('exports the current graph', async ({ page }) => {

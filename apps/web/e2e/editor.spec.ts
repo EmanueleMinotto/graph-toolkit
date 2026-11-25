@@ -62,6 +62,6 @@ test.describe('editor', () => {
     await choose(page, 'Algorithm', 'Shortest path');
     await vertex(page, '0').click();
     await vertex(page, '1').click();
-    await expect(page.getByRole('status')).toContainText('Distance 5');
+    await expect(page.locator('output')).toContainText('Distance 5');
   });
 });

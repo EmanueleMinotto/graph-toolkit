@@ -34,15 +34,15 @@ test('checks isomorphism against the second graph', async ({ page }) => {
   await page.getByLabel('Vertices', { exact: true }).fill('6');
   await page.getByRole('button', { name: 'Create second graph' }).click();
   await choose(page, 'Algorithm', 'Isomorphism with second graph');
-  await expect(page.getByRole('status')).toContainText('Isomorphic');
+  await expect(page.locator('output')).toContainText('Isomorphic');
 });
 
 test('shows the adjacency matrix and its square', async ({ page }) => {
   await choose(page, 'Algorithm', 'Walk counts (adjacency power)');
-  await expect(page.getByRole('status')).toContainText('Walks of length 2');
+  await expect(page.locator('output')).toContainText('Walks of length 2');
   await expect(page.getByRole('columnheader', { name: '5' })).toBeVisible();
   await page.getByLabel('Length (k)').fill('3');
-  await expect(page.getByRole('status')).toContainText('length 3');
+  await expect(page.locator('output')).toContainText('length 3');
 });
 
 test('normalizes with a prefix and validates the result', async ({ page }) => {

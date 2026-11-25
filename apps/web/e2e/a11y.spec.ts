@@ -15,7 +15,7 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.goto('/');
     expect(await scan(page)).toEqual([]);
     await choose(page, 'Algorithm', 'Adjacency matrix');
-    await expect(page.getByRole('status')).toContainText('Adjacency matrix');
+    await expect(page.locator('output')).toContainText('Adjacency matrix');
     await page.getByText('Edit', { exact: true }).click();
     expect(await scan(page)).toEqual([]);
   });
