@@ -2,16 +2,8 @@ import { cycleGraph, pathGraph, vertexId } from 'graph-toolkit';
 import { describe, expect, it } from 'vitest';
 import { analyze, edgeKey } from './analysis.js';
 import { fitToBox } from './fit.js';
-import {
-  fileName,
-  FORMATS,
-  formatFromFileName,
-  makeSample,
-  parseGraph,
-  randomSeed,
-  SAMPLES,
-  serializeGraph,
-} from './formats.js';
+import { fileName, FORMATS, formatFromFileName, parseGraph, serializeGraph } from './formats.js';
+import { makeSample, randomSeed, SAMPLES } from './samples.js';
 
 const [zero, one, two] = [vertexId('0'), vertexId('1'), vertexId('2')] as const;
 

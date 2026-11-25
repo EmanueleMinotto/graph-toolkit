@@ -48,6 +48,8 @@ export const FORMAT_ICONS: Readonly<Record<string, Icon>> = {
   dot: IconHierarchy,
   graphml: IconCode,
   gexf: IconCode,
+  gml: IconCode,
+  graph6: IconNumbers,
   'adjacency-csv': IconTable,
   mermaid: IconVectorBezier2,
   prufer: IconNumbers,
@@ -58,6 +60,7 @@ export const LAYOUT_ICONS: Readonly<Record<string, Icon>> = {
   circular: IconCircleDashed,
   grid: IconGridDots,
   layered: IconStack2,
+  radial: IconCircles,
 };
 
 export const SAMPLE_ICONS: Readonly<Record<string, Icon>> = {
@@ -67,6 +70,12 @@ export const SAMPLE_ICONS: Readonly<Record<string, Icon>> = {
   grid: IconGridDots,
   star: IconStar,
   random: IconDice5,
+  wheel: IconCircleDot,
+  'binary-tree': IconBinaryTree,
+  hypercube: IconGrid3x3,
+  petersen: IconAtom2,
+  'scale-free': IconChartDots,
+  'small-world': IconTopologyStar3,
 };
 
 /** One icon per tool group (see `Tool.group`). */

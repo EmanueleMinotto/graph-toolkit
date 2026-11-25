@@ -3,13 +3,14 @@ import {
   forceLayout,
   gridLayout,
   layeredLayout,
+  radialLayout,
   type Graph,
   type Layout,
 } from 'graph-toolkit';
 
-export type LayoutKind = 'force' | 'circular' | 'grid' | 'layered';
+export type LayoutKind = 'force' | 'circular' | 'grid' | 'layered' | 'radial';
 
-export const LAYOUTS: readonly LayoutKind[] = ['force', 'circular', 'grid', 'layered'];
+export const LAYOUTS: readonly LayoutKind[] = ['force', 'circular', 'grid', 'layered', 'radial'];
 
 const FULL_QUALITY_VERTICES = 200;
 const FULL_ITERATIONS = 300;
@@ -27,6 +28,7 @@ const layouts: Readonly<Record<LayoutKind, (graph: Graph) => Layout>> = {
   circular: (graph) => circularLayout(graph),
   grid: (graph) => gridLayout(graph),
   layered: (graph) => layeredLayout(graph),
+  radial: (graph) => radialLayout(graph),
 };
 
 export const computeLayout = (kind: LayoutKind, graph: Graph): Layout => layouts[kind](graph);

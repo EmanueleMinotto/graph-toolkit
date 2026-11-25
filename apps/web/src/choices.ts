@@ -1,7 +1,8 @@
 import { type Graph } from 'graph-toolkit';
 import { type Choice } from './ChoiceSelect.js';
 import { type AnalysisKind } from './analysis.js';
-import { FORMATS, SAMPLES, type Format, type SampleKind } from './formats.js';
+import { FORMATS, type Format } from './formats.js';
+import { SAMPLES, type SampleKind } from './samples.js';
 import {
   FALLBACK_ICON,
   FORMAT_ICONS,
@@ -21,6 +22,8 @@ const FORMAT_LABELS: Readonly<Record<Format, string>> = {
   dot: 'DOT',
   graphml: 'GraphML',
   gexf: 'GEXF',
+  gml: 'GML',
+  graph6: 'graph6',
   'adjacency-csv': 'Adjacency CSV',
   mermaid: 'Mermaid',
   prufer: 'Prüfer code',
@@ -31,6 +34,7 @@ const LAYOUT_LABELS: Readonly<Record<LayoutKind, string>> = {
   circular: 'Circular',
   grid: 'Grid',
   layered: 'Layered',
+  radial: 'Radial',
 };
 
 const SAMPLE_LABELS: Readonly<Record<SampleKind, string>> = {
@@ -40,6 +44,12 @@ const SAMPLE_LABELS: Readonly<Record<SampleKind, string>> = {
   grid: 'Grid',
   star: 'Star',
   random: 'Random',
+  wheel: 'Wheel',
+  'binary-tree': 'Binary tree',
+  hypercube: 'Hypercube (dimension)',
+  petersen: 'Petersen graph',
+  'scale-free': 'Scale-free (Barabási–Albert)',
+  'small-world': 'Small world (Watts–Strogatz)',
 };
 
 const icon = (icons: Readonly<Record<string, Choice<string>['icon']>>, id: string) =>

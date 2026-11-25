@@ -5,8 +5,9 @@ import { useState } from 'react';
 import { ChoiceSelect } from './ChoiceSelect.js';
 import { OPERATION_CHOICES, SAMPLE_CHOICES } from './choices.js';
 import { Panel } from './Controls.js';
-import { MAX_SIZE, makeSample, randomSeed, type SampleKind } from './formats.js';
+import { MAX_SIZE, makeSample, randomSeed, type SampleKind } from './samples.js';
 import { applyOperation, OPERATIONS, type OperationKind } from './operations.js';
+import { t } from './i18n.js';
 
 const DEFAULT_SIZE = 4;
 
@@ -30,16 +31,16 @@ export function OperationsPanel({ graph, other, picked, onOther, onResult, guard
   const [text, setText] = useState('');
   const field = OPERATIONS.find((entry) => entry.id === operation)?.field;
   return (
-    <Panel id="operations" title="Operations" icon={IconTool}>
+    <Panel id="operations" title={t('Operations')} icon={IconTool}>
       <Group grow align="flex-end">
         <ChoiceSelect
-          label="Second graph"
+          label={t('Second graph')}
           value={kind}
           choices={SAMPLE_CHOICES}
           onChange={setKind}
         />
         <NumberInput
-          label="Vertices"
+          label={t('Vertices')}
           min={1}
           max={MAX_SIZE[kind]}
           value={size}
@@ -64,7 +65,7 @@ export function OperationsPanel({ graph, other, picked, onOther, onResult, guard
         Second graph: {describe(other)}
       </Text>
       <ChoiceSelect
-        label="Operation"
+        label={t('Operation')}
         value={operation}
         choices={OPERATION_CHOICES}
         onChange={setOperation}
