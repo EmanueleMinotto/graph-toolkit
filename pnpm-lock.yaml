@@ -285,6 +285,13 @@ importers:
       '@graph-toolkit/traversal':
         specifier: workspace:*
         version: link:../traversal
+    devDependencies:
+      '@graph-toolkit/generators':
+        specifier: workspace:*
+        version: link:../generators
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
 packages:
 
