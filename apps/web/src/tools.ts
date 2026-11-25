@@ -84,6 +84,7 @@ export const TOOLS: readonly Tool[] = [
   structure('k-cores', 'k-cores (core numbers)'),
   structure('clustering', 'Clustering coefficients'),
   structure('diameter', 'Diameter, radius and center'),
+  structure('treewidth', 'Treewidth (upper bound)'),
   structure('transitive-closure', 'Transitive closure', directed),
   coloring('coloring', 'DSATUR coloring', undirected),
   coloring('greedy-coloring', 'Greedy coloring (Welsh–Powell)', undirected),
@@ -92,6 +93,10 @@ export const TOOLS: readonly Tool[] = [
   trees('mst', 'Minimum spanning tree (Kruskal)', undirected),
   trees('prim', 'Minimum spanning tree (Prim)', undirected),
   trees('boruvka', 'Minimum spanning tree (Borůvka)', undirected),
+  trees('steiner', 'Steiner tree over the first k vertices', {
+    ...undirected,
+    param: { label: 'Terminals (k)', initial: 3, min: 2, max: 50 },
+  }),
   trees('arborescence', 'Minimum arborescence (Chu–Liu/Edmonds)', { ...directed, needs: 1 }),
   trees('rooted-tree', 'Rooted tree: depth and parent', { ...undirected, needs: 1 }),
   trees('lca', 'Lowest common ancestor', { ...undirected, needs: 2 }),

@@ -4,11 +4,13 @@ import {
   maximumMatching,
   minCut,
   minimumSpanningArborescence,
+  steinerTree,
   type Graph,
 } from 'graph-toolkit';
 import { edgeKey, NONE, type Highlight, type Selection } from './analysis-types.js';
 
-export type OptimizationKind = 'min-cut' | 'blossom' | 'johnson' | 'dag-distances' | 'arborescence';
+export type OptimizationKind =
+  'min-cut' | 'blossom' | 'johnson' | 'dag-distances' | 'arborescence' | 'steiner';
 
 const MAX_ROWS = 500;
 const MAX_DISPLAY = 40;
@@ -84,6 +86,22 @@ function arborescence(graph: Graph, { from }: Selection): Highlight {
   };
 }
 
+const MIN_TERMINALS = 2;
+
+/** Connects the first `count` vertices (the terminals) at low cost. */
+function steiner(graph: Graph, { count = MIN_TERMINALS }: Selection): Highlight {
+  const terminals = graph.vertices().slice(0, count);
+  const tree = steinerTree(graph, terminals);
+  if (tree === undefined) return pick('The terminals are not all connected.');
+  return {
+    ...NONE,
+    colors: new Map(terminals.map((id) => [id, FIRST_COLOR])),
+    edges: new Set(tree.edges.map((edge) => edgeKey(edge.source, edge.target, graph.directed))),
+    summary: `Steiner tree over ${terminals.length} terminals, weight ${tree.totalWeight}`,
+    table: tree.edges.map((edge) => [`${edge.source} – ${edge.target}`, String(edge.weight)]),
+  };
+}
+
 export const optimizationAnalyses: Readonly<
   Record<OptimizationKind, (graph: Graph, selection: Selection) => Highlight>
 > = {
@@ -92,4 +110,5 @@ export const optimizationAnalyses: Readonly<
   johnson: (graph) => allPairsJohnson(graph),
   'dag-distances': dagDistances,
   arborescence,
+  steiner,
 };

@@ -24,6 +24,9 @@ const FORMAT_LABELS: Readonly<Record<Format, string>> = {
   gexf: 'GEXF',
   gml: 'GML',
   graph6: 'graph6',
+  sparse6: 'sparse6',
+  pajek: 'Pajek',
+  dimacs: 'DIMACS',
   'adjacency-csv': 'Adjacency CSV',
   mermaid: 'Mermaid',
   prufer: 'Prüfer code',
@@ -35,6 +38,8 @@ const LAYOUT_LABELS: Readonly<Record<LayoutKind, string>> = {
   grid: 'Grid',
   layered: 'Layered',
   radial: 'Radial',
+  spectral: 'Spectral (up to 200 vertices)',
+  tutte: 'Tutte (planar graphs)',
 };
 
 const SAMPLE_LABELS: Readonly<Record<SampleKind, string>> = {

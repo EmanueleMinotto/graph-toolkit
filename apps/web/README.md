@@ -16,14 +16,14 @@ pnpm --filter @graph-toolkit/web build   # static site in apps/web/dist
 
 - Generate paths, cycles, complete graphs, grids, stars, wheels, binary trees, hypercubes, the Petersen graph and seeded random, scale-free (Barabási–Albert) and small-world (Watts–Strogatz) graphs, optionally directed; seeded kinds accept a seed, random graphs also an edge probability. Sizes up to 2000 vertices (caps per kind).
 - **Examples**: eleven ready-made graphs (Petersen, K3,3, a flow network, a course DAG, a road map, …), each chosen to show a tool.
-- Import / export JSON, edge list, DOT, GraphML, GEXF, GML, graph6, Mermaid, adjacency CSV and Prüfer codes: paste text then **Import**, **Export current** fills the box, **Upload file** / **Download** use files (the format is guessed from the extension).
+- Import / export JSON, edge list, DOT, GraphML, GEXF, GML, graph6, sparse6, Pajek, DIMACS, Mermaid, adjacency CSV and Prüfer codes: paste text then **Import**, **Export current** fills the box, **Upload file** / **Download** use files (the format is guessed from the extension).
 - Editor: switch **Edit graph** to _Edit_, then click the canvas to add a vertex and drag from one vertex to another to add an edge (weight and _Allow parallel edges_ are set in the panel). With one or two vertices selected, **Remove vertex**, **Remove edge** and **Set weight on edge** act on them. Manual edits pin every vertex position.
 - **Operations**: generate a second graph, then union, intersection, Cartesian/tensor product; or complement, transpose, line graph, induced subgraph, edge contraction, and normalization (canonicalize, reindex, relabel with a prefix, remove self-loops). Results replace the current graph; oversized results are refused.
 - **Validate**: check the graph against a schema (direction, self-loops, isolated vertices, connectivity, size limits, id pattern, weight range).
 
 **Look at it**
 
-- Layouts: force-directed, circular, grid, layered, radial. **Undo / Redo** (header) step through up to 50 previous graphs.
+- Layouts: force-directed, circular, grid, layered, radial, spectral (up to 200 vertices) and Tutte (planar drawings of 3-connected planar graphs). **Undo / Redo** (header) step through up to 50 previous graphs.
 - Navigation: mouse wheel zooms around the cursor, dragging the background pans, dragging a vertex moves it (a plain click selects it), **Reset view** restores zoom and positions. Vertices are focusable buttons: Tab to one and press Enter or Space to select it. **Shift+click** builds a group: drag one member to move them all, **Delete** removes the group, **Escape** clears it. Graphs over 300 vertices hide labels until you zoom in.
 - Sidebar sections are collapsible and sortable (drag the grip on the left, or focus it, press Space and use the arrow keys). Which ones are open and in what order is remembered in the browser (`localStorage`, keys `graph-toolkit.open-panels` and `graph-toolkit.panel-order`). Every choice list is a Mantine Combobox with an icon per option, grouped where it helps (the Algorithm list is also searchable).
 - **Save and share**: the graph is kept in the browser and mirrored in the address bar (`#g=…`, when short enough); the link button in the header copies a URL that reopens it. **Export SVG** / **Export PNG** save the picture as drawn.
@@ -33,19 +33,19 @@ pnpm --filter @graph-toolkit/web build   # static site in apps/web/dist
 
 **Analyze it** (Algorithm menu; tools that do not fit the graph are listed but disabled with the reason)
 
-| Group                      | Tools                                                                                                                                                                            |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Traversal                  | BFS, DFS                                                                                                                                                                         |
-| Paths                      | Shortest path, Dijkstra, Bellman-Ford, Floyd-Warshall, Johnson, DAG distances, A\*, k shortest paths                                                                             |
-| Trails                     | Eulerian trail, Hamiltonian path and cycle                                                                                                                                       |
-| Structure                  | Components (connected, strong, biconnected), bridges, articulation points, k-cores, clustering, diameter, transitive closure, topological order, cycles, tree check, bipartition |
-| Coloring                   | DSATUR, greedy, exact, edge coloring                                                                                                                                             |
-| Trees                      | Kruskal, Prim, Borůvka, minimum arborescence, rooted tree (depth, parent), lowest common ancestor                                                                                |
-| Flow and matching          | Max flow (Edmonds–Karp, Dinic), minimum cut, bipartite and general (blossom) matching                                                                                            |
-| Centrality and communities | PageRank, degree, closeness, betweenness (vertex size), communities                                                                                                              |
-| Cliques and planarity      | Maximal / maximum clique, planarity                                                                                                                                              |
-| Compare                    | Isomorphism with the second graph                                                                                                                                                |
-| Matrices                   | Adjacency, weighted adjacency, Laplacian, spectrum, walk counts (adjacency power)                                                                                                |
+| Group                      | Tools                                                                                                                                                                                             |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Traversal                  | BFS, DFS                                                                                                                                                                                          |
+| Paths                      | Shortest path, Dijkstra, Bellman-Ford, Floyd-Warshall, Johnson, DAG distances, A\*, k shortest paths                                                                                              |
+| Trails                     | Eulerian trail, Hamiltonian path and cycle                                                                                                                                                        |
+| Structure                  | Components (connected, strong, biconnected), bridges, articulation points, k-cores, clustering, diameter, treewidth bound, transitive closure, topological order, cycles, tree check, bipartition |
+| Coloring                   | DSATUR, greedy, exact, edge coloring                                                                                                                                                              |
+| Trees                      | Kruskal, Prim, Borůvka, minimum arborescence, Steiner tree, rooted tree (depth, parent), lowest common ancestor                                                                                   |
+| Flow and matching          | Max flow (Edmonds–Karp, Dinic), minimum cut, bipartite and general (blossom) matching                                                                                                             |
+| Centrality and communities | PageRank, degree, closeness, betweenness (vertex size), communities                                                                                                                               |
+| Cliques and planarity      | Maximal / maximum clique, planarity                                                                                                                                                               |
+| Compare                    | Isomorphism with the second graph                                                                                                                                                                 |
+| Matrices                   | Adjacency, weighted adjacency, Laplacian, spectrum, walk counts (adjacency power)                                                                                                                 |
 
 BFS, DFS, the distance tools and the spanning-tree tools can be **animated**: press play (or drag the step slider) to watch vertices and edges appear in the order the algorithm found them.
 

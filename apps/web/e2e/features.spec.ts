@@ -107,3 +107,13 @@ test('switches the interface to Italian and remembers it', async ({ page }) => {
   await page.getByRole('button', { name: 'Cambia lingua' }).click();
   await expect(page.getByRole('button', { name: 'Move New graph' })).toBeVisible();
 });
+
+test('draws the cube with the Tutte layout and bounds its treewidth', async ({ page }) => {
+  await page.getByRole('button', { name: /Cube Q3/ }).click();
+  await choose(page, 'Layout', 'Tutte (planar graphs)');
+  await expect(page.locator('svg.graph circle')).toHaveCount(8);
+  await choose(page, 'Layout', 'Spectral (up to 200 vertices)');
+  await expect(page.locator('svg.graph circle')).toHaveCount(8);
+  await choose(page, 'Algorithm', 'Treewidth (upper bound)');
+  await expect(page.getByText(/Treewidth is at most \d+/)).toBeVisible();
+});

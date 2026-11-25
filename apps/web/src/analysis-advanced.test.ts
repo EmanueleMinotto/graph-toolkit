@@ -70,6 +70,15 @@ describe('advanced analyses', () => {
     expect(analyze('arborescence', graph, none).summary).toBe('Pick a root vertex.');
   });
 
+  it('bounds the treewidth and builds a Steiner tree', () => {
+    expect(analyze('treewidth', petersenGraph(), none).summary).toContain('at most');
+    const path = analyze('steiner', pathGraph(5), { ...none, count: 2 });
+    expect(path.summary).toBe('Steiner tree over 2 terminals, weight 1');
+    expect(analyze('steiner', pathGraph(5), none).summary).toContain('2 terminals');
+    const split = new GraphBuilder().addVertex(v(0)).addVertex(v(1)).build();
+    expect(analyze('steiner', split, none).summary).toBe('The terminals are not all connected.');
+  });
+
   it('summarizes closure and spectrum', () => {
     expect(
       analyze(

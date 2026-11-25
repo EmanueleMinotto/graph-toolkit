@@ -4,14 +4,27 @@ import {
   gridLayout,
   layeredLayout,
   radialLayout,
+  spectralLayout,
+  tutteLayout,
   type Graph,
   type Layout,
 } from 'graph-toolkit';
 
-export type LayoutKind = 'force' | 'circular' | 'grid' | 'layered' | 'radial';
+export type LayoutKind =
+  'force' | 'circular' | 'grid' | 'layered' | 'radial' | 'spectral' | 'tutte';
 
-export const LAYOUTS: readonly LayoutKind[] = ['force', 'circular', 'grid', 'layered', 'radial'];
+export const LAYOUTS: readonly LayoutKind[] = [
+  'force',
+  'circular',
+  'grid',
+  'layered',
+  'radial',
+  'spectral',
+  'tutte',
+];
 
+/** Spectral layout is O(V³): beyond this a circle is drawn instead. */
+const SPECTRAL_LIMIT = 200;
 const FULL_QUALITY_VERTICES = 200;
 const FULL_ITERATIONS = 300;
 const MIN_ITERATIONS = 30;
@@ -29,6 +42,9 @@ const layouts: Readonly<Record<LayoutKind, (graph: Graph) => Layout>> = {
   grid: (graph) => gridLayout(graph),
   layered: (graph) => layeredLayout(graph),
   radial: (graph) => radialLayout(graph),
+  spectral: (graph) =>
+    graph.vertexCount > SPECTRAL_LIMIT ? circularLayout(graph) : spectralLayout(graph),
+  tutte: (graph) => tutteLayout(graph),
 };
 
 export const computeLayout = (kind: LayoutKind, graph: Graph): Layout => layouts[kind](graph);

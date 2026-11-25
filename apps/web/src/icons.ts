@@ -50,6 +50,9 @@ export const FORMAT_ICONS: Readonly<Record<string, Icon>> = {
   gexf: IconCode,
   gml: IconCode,
   graph6: IconNumbers,
+  sparse6: IconNumbers,
+  pajek: IconList,
+  dimacs: IconTable,
   'adjacency-csv': IconTable,
   mermaid: IconVectorBezier2,
   prufer: IconNumbers,
@@ -61,6 +64,8 @@ export const LAYOUT_ICONS: Readonly<Record<string, Icon>> = {
   grid: IconGridDots,
   layered: IconStack2,
   radial: IconCircles,
+  spectral: IconChartDots,
+  tutte: IconVectorBezier2,
 };
 
 export const SAMPLE_ICONS: Readonly<Record<string, Icon>> = {

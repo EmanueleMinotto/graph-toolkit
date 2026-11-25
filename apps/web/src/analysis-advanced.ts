@@ -11,6 +11,7 @@ import {
   kCores,
   radius,
   transitiveClosure,
+  treewidthUpperBound,
   type Graph,
   type VertexId,
 } from 'graph-toolkit';
@@ -24,6 +25,7 @@ export type AdvancedKind =
   | 'clustering'
   | 'diameter'
   | 'transitive-closure'
+  | 'treewidth'
   | 'spectrum';
 
 const MAX_ROWS = 500;
@@ -113,6 +115,10 @@ export const advancedAnalyses: Readonly<
   'transitive-closure': (graph) => ({
     ...NONE,
     summary: `The transitive closure has ${plural(transitiveClosure(graph).edgeCount, 'arc')}`,
+  }),
+  treewidth: (graph) => ({
+    ...NONE,
+    summary: `Treewidth is at most ${treewidthUpperBound(graph)} (min-degree heuristic)`,
   }),
   spectrum: (graph) => spectrum(graph),
 };

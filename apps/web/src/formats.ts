@@ -1,5 +1,6 @@
 import {
   fromAdjacencyCsv,
+  fromDimacs,
   fromDot,
   fromEdgeList,
   fromGexf,
@@ -8,10 +9,13 @@ import {
   fromGraphMl,
   fromJson,
   fromMermaid,
+  fromPajek,
+  fromSparse6,
   pruferCode,
   treeFromPruferCode,
   vertexId,
   toAdjacencyCsv,
+  toDimacs,
   toDot,
   toEdgeList,
   toGexf,
@@ -20,6 +24,8 @@ import {
   toGraphMl,
   toJson,
   toMermaid,
+  toPajek,
+  toSparse6,
   type Graph,
 } from 'graph-toolkit';
 
@@ -31,6 +37,9 @@ export type Format =
   | 'gexf'
   | 'gml'
   | 'graph6'
+  | 'sparse6'
+  | 'pajek'
+  | 'dimacs'
   | 'adjacency-csv'
   | 'mermaid'
   | 'prufer';
@@ -43,6 +52,9 @@ export const FORMATS: readonly Format[] = [
   'gexf',
   'gml',
   'graph6',
+  'sparse6',
+  'pajek',
+  'dimacs',
   'adjacency-csv',
   'mermaid',
   'prufer',
@@ -69,6 +81,9 @@ const importers: Readonly<Record<Format, (text: string, isDirected: boolean) => 
   gexf: (text) => fromGexf(text),
   gml: (text) => fromGml(text),
   graph6: (text) => fromGraph6(text),
+  sparse6: (text) => fromSparse6(text),
+  pajek: (text) => fromPajek(text),
+  dimacs: (text) => fromDimacs(text),
   'adjacency-csv': (text, isDirected) => fromAdjacencyCsv(text, { isDirected }),
   mermaid: (text) => fromMermaid(text),
   prufer: (text) => fromPrufer(text),
@@ -82,6 +97,9 @@ const exporters: Readonly<Record<Format, (graph: Graph) => string>> = {
   gexf: (graph) => toGexf(graph),
   gml: (graph) => toGml(graph),
   graph6: (graph) => toGraph6(graph),
+  sparse6: (graph) => toSparse6(graph),
+  pajek: (graph) => toPajek(graph),
+  dimacs: (graph) => toDimacs(graph),
   'adjacency-csv': (graph) => toAdjacencyCsv(graph),
   mermaid: (graph) => toMermaid(graph),
   prufer: (graph) => pruferCode(graph).join(' '),
@@ -100,6 +118,9 @@ const EXTENSIONS: Readonly<Record<Format, string>> = {
   gexf: 'gexf',
   gml: 'gml',
   graph6: 'g6',
+  sparse6: 's6',
+  pajek: 'net',
+  dimacs: 'dimacs',
   'adjacency-csv': 'csv',
   mermaid: 'mmd',
   prufer: 'prufer',
