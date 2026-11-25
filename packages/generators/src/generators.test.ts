@@ -1,8 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
+  barabasiAlbertGraph,
+  binaryTreeGraph,
+  completeBipartiteGraph,
   completeGraph,
   cycleGraph,
   gridGraph,
+  hypercubeGraph,
+  petersenGraph,
+  randomGraphWithEdges,
+  wattsStrogatzGraph,
+  wheelGraph,
   pathGraph,
   randomGraph,
   starGraph,
@@ -48,5 +56,51 @@ describe('randomGraph at scale', () => {
     expect(new Set(graph.edges().map((edge) => `${edge.source}-${edge.target}`)).size).toBe(
       graph.edgeCount,
     );
+  });
+});
+
+const degrees = (graph: ReturnType<typeof petersenGraph>) =>
+  graph.vertices().map((vertex) => graph.degree(vertex));
+
+describe('structured and random families', () => {
+  it('builds the Petersen graph: 10 vertices, 3-regular', () => {
+    const graph = petersenGraph();
+    expect(graph.edgeCount).toBe(15);
+    expect(new Set(degrees(graph))).toEqual(new Set([3]));
+  });
+
+  it('builds wheels, bipartite, binary trees and hypercubes', () => {
+    expect(wheelGraph(6).edgeCount).toBe(10);
+    expect(wheelGraph(0).vertexCount).toBe(0);
+    expect(completeBipartiteGraph(2, 3).edgeCount).toBe(6);
+    expect(binaryTreeGraph(7).edgeCount).toBe(6);
+    expect(binaryTreeGraph(0).edgeCount).toBe(0);
+    expect(hypercubeGraph(3).edgeCount).toBe(12);
+  });
+
+  it('draws exactly m edges for G(n, m), capped at the maximum', () => {
+    expect(randomGraphWithEdges(8, { edges: 10, seed: 1 }).edgeCount).toBe(10);
+    expect(randomGraphWithEdges(4, { edges: 99, seed: 1 }).edgeCount).toBe(6);
+  });
+
+  it('grows Barabási–Albert graphs with attach edges per new vertex', () => {
+    const graph = barabasiAlbertGraph(20, { attach: 2, seed: 7 });
+    expect(graph.edgeCount).toBe(3 + 17 * 2);
+    expect(barabasiAlbertGraph(2, { attach: 5, seed: 7 }).edgeCount).toBe(1);
+    expect(barabasiAlbertGraph(20, { attach: 2, seed: 7 }).edges()).toEqual(graph.edges());
+  });
+
+  it('keeps the edge count under Watts–Strogatz rewiring and is seed-deterministic', () => {
+    const options = { neighbors: 4, beta: 0.5, seed: 3 };
+    const graph = wattsStrogatzGraph(20, options);
+    expect(graph.edgeCount).toBe(40);
+    expect(wattsStrogatzGraph(20, options).edges()).toEqual(graph.edges());
+    expect(wattsStrogatzGraph(20, { ...options, beta: 0 }).edgeCount).toBe(40);
+  });
+
+  it('stays simple when the lattice wraps onto itself (few vertices, wide reach)', () => {
+    const options = { neighbors: 4, beta: 0.3, seed: 1 };
+    expect(wattsStrogatzGraph(4, options).edgeCount).toBe(6);
+    expect(wattsStrogatzGraph(1, options).edgeCount).toBe(0);
   });
 });
