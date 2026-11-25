@@ -136,3 +136,14 @@ test('exports Mermaid, downloads it and uploads a file back', async ({ page }) =
   await page.getByRole('button', { name: 'Import' }).click();
   await expect(page.locator('svg.graph circle')).toHaveCount(3);
 });
+
+test('lists connected components and checks bipartiteness', async ({ page }) => {
+  await page.getByLabel('Format').selectOption('edge-list');
+  await page.getByLabel('Graph text').fill('a b\nc d\nd e');
+  await page.getByRole('button', { name: 'Import' }).click();
+  await page.getByLabel('Algorithm').selectOption('components');
+  await expect(page.getByRole('status')).toContainText('2 components');
+  await expect(page.getByRole('cell', { name: 'c, d, e' })).toBeVisible();
+  await page.getByLabel('Algorithm').selectOption('bipartite');
+  await expect(page.getByRole('status')).toContainText('Bipartite');
+});

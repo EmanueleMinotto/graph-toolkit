@@ -6,29 +6,12 @@ import {
   type Graph,
   type VertexId,
 } from 'graph-toolkit';
+import { edgeKey, NONE, type Highlight, type Selection } from './analysis-types.js';
+import { structureAnalyses, type StructureKind } from './analysis-structure.js';
 
-export type AnalysisKind = 'none' | 'bfs' | 'shortest-path' | 'coloring' | 'mst';
+export type AnalysisKind = 'none' | 'bfs' | 'shortest-path' | 'coloring' | 'mst' | StructureKind;
 
-export interface Selection {
-  readonly from: VertexId | undefined;
-  readonly to: VertexId | undefined;
-}
-
-export interface Highlight {
-  /** Vertex → palette index. */
-  readonly colors: ReadonlyMap<VertexId, number>;
-  readonly edges: ReadonlySet<string>;
-  readonly summary: string;
-  /** Optional two-column detail (e.g. vertex → value). */
-  readonly table?: readonly (readonly [string, string])[];
-}
-
-export function edgeKey(source: VertexId, target: VertexId, isDirected: boolean): string {
-  const ordered = isDirected || source <= target ? [source, target] : [target, source];
-  return JSON.stringify(ordered);
-}
-
-const NONE: Highlight = { colors: new Map(), edges: new Set(), summary: '' };
+export { edgeKey, type Highlight, type Selection } from './analysis-types.js';
 
 const pathEdges = (path: readonly VertexId[], isDirected: boolean): ReadonlySet<string> =>
   new Set(path.slice(1).map((target, index) => edgeKey(path[index] ?? target, target, isDirected)));
@@ -82,6 +65,7 @@ const analyses: Readonly<Record<AnalysisKind, (graph: Graph, selection: Selectio
     'shortest-path': shortestPath,
     coloring: (graph) => coloring(graph),
     mst: (graph) => spanningTree(graph),
+    ...structureAnalyses,
   };
 
 /** Runs an analysis; library errors become the summary text. */
