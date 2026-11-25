@@ -5,3 +5,5 @@ coverage
 *.tsbuildinfo
 .DS_Store
 docs/api
+test-results
+playwright-report
