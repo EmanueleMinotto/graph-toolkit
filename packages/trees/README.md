@@ -26,3 +26,4 @@ isTree(graph); // connected and acyclic
 | `primMinimumSpanningForest(g)`, `boruvkaMinimumSpanningForest(g)` | Same result weight as Kruskal; undirected only.                                                            | O(E log V)                     |
 | `new RootedTree(g, root)`                                         | `parentOf`, `depthOf`, `childrenOf`, `lowestCommonAncestor` (binary lifting). Requires an undirected tree. | setup O(V log V), LCA O(log V) |
 | `pruferCode(tree)`, `treeFromPruferCode(vertices, code)`          | Bijection between labeled trees and sequences of length n − 2.                                             | O(n log n)                     |
+| `minimumSpanningArborescence(g, root)`                            | Chu–Liu/Edmonds minimum arborescence of a directed graph; `undefined` if some vertex is unreachable.       | O(V·E)                         |
