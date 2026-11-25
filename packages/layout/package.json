@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "Deterministic 2D layouts: circular, grid, force-directed",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmanueleMinotto/graph-toolkit.git",
+    "directory": "packages/layout"
+  },
+  "homepage": "https://emanueleminotto.github.io/graph-toolkit/",
+  "bugs": {
+    "url": "https://github.com/EmanueleMinotto/graph-toolkit/issues"
+  },
   "engines": {
     "node": ">=22"
   },

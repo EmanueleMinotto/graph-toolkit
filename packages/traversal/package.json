@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "BFS, DFS, topological order and connected components",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmanueleMinotto/graph-toolkit.git",
+    "directory": "packages/traversal"
+  },
+  "homepage": "https://emanueleminotto.github.io/graph-toolkit/",
+  "bugs": {
+    "url": "https://github.com/EmanueleMinotto/graph-toolkit/issues"
+  },
   "engines": {
     "node": ">=22"
   },

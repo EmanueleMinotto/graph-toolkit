@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "Everything in one import: re-exports all @graph-sdk packages",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmanueleMinotto/graph-toolkit.git",
+    "directory": "packages/graph-toolkit"
+  },
+  "homepage": "https://emanueleminotto.github.io/graph-toolkit/",
+  "bugs": {
+    "url": "https://github.com/EmanueleMinotto/graph-toolkit/issues"
+  },
   "engines": {
     "node": ">=22"
   },

@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "Graph standardization: canonical ordering, relabeling, self-loop removal",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmanueleMinotto/graph-toolkit.git",
+    "directory": "packages/normalize"
+  },
+  "homepage": "https://emanueleminotto.github.io/graph-toolkit/",
+  "bugs": {
+    "url": "https://github.com/EmanueleMinotto/graph-toolkit/issues"
+  },
   "engines": {
     "node": ">=22"
   },
