@@ -1,4 +1,5 @@
 import { GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
+import { colorAt, edgeColorKernel, exactKernel } from './internal/exact.js';
 import {
   bipartiteKernel,
   countColors,
@@ -52,4 +53,39 @@ export function isProperColoring(graph: Graph, coloring: Coloring): boolean {
   return graph
     .edges()
     .every((edge) => coloring.colors.get(edge.source) !== coloring.colors.get(edge.target));
+}
+
+/** Optimal vertex coloring (chromatic number) by backtracking. Exponential: keep graphs small. */
+export function exactColoring(graph: Graph): Coloring {
+  assertColorable(graph);
+  return toColoring(graph, exactKernel(graph.csr, graph.vertexCount));
+}
+
+export interface ColoredEdge {
+  readonly source: VertexId;
+  readonly target: VertexId;
+  readonly color: number;
+}
+
+export interface EdgeColoring {
+  readonly edges: readonly ColoredEdge[];
+  readonly colorCount: number;
+}
+
+/** Greedy proper edge coloring, at most 2Δ − 1 colors, O(E · Δ). */
+export function edgeColoring(graph: Graph): EdgeColoring {
+  assertColorable(graph);
+  const edges = graph.edges();
+  const pairs = edges.map(
+    (edge) => [graph.indexOf(edge.source), graph.indexOf(edge.target)] as const,
+  );
+  const colors = edgeColorKernel(graph.vertexCount, pairs);
+  return {
+    edges: edges.map((edge, index) => ({
+      source: edge.source,
+      target: edge.target,
+      color: colorAt(colors, index),
+    })),
+    colorCount: Math.max(0, ...colors) + (colors.length > 0 ? 1 : 0),
+  };
 }

@@ -1,1 +1,7 @@
-export { bfs, connectedComponents, dfs, topologicalSort } from './traversal.js';
+export {
+  bfs,
+  connectedComponents,
+  dfs,
+  stronglyConnectedComponents,
+  topologicalSort,
+} from './traversal.js';

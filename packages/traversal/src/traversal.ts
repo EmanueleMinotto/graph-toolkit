@@ -1,5 +1,6 @@
 import { GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
 import { bfsOrder, componentIndices, dfsOrder, kahnOrder } from './internal/search.js';
+import { tarjan } from './internal/scc.js';
 
 type Search = (csr: Graph['csr'], start: number, visited: Uint8Array) => readonly number[];
 
@@ -28,6 +29,18 @@ export function topologicalSort(graph: Graph): readonly VertexId[] | undefined {
 export function connectedComponents(graph: Graph): readonly (readonly VertexId[])[] {
   if (graph.directed) throw new GraphError('connectedComponents requires an undirected graph');
   return componentIndices(graph.csr, graph.vertexCount).map((component) =>
+    component.map((index) => graph.vertexAt(index)),
+  );
+}
+
+/**
+ * Strongly connected components of a directed graph, in reverse topological order of the
+ * condensation. O(V + E). Throws {@link GraphError} for undirected graphs.
+ */
+export function stronglyConnectedComponents(graph: Graph): readonly (readonly VertexId[])[] {
+  if (!graph.directed)
+    throw new GraphError('stronglyConnectedComponents requires a directed graph');
+  return tarjan(graph.csr, graph.vertexCount).map((component) =>
     component.map((index) => graph.vertexAt(index)),
   );
 }

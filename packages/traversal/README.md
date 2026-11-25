@@ -18,9 +18,10 @@ connectedComponents(graph); // [[a, b], [c]]
 
 ## API
 
-| Function                     | Notes                                                                           | Complexity |
-| ---------------------------- | ------------------------------------------------------------------------------- | ---------- |
-| `bfs(graph, start)`          | Breadth-first order of reachable vertices.                                      | O(V + E)   |
-| `dfs(graph, start)`          | Iterative depth-first preorder, neighbors in insertion order.                   | O(V + E)   |
-| `topologicalSort(graph)`     | Kahn's algorithm; `undefined` when the graph has a cycle.                       | O(V + E)   |
-| `connectedComponents(graph)` | Undirected graphs only (throws `GraphError` otherwise). Strong components: TBD. | O(V + E)   |
+| Function                         | Notes                                                         | Complexity |
+| -------------------------------- | ------------------------------------------------------------- | ---------- |
+| `bfs(graph, start)`              | Breadth-first order of reachable vertices.                    | O(V + E)   |
+| `dfs(graph, start)`              | Iterative depth-first preorder, neighbors in insertion order. | O(V + E)   |
+| `topologicalSort(graph)`         | Kahn's algorithm; `undefined` when the graph has a cycle.     | O(V + E)   |
+| `connectedComponents(graph)`     | Undirected graphs only (throws `GraphError` otherwise).       | O(V + E)   |
+| `stronglyConnectedComponents(g)` | Iterative Tarjan; directed only, sink components first.       | O(V + E)   |

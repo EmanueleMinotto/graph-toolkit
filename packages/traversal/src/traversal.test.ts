@@ -1,6 +1,12 @@
 import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-toolkit/core';
 import { describe, expect, it } from 'vitest';
-import { bfs, connectedComponents, dfs, topologicalSort } from './index.js';
+import {
+  bfs,
+  connectedComponents,
+  dfs,
+  stronglyConnectedComponents,
+  topologicalSort,
+} from './index.js';
 
 const ids = ['a', 'b', 'c', 'd', 'e'].map((name) => vertexId(name));
 const [a, b, c, d, isolated] = ids as [
@@ -17,6 +23,8 @@ const build = (directed: boolean, edges: readonly (readonly [number, number])[])
   for (const [from, to] of edges) builder.addEdge(ids[from]!, ids[to]!);
   return builder.build();
 };
+
+const byName = (left: string, right: string) => left.localeCompare(right);
 
 describe('traversal', () => {
   const tree = build(false, [
@@ -71,5 +79,41 @@ describe('traversal', () => {
       [1, 0],
     ]);
     expect(topologicalSort(cyclic)).toBeUndefined();
+  });
+});
+
+describe('stronglyConnectedComponents', () => {
+  it('finds cycles and singletons', () => {
+    const graph = build(true, [
+      [0, 1],
+      [1, 2],
+      [2, 0],
+      [2, 3],
+      [3, 4],
+      [4, 3],
+    ]);
+    const sets = stronglyConnectedComponents(graph).map((part) => part.toSorted(byName).join(''));
+    expect(sets.toSorted(byName)).toEqual(['abc', 'de']);
+  });
+
+  it('puts sink components first and handles DAGs and empty graphs', () => {
+    const dag = build(true, [
+      [0, 1],
+      [1, 2],
+    ]);
+    expect(stronglyConnectedComponents(dag)).toEqual([[c], [b], [a], [d], [isolated]]);
+    expect(stronglyConnectedComponents(new GraphBuilder({ directed: true }).build())).toEqual([]);
+  });
+
+  it('ignores edges into finished components', () => {
+    const graph = build(true, [
+      [0, 1],
+      [2, 1],
+    ]);
+    expect(stronglyConnectedComponents(graph)).toHaveLength(5);
+  });
+
+  it('rejects undirected graphs', () => {
+    expect(() => stronglyConnectedComponents(build(false, []))).toThrow(GraphError);
   });
 });
