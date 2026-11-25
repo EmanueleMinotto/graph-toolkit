@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky",
-    "docs": "typedoc",
+    "docs:api": "typedoc",
     "changeset": "changeset",
     "version-packages": "changeset version"
   },

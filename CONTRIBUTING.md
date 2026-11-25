@@ -8,6 +8,6 @@
 
 ## Docs, benchmarks and releases
 
-- `pnpm docs` builds the TypeDoc API reference into `docs/api` (git-ignored; published to GitHub Pages by `.github/workflows/pages.yml`).
+- `pnpm docs:api` builds the TypeDoc API reference into `docs/api` (git-ignored; published to GitHub Pages by `.github/workflows/pages.yml`).
 - `apps/benchmarks` holds performance budget tests (run with the normal test task) and an on-demand `bench` script.
 - Releases use Changesets: add a note with `pnpm changeset`, apply versions with `pnpm version-packages`.

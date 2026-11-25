@@ -32,4 +32,4 @@ jobs:
       - run: pnpm lint
       - run: pnpm turbo run typecheck test build
       - run: pnpm -r --filter "./packages/*" exec publint
-      - run: pnpm docs
+      - run: pnpm docs:api
