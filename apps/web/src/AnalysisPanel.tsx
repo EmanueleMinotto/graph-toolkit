@@ -55,7 +55,9 @@ function toolOptions(graph: Graph): (Item | ItemGroup)[] {
   });
 }
 
-function selectionHint(needs: Tool['needs'], from = '–', to = '–'): string {
+function selectionHint(tool: Tool, from = '–', to = '–'): string {
+  const { needs } = tool;
+  if (tool.usesOther === true) return 'Compares with the second graph (Operations panel).';
   if (needs === 0) return '';
   const target = needs === 2 ? ` and target (${to})` : '';
   return `Click vertices to choose start (${from})${target}.`;
@@ -63,7 +65,7 @@ function selectionHint(needs: Tool['needs'], from = '–', to = '–'): string {
 
 export function AnalysisPanel(props: AnalysisProps) {
   const active = toolOf(props.kind);
-  const hint = selectionHint(active.needs, props.from, props.to);
+  const hint = selectionHint(active, props.from, props.to);
   return (
     <Panel title="Analysis">
       <NativeSelect

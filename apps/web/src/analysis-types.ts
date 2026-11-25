@@ -1,10 +1,12 @@
-import { type VertexId } from 'graph-toolkit';
+import { type Graph, type VertexId } from 'graph-toolkit';
 
 export interface Selection {
   readonly from: VertexId | undefined;
   readonly to: VertexId | undefined;
   /** Value of the tool's numeric parameter (see `Tool.param`): a count, a damping factor, … */
   readonly count?: number | undefined;
+  /** The generated second graph, for tools that compare two graphs. */
+  readonly other?: Graph | undefined;
 }
 
 export interface Highlight {

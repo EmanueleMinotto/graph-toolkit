@@ -1,6 +1,7 @@
 import { bfs, dijkstra, type Graph } from 'graph-toolkit';
 import { NONE, pathEdges, type Highlight, type Selection } from './analysis-types.js';
 import { coloringAnalyses, type ColoringKind } from './analysis-coloring.js';
+import { compareAnalyses, type CompareKind } from './analysis-compare.js';
 import { networkAnalyses, type NetworkKind } from './analysis-network.js';
 import { pathAnalyses, type PathKind } from './analysis-paths.js';
 import { treeAnalyses, type TreeKind } from './analysis-trees.js';
@@ -14,7 +15,8 @@ export type AnalysisKind =
   | PathKind
   | TreeKind
   | ColoringKind
-  | NetworkKind;
+  | NetworkKind
+  | CompareKind;
 
 export { edgeKey, type Highlight, type Selection } from './analysis-types.js';
 
@@ -51,6 +53,7 @@ const analyses: Readonly<Record<AnalysisKind, (graph: Graph, selection: Selectio
     ...coloringAnalyses,
     ...pathAnalyses,
     ...networkAnalyses,
+    ...compareAnalyses,
   };
 
 /** Runs an analysis; library errors become the summary text. */

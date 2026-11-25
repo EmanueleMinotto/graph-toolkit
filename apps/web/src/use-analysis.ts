@@ -23,10 +23,10 @@ const hasWorker = typeof Worker !== 'undefined';
  * (jsdom) it runs inline.
  */
 export function useAnalysis(kind: AnalysisKind, graph: Graph, selection: Selection): AnalysisState {
-  const { from, to, count } = selection;
+  const { from, to, count, other } = selection;
   const job = useMemo<Job>(
-    () => ({ kind, graph, from, to, count }),
-    [kind, graph, from, to, count],
+    () => ({ kind, graph, from, to, count, other }),
+    [kind, graph, from, to, count, other],
   );
   const [done, setDone] = useState<{ readonly job: Job; readonly result: Highlight }>({
     job,
@@ -39,16 +39,23 @@ export function useAnalysis(kind: AnalysisKind, graph: Graph, selection: Selecti
     worker.addEventListener('message', (event: MessageEvent<Highlight>) => {
       setDone({ job, result: event.data });
     });
-    const request: WorkerRequest = { kind: job.kind, json: toJson(job.graph), from, to, count };
+    const request: WorkerRequest = {
+      kind: job.kind,
+      json: toJson(job.graph),
+      otherJson: other === undefined ? undefined : toJson(other),
+      from,
+      to,
+      count,
+    };
     worker.postMessage(request);
     return () => {
       worker.terminate();
     };
-  }, [job, from, to, count]);
+  }, [job, from, to, count, other]);
 
   const inline = useMemo(
-    () => (hasWorker || kind === 'none' ? IDLE : analyze(kind, graph, { from, to, count })),
-    [kind, graph, from, to, count],
+    () => (hasWorker || kind === 'none' ? IDLE : analyze(kind, graph, { from, to, count, other })),
+    [kind, graph, from, to, count, other],
   );
   if (kind === 'none') return { result: IDLE, isPending: false };
   if (!hasWorker) return { result: inline, isPending: false };

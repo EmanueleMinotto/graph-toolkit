@@ -21,9 +21,11 @@ export interface Tool {
   readonly needs: 0 | 1 | 2;
   readonly requires?: Requirement;
   readonly param?: Param;
+  /** Compares against the generated second graph. */
+  readonly usesOther?: boolean;
 }
 
-type Extras = Pick<Tool, 'requires' | 'param'>;
+type Extras = Pick<Tool, 'requires' | 'param' | 'usesOther'>;
 
 type Entry = (
   id: AnalysisKind,
@@ -49,6 +51,7 @@ const trees = inGroup('Trees');
 const flows = inGroup('Flow and matching');
 const ranking = inGroup('Centrality and communities');
 const cliques = inGroup('Cliques and planarity');
+const compare = inGroup('Compare');
 
 export const TOOLS: readonly Tool[] = [
   NO_TOOL,
@@ -96,6 +99,7 @@ export const TOOLS: readonly Tool[] = [
   cliques('maximal-cliques', 'Maximal cliques', undirected),
   cliques('maximum-clique', 'Maximum clique', undirected),
   cliques('planar', 'Planarity test', undirected),
+  compare('isomorphism', 'Isomorphism with second graph', { usesOther: true }),
 ];
 
 export const toolOf = (id: AnalysisKind): Tool => TOOLS.find((entry) => entry.id === id) ?? NO_TOOL;

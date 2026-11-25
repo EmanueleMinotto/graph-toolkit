@@ -1,16 +1,18 @@
-import { Alert, AppShell, Group, Paper, ScrollArea, Stack, Title } from '@mantine/core';
+import { Alert, AppShell, Paper, ScrollArea, Stack } from '@mantine/core';
 import { type Graph, type VertexId } from 'graph-toolkit';
 import { useMemo, useRef, useState } from 'react';
 import { AnalysisPanel } from './AnalysisPanel.js';
+import { OperationsPanel } from './OperationsPanel.js';
 import { Select } from './Controls.js';
 import { EditPanel } from './EditPanel.js';
 import { GeneratePanel } from './GeneratePanel.js';
 import { GraphView, type GraphViewHandle } from './GraphView.js';
 import { ImportPanel } from './ImportPanel.js';
-import { Toolbar } from './Toolbar.js';
+import { Header } from './Header.js';
 import { makeSample } from './formats.js';
 import { computeLayout, LAYOUTS, type LayoutKind } from './layouts.js';
 import { type Scene } from './scene.js';
+import { useGuard } from './use-guard.js';
 import { useTool } from './use-tool.js';
 import { useAnalysis } from './use-analysis.js';
 import { useEditor } from './use-editor.js';
@@ -23,7 +25,8 @@ export function App() {
   const [layoutKind, setLayoutKind] = useState<LayoutKind>('force');
   const { kind, count, setCount, choose } = useTool();
   const [picked, setPicked] = useState<readonly VertexId[]>([]);
-  const [error, setError] = useState('');
+  const [other, setOther] = useState(() => makeSample('path', 4));
+  const { error, setError, guarded } = useGuard();
   const [generation, setGeneration] = useState(0);
   const view = useRef<GraphViewHandle>(null);
 
@@ -32,7 +35,7 @@ export function App() {
     [scene, layoutKind, graph],
   );
   const [from, to] = picked;
-  const selection = useMemo(() => ({ from, to, count }), [from, to, count]);
+  const selection = useMemo(() => ({ from, to, count, other }), [from, to, count, other]);
   const analysis = useAnalysis(kind, graph, selection);
 
   const travel = (move: () => void): void => {
@@ -47,13 +50,6 @@ export function App() {
     history.push({ graph: next, pinned: undefined });
     remount();
     setError('');
-  };
-  const guarded = (action: () => void): void => {
-    try {
-      action();
-    } catch (error_) {
-      setError(error_ instanceof Error ? error_.message : 'Unexpected error');
-    }
   };
   const editor = useEditor({
     scene,
@@ -76,17 +72,12 @@ export function App() {
   return (
     <AppShell header={{ height: 56 }} navbar={{ width: 360, breakpoint: 'sm' }} padding="md">
       <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
-          <Title order={1} size="h3">
-            graph-toolkit
-          </Title>
-          <Toolbar
-            canUndo={history.canUndo}
-            canRedo={history.canRedo}
-            onUndo={() => travel(history.undo)}
-            onRedo={() => travel(history.redo)}
-          />
-        </Group>
+        <Header
+          canUndo={history.canUndo}
+          canRedo={history.canRedo}
+          onUndo={() => travel(history.undo)}
+          onRedo={() => travel(history.redo)}
+        />
       </AppShell.Header>
       <AppShell.Navbar p="md">
         <AppShell.Section grow component={ScrollArea}>
@@ -100,6 +91,14 @@ export function App() {
             <Paper withBorder p="md" radius="md">
               <Select label="Layout" value={layoutKind} options={LAYOUTS} onChange={changeLayout} />
             </Paper>
+            <OperationsPanel
+              graph={graph}
+              other={other}
+              picked={picked}
+              onOther={setOther}
+              onResult={replaceGraph}
+              guarded={guarded}
+            />
             <EditPanel
               mode={editor.mode}
               from={from}
