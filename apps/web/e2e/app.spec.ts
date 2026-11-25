@@ -74,3 +74,16 @@ test('drags a vertex without selecting it', async ({ page }) => {
   await page.getByRole('button', { name: 'Reset view' }).click();
   await expect(node).toHaveAttribute('transform', before!);
 });
+
+test('generates a large graph quickly and caps oversized input', async ({ page }) => {
+  await page.getByLabel('Kind').selectOption('random');
+  await page.getByLabel('Size').fill('1000');
+  const start = Date.now();
+  await page.getByRole('button', { name: 'Generate' }).click();
+  await expect(page.locator('svg.graph circle')).toHaveCount(1000);
+  expect(Date.now() - start).toBeLessThan(5000);
+  await page.getByLabel('Kind').selectOption('complete');
+  await page.getByLabel('Size').fill('5000');
+  await page.getByRole('button', { name: 'Generate' }).click();
+  await expect(page.locator('svg.graph circle')).toHaveCount(150);
+});

@@ -59,13 +59,31 @@ export const SAMPLES: readonly SampleKind[] = ['cycle', 'complete', 'grid', 'sta
 
 const SEED = 7;
 const EDGE_PROBABILITY = 0.25;
+const AVERAGE_DEGREE = 6;
+
+/** Largest accepted size per kind; dense kinds are capped lower to keep the SVG responsive. */
+export const MAX_SIZE: Readonly<Record<SampleKind, number>> = {
+  cycle: 2000,
+  star: 2000,
+  random: 1000,
+  grid: 40, // side length: 40 × 40 = 1600 vertices
+  complete: 150, // 150 vertices = 11 175 edges
+};
+
+/** Dense for small graphs, sparse (about `AVERAGE_DEGREE` neighbours) for large ones. */
+const randomProbability = (size: number): number =>
+  Math.min(EDGE_PROBABILITY, AVERAGE_DEGREE / Math.max(size - 1, 1));
 
 const samples: Readonly<Record<SampleKind, (size: number) => Graph>> = {
   cycle: (size) => cycleGraph(size),
   complete: (size) => completeGraph(size),
   grid: (size) => gridGraph(size, size),
   star: (size) => starGraph(size),
-  random: (size) => randomGraph(size, { probability: EDGE_PROBABILITY, seed: SEED }),
+  random: (size) => randomGraph(size, { probability: randomProbability(size), seed: SEED }),
 };
 
-export const makeSample = (kind: SampleKind, size: number): Graph => samples[kind](size);
+const clampSize = (kind: SampleKind, size: number): number =>
+  Math.min(Math.max(size, 1), MAX_SIZE[kind]);
+
+export const makeSample = (kind: SampleKind, size: number): Graph =>
+  samples[kind](clampSize(kind, Math.trunc(size)));

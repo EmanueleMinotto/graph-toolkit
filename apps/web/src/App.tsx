@@ -21,8 +21,19 @@ type LayoutKind = 'force' | 'circular' | 'grid';
 
 const LAYOUTS: readonly LayoutKind[] = ['force', 'circular', 'grid'];
 
+const FULL_QUALITY_VERTICES = 200;
+const FULL_ITERATIONS = 300;
+const MIN_ITERATIONS = 30;
+
+/** Force layout is O(V²) per iteration: scale iterations down so large graphs stay interactive. */
+const forceIterations = (vertexCount: number): number =>
+  Math.max(
+    MIN_ITERATIONS,
+    Math.floor(FULL_ITERATIONS * Math.min(1, (FULL_QUALITY_VERTICES / vertexCount) ** 2)),
+  );
+
 const layouts = {
-  force: (graph: Graph) => forceLayout(graph),
+  force: (graph: Graph) => forceLayout(graph, { iterations: forceIterations(graph.vertexCount) }),
   circular: (graph: Graph) => circularLayout(graph),
   grid: (graph: Graph) => gridLayout(graph),
 } as const;

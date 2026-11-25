@@ -43,8 +43,25 @@ export function mulberry32(seed: number): () => number {
   };
 }
 
-/** G(n, p): every pair is an edge with probability `probability`. */
+function skipPairs(count: number, probability: number, next: () => number): Pair[] {
+  const logMiss = Math.log(1 - probability);
+  const pairs: Pair[] = [];
+  let to = 1;
+  let from = -1;
+  while (to < count) {
+    from += 1 + Math.floor(Math.log(1 - next()) / logMiss);
+    while (from >= to && to < count) from -= to++;
+    if (to < count) pairs.push([from, to]);
+  }
+  return pairs;
+}
+
+/**
+ * G(n, p) in O(n + m) by skipping geometrically distributed gaps between edges
+ * (Batagelj–Brandes) instead of testing all n² pairs.
+ */
 export function randomPairs(count: number, probability: number, seed: number): Pair[] {
-  const next = mulberry32(seed);
-  return completePairs(count).filter(() => next() < probability);
+  if (probability <= 0) return [];
+  if (probability >= 1) return completePairs(count);
+  return skipPairs(count, probability, mulberry32(seed));
 }

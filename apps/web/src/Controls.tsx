@@ -11,9 +11,9 @@ import {
   Title,
 } from '@mantine/core';
 import { type VertexId } from 'graph-toolkit';
-import { type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { ANALYSES, type AnalysisKind } from './analysis.js';
-import { FORMATS, SAMPLES, type Format, type SampleKind } from './formats.js';
+import { FORMATS, MAX_SIZE, SAMPLES, type Format, type SampleKind } from './formats.js';
 
 const DEFAULT_SIZE = 6;
 
@@ -51,6 +51,7 @@ interface GenerateProps {
 }
 
 export function GeneratePanel({ onGenerate }: GenerateProps) {
+  const [kind, setKind] = useState<SampleKind>('cycle');
   return (
     <form
       onSubmit={(event) => {
@@ -61,8 +62,21 @@ export function GeneratePanel({ onGenerate }: GenerateProps) {
     >
       <Panel title="Generate">
         <Group grow align="flex-end">
-          <NativeSelect label="Kind" name="kind" data={[...SAMPLES]} defaultValue="cycle" />
-          <NumberInput label="Size" name="size" min={1} max={30} defaultValue={DEFAULT_SIZE} />
+          <NativeSelect
+            label="Kind"
+            name="kind"
+            data={[...SAMPLES]}
+            value={kind}
+            onChange={(event) => setKind(event.currentTarget.value as SampleKind)}
+          />
+          <NumberInput
+            label="Size"
+            name="size"
+            min={1}
+            max={MAX_SIZE[kind]}
+            defaultValue={DEFAULT_SIZE}
+            description={`max ${MAX_SIZE[kind]}`}
+          />
         </Group>
         <Button type="submit">Generate</Button>
       </Panel>

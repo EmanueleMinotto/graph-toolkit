@@ -88,3 +88,12 @@ describe('fitToBox', () => {
     expect(fitted.get(zero)).toEqual({ x: 5, y: 5 });
   });
 });
+
+describe('makeSample at scale', () => {
+  it('builds large sparse graphs and clamps oversized requests', () => {
+    expect(makeSample('random', 1000).vertexCount).toBe(1000);
+    expect(makeSample('random', 1000).edgeCount).toBeLessThan(5000);
+    expect(makeSample('complete', 10_000).vertexCount).toBe(150);
+    expect(makeSample('cycle', 0).vertexCount).toBe(1);
+  });
+});

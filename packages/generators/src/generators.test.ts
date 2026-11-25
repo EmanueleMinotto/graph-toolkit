@@ -39,3 +39,14 @@ describe('generators', () => {
     expect(randomGraph(10, { probability: 1, seed: 1 }).edgeCount).toBe(45);
   });
 });
+
+describe('randomGraph at scale', () => {
+  it('has the expected density and no duplicate edges', () => {
+    const graph = randomGraph(2000, { probability: 0.01, seed: 3 });
+    const expected = 0.01 * ((2000 * 1999) / 2);
+    expect(Math.abs(graph.edgeCount - expected)).toBeLessThan(expected * 0.1);
+    expect(new Set(graph.edges().map((edge) => `${edge.source}-${edge.target}`)).size).toBe(
+      graph.edgeCount,
+    );
+  });
+});
