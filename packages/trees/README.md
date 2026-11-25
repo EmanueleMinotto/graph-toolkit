@@ -27,3 +27,4 @@ isTree(graph); // connected and acyclic
 | `new RootedTree(g, root)`                                         | `parentOf`, `depthOf`, `childrenOf`, `lowestCommonAncestor` (binary lifting). Requires an undirected tree. | setup O(V log V), LCA O(log V) |
 | `pruferCode(tree)`, `treeFromPruferCode(vertices, code)`          | Bijection between labeled trees and sequences of length n − 2.                                             | O(n log n)                     |
 | `minimumSpanningArborescence(g, root)`                            | Chu–Liu/Edmonds minimum arborescence of a directed graph; `undefined` if some vertex is unreachable.       | O(V·E)                         |
+| `steinerTree(g, terminals)`                                       | Kou–Markowsky–Berman 2-approximation: connects the terminals at low cost, possibly through other vertices. | O(k·(V+E) log V)               |

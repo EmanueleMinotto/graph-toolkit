@@ -28,6 +28,7 @@ export {
   kCores,
   radius,
   transitiveClosure,
+  treewidthUpperBound,
 } from './structure.js';
 export {
   maximumMatching,

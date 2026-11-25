@@ -40,6 +40,7 @@ maximumBipartiteMatching(bipartiteGraph).size;
 | `kCores(g)`, `clusteringCoefficients(g)`, `averageClustering(g)`  | Core numbers and triangle density.                                        | O(V·E) / O(Σdeg²) |
 | `eccentricities(g)`, `diameter(g)`, `radius(g)`, `center(g)`      | Hop-distance measures (`Infinity` when disconnected).                     | O(V·(V+E))        |
 | `transitiveClosure(g)`                                            | Directed graph linking every vertex to everything it reaches.             | O(V·(V+E))        |
+| `treewidthUpperBound(g)`                                          | Min-degree elimination; exact on trees, cycles and cliques.               | O(V²)             |
 
 `maximalCliques` and `maximumClique` accept `{ signal }` (any `AbortSignal`) to cancel long searches.
 

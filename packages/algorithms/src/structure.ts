@@ -7,6 +7,7 @@ import {
   clustering,
   coreNumbers,
   hopDistances,
+  minDegreeWidth,
   reachablePairs,
   symmetricSets,
 } from './internal/structure.js';
@@ -95,4 +96,12 @@ export function transitiveClosure(graph: Graph): Graph {
     builder.addEdge(graph.vertexAt(from), graph.vertexAt(to));
   }
   return builder.build();
+}
+
+/**
+ * Upper bound on the treewidth by min-degree elimination (exact for trees, cycles and cliques;
+ * edge directions ignored). 0 for graphs without edges.
+ */
+export function treewidthUpperBound(graph: Graph): number {
+  return minDegreeWidth(symmetricSets(graph.csr, graph.vertexCount));
 }

@@ -15,6 +15,7 @@ import {
   minCut,
   radius,
   transitiveClosure,
+  treewidthUpperBound,
 } from './index.js';
 
 const v = (index: number) => vertexId(String(index));
@@ -120,5 +121,19 @@ describe('minCut', () => {
     expect(cut.sourceSide).toContain(v(0));
     expect(cut.sinkSide).toContain(v(3));
     expect(cut.edges.reduce((sum, edge) => sum + edge.weight, 0)).toBe(cut.value);
+  });
+});
+
+describe('treewidthUpperBound', () => {
+  it('is exact on trees, cycles and cliques', () => {
+    expect(treewidthUpperBound(pathGraph(6))).toBe(1);
+    expect(treewidthUpperBound(cycleGraph(6))).toBe(2);
+    expect(treewidthUpperBound(completeGraph(5))).toBe(4);
+    expect(treewidthUpperBound(bowtie())).toBe(2);
+  });
+
+  it('is 0 without edges and for the empty graph', () => {
+    expect(treewidthUpperBound(pathGraph(1))).toBe(0);
+    expect(treewidthUpperBound(pathGraph(0))).toBe(0);
   });
 });

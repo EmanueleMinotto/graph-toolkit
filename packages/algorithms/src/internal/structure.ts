@@ -115,3 +115,33 @@ export function reachablePairs(csr: Csr, count: number): Pair[] {
   }
   return pairs;
 }
+
+function lowestDegree(adjacency: readonly Set<number>[], alive: ReadonlySet<number>): number {
+  let best = -1;
+  for (const vertex of alive) {
+    if (best === -1 || adjacency[vertex]!.size < adjacency[best]!.size) best = vertex;
+  }
+  return best;
+}
+
+/** Removes `vertex`, joining its neighbors into a clique; returns how many it had. */
+function eliminate(adjacency: Set<number>[], vertex: number): number {
+  const neighbors = [...adjacency[vertex]!];
+  for (const left of neighbors) {
+    adjacency[left]!.delete(vertex);
+    for (const right of neighbors) if (right !== left) adjacency[left]!.add(right);
+  }
+  return neighbors.length;
+}
+
+/** Min-degree elimination: the widest bag created is an upper bound on the treewidth. */
+export function minDegreeWidth(adjacency: Set<number>[]): number {
+  const alive = new Set(adjacency.keys());
+  let width = 0;
+  while (alive.size > 0) {
+    const vertex = lowestDegree(adjacency, alive);
+    width = Math.max(width, eliminate(adjacency, vertex));
+    alive.delete(vertex);
+  }
+  return width;
+}
