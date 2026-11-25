@@ -1,37 +1,28 @@
-import { NativeSelect, Paper, Stack, Title } from '@mantine/core';
+import { Accordion, Group, Stack } from '@mantine/core';
+import { type Icon } from '@tabler/icons-react';
 import { type ReactNode } from 'react';
 
-interface SelectProps<T extends string> {
-  readonly label: string;
-  readonly value: T;
-  readonly options: readonly T[];
-  readonly onChange: (value: T) => void;
-}
-
-export function Select<T extends string>({ label, value, options, onChange }: SelectProps<T>) {
-  return (
-    <NativeSelect
-      label={label}
-      value={value}
-      data={[...options]}
-      onChange={(event) => onChange(event.currentTarget.value as T)}
-    />
-  );
-}
-
-export function Panel({
-  title,
-  children,
-}: {
+interface PanelProps {
+  /** Key used to remember whether the panel is open. */
+  readonly id: string;
   readonly title: string;
+  readonly icon: Icon;
   readonly children: ReactNode;
-}) {
+}
+
+/** A collapsible sidebar section; must be rendered inside an `Accordion`. */
+export function Panel({ id, title, icon: Glyph, children }: PanelProps) {
   return (
-    <Paper withBorder p="md" radius="md">
-      <Stack gap="sm">
-        <Title order={4}>{title}</Title>
-        {children}
-      </Stack>
-    </Paper>
+    <Accordion.Item value={id}>
+      <Accordion.Control>
+        <Group gap="xs" wrap="nowrap">
+          <Glyph size={18} stroke={1.5} />
+          {title}
+        </Group>
+      </Accordion.Control>
+      <Accordion.Panel>
+        <Stack gap="sm">{children}</Stack>
+      </Accordion.Panel>
+    </Accordion.Item>
   );
 }

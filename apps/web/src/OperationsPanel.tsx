@@ -1,19 +1,14 @@
-import { Button, Group, NativeSelect, NumberInput, Text, TextInput } from '@mantine/core';
+import { Button, Group, NumberInput, Text, TextInput } from '@mantine/core';
+import { IconTool } from '@tabler/icons-react';
 import { type Graph, type VertexId } from 'graph-toolkit';
 import { useState } from 'react';
+import { ChoiceSelect } from './ChoiceSelect.js';
+import { OPERATION_CHOICES, SAMPLE_CHOICES } from './choices.js';
 import { Panel } from './Controls.js';
-import { MAX_SIZE, SAMPLES, makeSample, type SampleKind } from './formats.js';
+import { MAX_SIZE, makeSample, type SampleKind } from './formats.js';
 import { applyOperation, OPERATIONS, type OperationKind } from './operations.js';
 
 const DEFAULT_SIZE = 4;
-
-const groups = ['Two graphs', 'One graph', 'Normalize'].map((group) => ({
-  group,
-  items: OPERATIONS.filter((operation) => operation.group === group).map((operation) => ({
-    value: operation.id,
-    label: operation.label,
-  })),
-}));
 
 interface Props {
   readonly graph: Graph;
@@ -35,13 +30,13 @@ export function OperationsPanel({ graph, other, picked, onOther, onResult, guard
   const [text, setText] = useState('');
   const field = OPERATIONS.find((entry) => entry.id === operation)?.field;
   return (
-    <Panel title="Operations">
+    <Panel id="operations" title="Operations" icon={IconTool}>
       <Group grow align="flex-end">
-        <NativeSelect
+        <ChoiceSelect
           label="Second graph"
-          data={[...SAMPLES]}
           value={kind}
-          onChange={(event) => setKind(event.currentTarget.value as SampleKind)}
+          choices={SAMPLE_CHOICES}
+          onChange={setKind}
         />
         <NumberInput
           label="Vertices in second graph"
@@ -64,11 +59,11 @@ export function OperationsPanel({ graph, other, picked, onOther, onResult, guard
       <Text size="sm" c="dimmed">
         Second graph: {describe(other)}
       </Text>
-      <NativeSelect
+      <ChoiceSelect
         label="Operation"
-        data={groups}
         value={operation}
-        onChange={(event) => setOperation(event.currentTarget.value as OperationKind)}
+        choices={OPERATION_CHOICES}
+        onChange={setOperation}
       />
       {field === undefined ? null : (
         <TextInput

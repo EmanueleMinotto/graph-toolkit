@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { choose } from './helpers.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -58,7 +59,7 @@ test.describe('editor', () => {
     await vertex(page, '1').click();
     await page.getByLabel('Edge weight').fill('10');
     await page.getByRole('button', { name: 'Set weight on edge' }).click();
-    await page.getByLabel('Algorithm').selectOption('shortest-path');
+    await choose(page, 'Algorithm', 'Shortest path');
     await vertex(page, '0').click();
     await vertex(page, '1').click();
     await expect(page.getByRole('status')).toContainText('Distance 5');

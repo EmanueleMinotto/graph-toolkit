@@ -1,10 +1,12 @@
 import { Button, Checkbox, FileButton, Group, Textarea } from '@mantine/core';
+import { IconFileImport } from '@tabler/icons-react';
 import { type Graph } from 'graph-toolkit';
 import { useState } from 'react';
-import { Panel, Select } from './Controls.js';
+import { ChoiceSelect } from './ChoiceSelect.js';
+import { FORMAT_CHOICES } from './choices.js';
+import { Panel } from './Controls.js';
 import { download } from './download.js';
 import {
-  FORMATS,
   fileName,
   formatFromFileName,
   parseGraph,
@@ -30,8 +32,8 @@ export function ImportPanel({ graph, onReplace, guarded }: Props) {
     setText(await file.text());
   };
   return (
-    <Panel title="Import / export">
-      <Select label="Format" value={format} options={FORMATS} onChange={setFormat} />
+    <Panel id="import" title="Import / export" icon={IconFileImport}>
+      <ChoiceSelect label="Format" value={format} choices={FORMAT_CHOICES} onChange={setFormat} />
       <Checkbox
         label="Directed (edge list / CSV)"
         checked={isDirected}

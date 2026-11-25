@@ -1,10 +1,12 @@
-/* eslint-disable functional/prefer-readonly-type -- Mantine's `data` prop only accepts mutable arrays */
-import { Button, Group, Loader, NativeSelect, NumberInput, Text } from '@mantine/core';
+import { Button, Group, Loader, NumberInput, Text } from '@mantine/core';
+import { IconChartInfographic } from '@tabler/icons-react';
 import { type Graph, type VertexId } from 'graph-toolkit';
 import { type AnalysisKind, type Highlight } from './analysis.js';
 import { MatrixGrid, ResultTable } from './ResultViews.js';
+import { ChoiceSelect } from './ChoiceSelect.js';
+import { toolChoices } from './choices.js';
 import { Panel } from './Controls.js';
-import { toolOf, TOOLS, unavailableReason, type Param, type Tool } from './tools.js';
+import { toolOf, type Param, type Tool } from './tools.js';
 
 interface AnalysisProps {
   readonly kind: AnalysisKind;
@@ -16,35 +18,6 @@ interface AnalysisProps {
   readonly count: number;
   readonly onCount: (count: number) => void;
   readonly onKind: (kind: AnalysisKind) => void;
-}
-
-interface Item {
-  readonly value: AnalysisKind;
-  readonly label: string;
-  readonly disabled: boolean;
-}
-
-interface ItemGroup {
-  readonly group: string;
-  readonly items: Item[];
-}
-
-const toolItem = (tool: Tool, graph: Graph): Item => {
-  const reason = unavailableReason(tool, graph);
-  return {
-    value: tool.id,
-    label: reason === undefined ? tool.label : `${tool.label} (${reason})`,
-    disabled: reason !== undefined,
-  };
-};
-
-/** Select data: ungrouped tools first, then one optgroup per `Tool.group`. */
-function toolOptions(graph: Graph): (Item | ItemGroup)[] {
-  const groups = [...new Set(TOOLS.map((tool) => tool.group))];
-  return groups.flatMap((group): (Item | ItemGroup)[] => {
-    const items = TOOLS.filter((tool) => tool.group === group).map((tool) => toolItem(tool, graph));
-    return group === undefined ? items : [{ group, items }];
-  });
 }
 
 function selectionHint(tool: Tool, from = '–', to = '–'): string {
@@ -59,12 +32,13 @@ export function AnalysisPanel(props: AnalysisProps) {
   const active = toolOf(props.kind);
   const hint = selectionHint(active, props.from, props.to);
   return (
-    <Panel title="Analysis">
-      <NativeSelect
+    <Panel id="analysis" title="Analysis" icon={IconChartInfographic}>
+      <ChoiceSelect
         label="Algorithm"
         value={props.kind}
-        data={toolOptions(props.graph)}
-        onChange={(event) => props.onKind(event.currentTarget.value as AnalysisKind)}
+        choices={toolChoices(props.graph)}
+        isSearchable
+        onChange={props.onKind}
       />
       {active.param === undefined ? null : (
         <ParamInput param={active.param} value={props.count} onChange={props.onCount} />

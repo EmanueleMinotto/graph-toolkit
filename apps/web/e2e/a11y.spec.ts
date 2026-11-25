@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { choose } from './helpers.js';
 
 const scan = async (page: Page) => {
   const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
@@ -13,7 +14,7 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.emulateMedia({ colorScheme: scheme });
     await page.goto('/');
     expect(await scan(page)).toEqual([]);
-    await page.getByLabel('Algorithm').selectOption('adjacency');
+    await choose(page, 'Algorithm', 'Adjacency matrix');
     await expect(page.getByRole('status')).toContainText('Adjacency matrix');
     await page.getByText('Edit', { exact: true }).click();
     expect(await scan(page)).toEqual([]);

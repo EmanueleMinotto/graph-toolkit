@@ -1,4 +1,5 @@
 import { Button, Checkbox, Group, NumberInput, SegmentedControl, Text } from '@mantine/core';
+import { IconPencil } from '@tabler/icons-react';
 import { Panel } from './Controls.js';
 
 export type Mode = 'select' | 'edit';
@@ -20,7 +21,7 @@ interface Props {
 export function EditPanel(props: Props) {
   const hasPair = props.from !== undefined && props.to !== undefined;
   return (
-    <Panel title="Edit graph">
+    <Panel id="edit" title="Edit graph" icon={IconPencil}>
       <SegmentedControl
         fullWidth
         value={props.mode}

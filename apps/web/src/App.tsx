@@ -1,16 +1,17 @@
-import { Alert, AppShell, Paper, ScrollArea, Stack } from '@mantine/core';
+import { Alert, AppShell, ScrollArea, Stack } from '@mantine/core';
 import { type Graph, type VertexId } from 'graph-toolkit';
 import { useMemo, useRef, useState } from 'react';
 import { AnalysisPanel } from './AnalysisPanel.js';
 import { OperationsPanel } from './OperationsPanel.js';
-import { Select } from './Controls.js';
+import { LayoutPanel } from './LayoutPanel.js';
+import { PanelStack } from './PanelStack.js';
 import { EditPanel } from './EditPanel.js';
 import { GeneratePanel } from './GeneratePanel.js';
 import { GraphView, type GraphViewHandle } from './GraphView.js';
 import { ImportPanel } from './ImportPanel.js';
 import { Header } from './Header.js';
 import { makeSample } from './formats.js';
-import { computeLayout, LAYOUTS, type LayoutKind } from './layouts.js';
+import { computeLayout, type LayoutKind } from './layouts.js';
 import { type Scene } from './scene.js';
 import { ValidationPanel } from './ValidationPanel.js';
 import { useGuard } from './use-guard.js';
@@ -83,48 +84,48 @@ export function App() {
       <AppShell.Navbar p="md">
         <AppShell.Section grow component={ScrollArea}>
           <Stack gap="md">
-            <GeneratePanel
-              onGenerate={(sample, size, options) =>
-                replaceGraph(makeSample(sample, size, options))
-              }
-            />
-            <ImportPanel graph={graph} onReplace={replaceGraph} guarded={guarded} />
-            <Paper withBorder p="md" radius="md">
-              <Select label="Layout" value={layoutKind} options={LAYOUTS} onChange={changeLayout} />
-            </Paper>
-            <OperationsPanel
-              graph={graph}
-              other={other}
-              picked={picked}
-              onOther={setOther}
-              onResult={replaceGraph}
-              guarded={guarded}
-            />
-            <EditPanel
-              mode={editor.mode}
-              from={from}
-              to={to}
-              weight={editor.weight}
-              allowParallel={editor.allowParallel}
-              onMode={editor.setMode}
-              onWeight={editor.setWeight}
-              onParallel={editor.setAllowParallel}
-              onRemoveVertex={editor.removeVertex}
-              onRemoveEdge={editor.removeEdge}
-              onSetWeight={editor.applyWeight}
-            />
-            <ValidationPanel graph={graph} />
-            <AnalysisPanel
-              kind={kind}
-              graph={graph}
-              from={from}
-              to={to}
-              result={analysis.result}
-              isPending={analysis.isPending}
-              count={count}
-              onCount={setCount}
-              onKind={choose}
-            />
+            <PanelStack>
+              <GeneratePanel
+                onGenerate={(sample, size, options) =>
+                  replaceGraph(makeSample(sample, size, options))
+                }
+              />
+              <ImportPanel graph={graph} onReplace={replaceGraph} guarded={guarded} />
+              <LayoutPanel value={layoutKind} onChange={changeLayout} />
+              <OperationsPanel
+                graph={graph}
+                other={other}
+                picked={picked}
+                onOther={setOther}
+                onResult={replaceGraph}
+                guarded={guarded}
+              />
+              <EditPanel
+                mode={editor.mode}
+                from={from}
+                to={to}
+                weight={editor.weight}
+                allowParallel={editor.allowParallel}
+                onMode={editor.setMode}
+                onWeight={editor.setWeight}
+                onParallel={editor.setAllowParallel}
+                onRemoveVertex={editor.removeVertex}
+                onRemoveEdge={editor.removeEdge}
+                onSetWeight={editor.applyWeight}
+              />
+              <ValidationPanel graph={graph} />
+              <AnalysisPanel
+                kind={kind}
+                graph={graph}
+                from={from}
+                to={to}
+                result={analysis.result}
+                isPending={analysis.isPending}
+                count={count}
+                onCount={setCount}
+                onKind={choose}
+              />
+            </PanelStack>
             {error === '' ? null : (
               <Alert color="red" variant="light">
                 {error}

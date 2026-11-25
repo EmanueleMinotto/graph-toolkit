@@ -11,6 +11,7 @@ import {
 } from '@mantine/core';
 import { type Graph, type ValidationIssue } from 'graph-toolkit';
 import { useState } from 'react';
+import { IconShieldCheck } from '@tabler/icons-react';
 import { Panel } from './Controls.js';
 import { DEFAULT_FORM, validate, type ValidationForm } from './validation.js';
 
@@ -67,7 +68,7 @@ export function ValidationPanel({ graph }: { readonly graph: Graph }) {
     }
   };
   return (
-    <Panel title="Validate">
+    <Panel id="validate" title="Validation" icon={IconShieldCheck}>
       <SegmentedControl
         fullWidth
         value={form.direction}

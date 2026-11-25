@@ -1,7 +1,10 @@
-import { Button, Checkbox, Group, NativeSelect, NumberInput } from '@mantine/core';
+import { Button, Checkbox, Group, NumberInput } from '@mantine/core';
+import { IconWand } from '@tabler/icons-react';
 import { useState } from 'react';
+import { ChoiceSelect } from './ChoiceSelect.js';
+import { SAMPLE_CHOICES } from './choices.js';
 import { Panel } from './Controls.js';
-import { MAX_SIZE, SAMPLES, type GenerateOptions, type SampleKind } from './formats.js';
+import { MAX_SIZE, type GenerateOptions, type SampleKind } from './formats.js';
 
 const DEFAULT_SIZE = 6;
 const DEFAULT_SEED = 7;
@@ -30,15 +33,9 @@ export function GeneratePanel({ onGenerate }: Props) {
         onGenerate(kind, Number(data.get('size')), readOptions(data));
       }}
     >
-      <Panel title="Generate">
+      <Panel id="generate" title="New graph" icon={IconWand}>
         <Group grow align="flex-end">
-          <NativeSelect
-            label="Kind"
-            name="kind"
-            data={[...SAMPLES]}
-            value={kind}
-            onChange={(event) => setKind(event.currentTarget.value as SampleKind)}
-          />
+          <ChoiceSelect label="Kind" value={kind} choices={SAMPLE_CHOICES} onChange={setKind} />
           <NumberInput
             label="Size"
             name="size"

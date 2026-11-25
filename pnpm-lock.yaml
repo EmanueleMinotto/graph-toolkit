@@ -108,6 +108,9 @@ importers:
       '@mantine/hooks':
         specifier: ^9.8.2
         version: 9.8.2(react@19.3.1)
+      '@tabler/icons-react':
+        specifier: ^3.53.0
+        version: 3.53.0(react@19.3.1)
       graph-toolkit:
         specifier: workspace:*
         version: link:../../packages/graph-toolkit
@@ -1201,6 +1204,14 @@ packages:
 
   '@sonarsource/analyzer-commons-configurations@2.31.0-5284':
     resolution: {integrity: sha512-ruk3blMs9BE9RNSp9LPpWZAIjxJmq4Cp00E3cELIHz7Kym3WxdWGRlKOMYLRQ5tJg/de7jN5AtEElY3bGIfTcw==}
+
+  '@tabler/icons-react@3.53.0':
+    resolution: {integrity: sha512-uaj3Pne8ULNIOhYYHCX1kK6q1AVzxB2qCoyRnb67Q36YTA+1ctSmrrzZS/VptG/OQWOsXYz4prA7lQMTG2llcw==}
+    peerDependencies:
+      react: '>= 16'
+
+  '@tabler/icons@3.53.0':
+    resolution: {integrity: sha512-7V77PESErZob7+Ie4ibDs9tjRoMmZyjr3RpxRK3KLJejwggzxrkhVunbQ7xGYewjwdUyPc6dHpMvvft0prkkzQ==}
 
   '@testing-library/dom@10.4.2':
     resolution: {integrity: sha512-yzr2S9HyAIdhz2/6qHgbs665Q7PKVcDF05vsOlHPxG1mo36gKVesdYVeDLnXgfjJ03CrKRk08knc6+E/9m8v2Q==}
@@ -3990,6 +4001,13 @@ snapshots:
   '@sindresorhus/is@4.6.0': {}
 
   '@sonarsource/analyzer-commons-configurations@2.31.0-5284': {}
+
+  '@tabler/icons-react@3.53.0(react@19.3.1)':
+    dependencies:
+      '@tabler/icons': 3.53.0
+      react: 19.3.1
+
+  '@tabler/icons@3.53.0': {}
 
   '@testing-library/dom@10.4.2':
     dependencies:

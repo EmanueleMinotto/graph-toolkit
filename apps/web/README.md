@@ -24,6 +24,7 @@ pnpm --filter @graph-toolkit/web build   # static site in apps/web/dist
 
 - Layouts: force-directed, circular, grid, layered. **Undo / Redo** (header) step through up to 50 previous graphs.
 - Navigation: mouse wheel zooms around the cursor, dragging the background pans, dragging a vertex moves it (a plain click selects it), **Reset view** restores zoom and positions. Vertices are focusable buttons: Tab to one and press Enter or Space to select it.
+- Sidebar sections are collapsible, and which ones are open is remembered in the browser (`localStorage`, key `graph-toolkit.open-panels`). Every choice list is a Mantine Combobox with an icon per option, grouped where it helps (the Algorithm list is also searchable).
 - Light and dark themes (follows the system, toggle in the header); the UI meets WCAG 2 A/AA contrast, checked with axe in the e2e tests.
 
 **Analyze it** (Algorithm menu; tools that do not fit the graph are listed but disabled with the reason)
@@ -46,18 +47,19 @@ Analyses run in a Web Worker, so heavy (exponential) ones never freeze the page;
 
 ## Structure
 
-| File                                                | Role                                                            |
-| --------------------------------------------------- | --------------------------------------------------------------- |
-| `src/tools.ts`                                      | Registry of analysis tools: group, clicks needed, requirements. |
-| `src/analysis.ts`, `src/analysis-*.ts`              | The analyses, grouped by topic; each returns a `Highlight`.     |
-| `src/use-analysis.ts`, `src/analysis.worker.ts`     | Run an analysis in a Web Worker (inline in jsdom).              |
-| `src/formats.ts`, `src/download.ts`                 | Format dispatch tables, samples, file download.                 |
-| `src/operations.ts`, `src/validation.ts`            | Pure graph operations and schema validation.                    |
-| `src/edit.ts`, `src/use-editor.ts`                  | Pure graph edits and the editing hook.                          |
-| `src/use-history.ts`, `src/scene.ts`                | Undo/redo timeline over graph + pinned positions.               |
-| `src/layouts.ts`, `src/fit.ts`, `src/viewport.ts`   | Layout choice, fitting to the viewBox, zoom/pan math.           |
-| `src/use-graph-interaction.ts`                      | Wheel zoom, pan, vertex dragging, edge drawing.                 |
-| `src/App.tsx`, `*Panel.tsx`, `GraphView.tsx`, `...` | UI.                                                             |
+| File                                                 | Role                                                            |
+| ---------------------------------------------------- | --------------------------------------------------------------- |
+| `src/tools.ts`                                       | Registry of analysis tools: group, clicks needed, requirements. |
+| `src/analysis.ts`, `src/analysis-*.ts`               | The analyses, grouped by topic; each returns a `Highlight`.     |
+| `src/use-analysis.ts`, `src/analysis.worker.ts`      | Run an analysis in a Web Worker (inline in jsdom).              |
+| `src/formats.ts`, `src/download.ts`                  | Format dispatch tables, samples, file download.                 |
+| `src/operations.ts`, `src/validation.ts`             | Pure graph operations and schema validation.                    |
+| `src/edit.ts`, `src/use-editor.ts`                   | Pure graph edits and the editing hook.                          |
+| `src/use-history.ts`, `src/scene.ts`                 | Undo/redo timeline over graph + pinned positions.               |
+| `src/layouts.ts`, `src/fit.ts`, `src/viewport.ts`    | Layout choice, fitting to the viewBox, zoom/pan math.           |
+| `src/use-graph-interaction.ts`                       | Wheel zoom, pan, vertex dragging, edge drawing.                 |
+| `src/choices.ts`, `src/icons.ts`, `ChoiceSelect.tsx` | Option lists (labels, groups, icons) and the combobox.          |
+| `src/App.tsx`, `*Panel.tsx`, `GraphView.tsx`, `...`  | UI.                                                             |
 
 To add an analysis: write the function in the matching `analysis-*.ts` (or a new one), add its kind to the `AnalysisKind` union, and add a line to `TOOLS`.
 
