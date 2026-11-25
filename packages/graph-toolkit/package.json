@@ -1,6 +1,6 @@
 {
   "name": "graph-toolkit",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Everything in one import: re-exports all @graph-toolkit packages",
   "license": "MIT",
   "engines": {

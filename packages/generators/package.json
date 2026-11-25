@@ -1,6 +1,6 @@
 {
   "name": "@graph-toolkit/generators",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Classic and seeded random graph generators",
   "license": "MIT",
   "engines": {

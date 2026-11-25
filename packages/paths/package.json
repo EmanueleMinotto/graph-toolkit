@@ -1,6 +1,6 @@
 {
   "name": "@graph-toolkit/paths",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Shortest paths (Dijkstra, Bellman-Ford, Floyd-Warshall) and cycle detection",
   "license": "MIT",
   "engines": {

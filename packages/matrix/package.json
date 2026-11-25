@@ -1,6 +1,6 @@
 {
   "name": "@graph-toolkit/matrix",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Adjacency and Laplacian matrices, matrix algebra and graph conversion",
   "license": "MIT",
   "engines": {
