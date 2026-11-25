@@ -3,6 +3,8 @@ export { fromDot, toDot } from './dot.js';
 export { fromEdgeList, toEdgeList, type EdgeListOptions } from './edge-list.js';
 export { ParseError } from './errors.js';
 export { fromGexf, toGexf } from './gexf.js';
+export { fromGml, toGml } from './gml.js';
+export { fromGraph6, toGraph6 } from './graph6.js';
 export { fromGraphMl, toGraphMl } from './graphml.js';
 export { fromJson, toJson } from './json.js';
 export { fromMermaid } from './mermaid-import.js';
