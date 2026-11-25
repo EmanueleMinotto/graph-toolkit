@@ -1,11 +1,11 @@
-# @graph-toolkit/math
+# @graph-sdk/math
 
 Data structures shared by graph algorithms. No dependencies.
 
 ## Usage
 
 ```ts
-import { DisjointSet, MinPriorityQueue } from '@graph-toolkit/math';
+import { DisjointSet, MinPriorityQueue } from '@graph-sdk/math';
 
 const queue = new MinPriorityQueue();
 queue.push(7, 2.5);

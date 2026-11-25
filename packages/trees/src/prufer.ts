@@ -1,4 +1,4 @@
-import { GraphBuilder, GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
+import { GraphBuilder, GraphError, type Graph, type VertexId } from '@graph-sdk/core';
 import { decodePrufer, encodePrufer, itemAt } from './internal/prufer.js';
 import { isTree } from './trees.js';
 

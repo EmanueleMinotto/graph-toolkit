@@ -1,6 +1,6 @@
-import { GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
+import { GraphError, type Graph, type VertexId } from '@graph-sdk/core';
 import { dagKernel, johnsonKernel } from './internal/johnson.js';
-import { topologicalSort } from '@graph-toolkit/traversal';
+import { topologicalSort } from '@graph-sdk/traversal';
 import {
   bellmanFordKernel,
   dijkstraKernel,

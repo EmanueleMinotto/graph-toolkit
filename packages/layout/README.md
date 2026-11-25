@@ -1,11 +1,11 @@
-# @graph-toolkit/layout
+# @graph-sdk/layout
 
 Pure, deterministic 2D layouts returning `Map<VertexId, { x, y }>`. Depends on `core`; no DOM.
 
 ## Usage
 
 ```ts
-import { circularLayout, forceLayout } from '@graph-toolkit/layout';
+import { circularLayout, forceLayout } from '@graph-sdk/layout';
 
 circularLayout(graph, 100); // radius 100 around the origin
 forceLayout(graph, { seed: 42, iterations: 300 }); // coordinates in [0, 1]²

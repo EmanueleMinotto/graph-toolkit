@@ -5,7 +5,7 @@ import {
   type Edge,
   type Graph,
   type VertexId,
-} from '@graph-toolkit/core';
+} from '@graph-sdk/core';
 
 const compare = (left: string, right: string): number =>
   Number(left > right) - Number(left < right);

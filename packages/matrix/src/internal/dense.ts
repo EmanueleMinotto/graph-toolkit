@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { Csr } from '@graph-sdk/core';
 
 export type Entry = readonly [row: number, column: number, value: number];
 

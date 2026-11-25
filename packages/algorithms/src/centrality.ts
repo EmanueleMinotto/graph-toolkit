@@ -1,4 +1,4 @@
-import type { Graph, VertexId } from '@graph-toolkit/core';
+import type { Graph, VertexId } from '@graph-sdk/core';
 import { valueAt } from './internal/access.js';
 import { betweenness, closeness } from './internal/centrality.js';
 

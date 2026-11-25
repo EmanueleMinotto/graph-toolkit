@@ -1,5 +1,5 @@
-import { GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
-import { DisjointSet } from '@graph-toolkit/math';
+import { GraphError, type Graph, type VertexId } from '@graph-sdk/core';
+import { DisjointSet } from '@graph-sdk/math';
 
 export interface WeightRule {
   readonly min?: number | undefined;

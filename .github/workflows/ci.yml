@@ -52,10 +52,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm turbo run build
-      - run: pnpm --filter @graph-toolkit/web exec playwright install --with-deps
+      - run: pnpm --filter @graph-sdk/web exec playwright install --with-deps
       # Software OpenGL so headless Firefox can create a WebGL context.
       - run: sudo apt-get install -y --no-install-recommends libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers xvfb
-      - run: xvfb-run --auto-servernum pnpm --filter @graph-toolkit/web e2e
+      - run: xvfb-run --auto-servernum pnpm --filter @graph-sdk/web e2e
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
 
@@ -71,8 +71,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm turbo run build
-      - run: pnpm --filter @graph-toolkit/web exec playwright install --with-deps chromium
-      - run: pnpm --filter @graph-toolkit/web exec playwright test --project=chromium e2e/visual.spec.ts
+      - run: pnpm --filter @graph-sdk/web exec playwright install --with-deps chromium
+      - run: pnpm --filter @graph-sdk/web exec playwright test --project=chromium e2e/visual.spec.ts
         env:
           VISUAL: '1'
       - uses: actions/upload-artifact@v4

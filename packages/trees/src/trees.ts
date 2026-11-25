@@ -1,6 +1,6 @@
-import { GraphError, type Edge, type Graph } from '@graph-toolkit/core';
-import { DisjointSet } from '@graph-toolkit/math';
-import { connectedComponents } from '@graph-toolkit/traversal';
+import { GraphError, type Edge, type Graph } from '@graph-sdk/core';
+import { DisjointSet } from '@graph-sdk/math';
+import { connectedComponents } from '@graph-sdk/traversal';
 
 export interface SpanningForest {
   readonly edges: readonly Edge[];

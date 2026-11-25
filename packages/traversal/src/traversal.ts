@@ -1,4 +1,4 @@
-import { GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
+import { GraphError, type Graph, type VertexId } from '@graph-sdk/core';
 import { bfsOrder, componentIndices, dfsOrder, kahnOrder } from './internal/search.js';
 import { tarjan } from './internal/scc.js';
 

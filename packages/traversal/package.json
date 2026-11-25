@@ -1,5 +1,5 @@
 {
-  "name": "@graph-toolkit/traversal",
+  "name": "@graph-sdk/traversal",
   "version": "0.1.0",
   "description": "BFS, DFS, topological order and connected components",
   "license": "MIT",
@@ -32,9 +32,9 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-toolkit/core": "workspace:*"
+    "@graph-sdk/core": "workspace:*"
   },
   "devDependencies": {
-    "@graph-toolkit/generators": "workspace:*"
+    "@graph-sdk/generators": "workspace:*"
   }
 }

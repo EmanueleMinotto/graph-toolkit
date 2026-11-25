@@ -1,12 +1,12 @@
-# @graph-toolkit/operations
+# @graph-sdk/operations
 
 Pure operations that return new graphs. Depends on `core`.
 
 ## Usage
 
 ```ts
-import { cycleGraph, pathGraph } from '@graph-toolkit/generators';
-import { complement, union } from '@graph-toolkit/operations';
+import { cycleGraph, pathGraph } from '@graph-sdk/generators';
+import { complement, union } from '@graph-sdk/operations';
 
 complement(cycleGraph(5)).edgeCount; // 5 (the pentagram)
 union(pathGraph(3), cycleGraph(4)).edgeCount; // 4

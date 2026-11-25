@@ -1,4 +1,4 @@
-import type { AbortOptions, Graph, VertexId } from '@graph-toolkit/core';
+import type { AbortOptions, Graph, VertexId } from '@graph-sdk/core';
 import { hierholzer, trailStart, type EulerInput } from './internal/euler.js';
 import { hamiltonian } from './internal/hamilton.js';
 

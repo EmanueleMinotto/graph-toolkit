@@ -1,4 +1,4 @@
-import { GraphError, type AbortOptions, type Graph, type VertexId } from '@graph-toolkit/core';
+import { GraphError, type AbortOptions, type Graph, type VertexId } from '@graph-sdk/core';
 import { maximalCliqueKernel } from './internal/cliques.js';
 
 /** All maximal cliques of an undirected graph (Bron–Kerbosch with pivoting). */

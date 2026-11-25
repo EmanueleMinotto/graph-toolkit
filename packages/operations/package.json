@@ -1,5 +1,5 @@
 {
-  "name": "@graph-toolkit/operations",
+  "name": "@graph-sdk/operations",
   "version": "0.1.0",
   "description": "Set-style operations on graphs: union, intersection, complement, subgraph, transpose",
   "license": "MIT",
@@ -32,9 +32,9 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-toolkit/core": "workspace:*"
+    "@graph-sdk/core": "workspace:*"
   },
   "devDependencies": {
-    "@graph-toolkit/generators": "workspace:*"
+    "@graph-sdk/generators": "workspace:*"
   }
 }

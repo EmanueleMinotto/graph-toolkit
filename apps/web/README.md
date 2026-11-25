@@ -1,13 +1,13 @@
-# @graph-toolkit/web
+# @graph-sdk/web
 
-Browser app to explore graphs, built with React 19, Mantine and Vite, using the `graph-toolkit` facade. Rendering is plain SVG; layouts come from `@graph-toolkit/layout`.
+Browser app to explore graphs, built with React 19, Mantine and Vite, using the `graph-toolkit` facade. Rendering is plain SVG; layouts come from `@graph-sdk/layout`.
 
 ## Run
 
 ```sh
 pnpm install
-pnpm --filter @graph-toolkit/web dev     # http://localhost:5173
-pnpm --filter @graph-toolkit/web build   # static site in apps/web/dist
+pnpm --filter @graph-sdk/web dev     # http://localhost:5173
+pnpm --filter @graph-sdk/web build   # static site in apps/web/dist
 ```
 
 ## Features

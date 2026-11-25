@@ -1,4 +1,4 @@
-import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-toolkit/core';
+import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-sdk/core';
 import { decodeSparse6, encodeSparse6 } from './internal/sparse6-codec.js';
 
 /** sparse6 line (`:` prefix) of a simple undirected graph; vertices are numbered by insertion order. */

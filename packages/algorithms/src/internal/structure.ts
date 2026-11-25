@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { Csr } from '@graph-sdk/core';
 import type { Pair } from './biconnected.js';
 
 /** Vertices of every block (blocks share only articulation points). */

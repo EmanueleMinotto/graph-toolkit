@@ -1,5 +1,5 @@
-import { GraphError, vertexId } from '@graph-toolkit/core';
-import { completeGraph, cycleGraph, pathGraph } from '@graph-toolkit/generators';
+import { GraphError, vertexId } from '@graph-sdk/core';
+import { completeGraph, cycleGraph, pathGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
 import { complement, inducedSubgraph, intersection, transpose, union } from './index.js';
 

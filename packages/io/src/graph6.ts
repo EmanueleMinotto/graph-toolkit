@@ -1,4 +1,4 @@
-import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-toolkit/core';
+import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-sdk/core';
 import { decodeGraph6, encodeGraph6 } from './internal/graph6-codec.js';
 
 /** graph6 line for a simple undirected graph (vertices are numbered by insertion order). */

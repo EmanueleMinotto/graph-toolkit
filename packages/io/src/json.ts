@@ -1,4 +1,4 @@
-import { type Graph } from '@graph-toolkit/core';
+import { type Graph } from '@graph-sdk/core';
 import { ParseError } from './errors.js';
 import { assembleGraph, type ParsedEdge } from './internal/assemble.js';
 

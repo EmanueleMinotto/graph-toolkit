@@ -1,4 +1,4 @@
-import { GraphError } from '@graph-toolkit/core';
+import { GraphError } from '@graph-sdk/core';
 import { ParseError } from '../errors.js';
 
 export const OFFSET = 63;

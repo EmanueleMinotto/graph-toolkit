@@ -1,5 +1,5 @@
-import { GraphBuilder, vertexId } from '@graph-toolkit/core';
-import { completeGraph, hypercubeGraph, pathGraph } from '@graph-toolkit/generators';
+import { GraphBuilder, vertexId } from '@graph-sdk/core';
+import { completeGraph, hypercubeGraph, pathGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
 import { spectralLayout, tutteLayout } from './index.js';
 

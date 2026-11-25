@@ -1,4 +1,4 @@
-import { MinPriorityQueue } from '@graph-toolkit/math';
+import { MinPriorityQueue } from '@graph-sdk/math';
 import type { IndexEdge } from './spanning.js';
 
 function degreesOf(vertexCount: number, edges: readonly IndexEdge[]) {

@@ -1,5 +1,5 @@
 {
-  "name": "@graph-toolkit/core",
+  "name": "@graph-sdk/core",
   "version": "0.1.0",
   "description": "Immutable graph model, builder and typed errors",
   "license": "MIT",

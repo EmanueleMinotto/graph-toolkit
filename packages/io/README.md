@@ -1,11 +1,11 @@
-# @graph-toolkit/io
+# @graph-sdk/io
 
 Importers and exporters, no runtime dependencies besides `core` and `matrix`. Functions are pure string ⇄ `Graph`.
 
 ## Usage
 
 ```ts
-import { fromGraphMl, toDot, toJson } from '@graph-toolkit/io';
+import { fromGraphMl, toDot, toJson } from '@graph-sdk/io';
 
 const graph = fromGraphMl(xmlText);
 toDot(graph); // Graphviz source

@@ -1,4 +1,4 @@
-import { GraphError, type Graph } from '@graph-toolkit/core';
+import { GraphError, type Graph } from '@graph-sdk/core';
 import { biconnectedBlocks, symmetricAdjacency } from './internal/biconnected.js';
 import { isBlockPlanar } from './internal/dmp.js';
 

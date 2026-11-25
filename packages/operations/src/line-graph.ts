@@ -1,4 +1,4 @@
-import type { Graph } from '@graph-toolkit/core';
+import type { Graph } from '@graph-sdk/core';
 import { assembleUnique } from './assemble.js';
 import { edgeId, lineEdges } from './internal/links.js';
 

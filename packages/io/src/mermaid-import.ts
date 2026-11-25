@@ -1,4 +1,4 @@
-import type { Graph } from '@graph-toolkit/core';
+import type { Graph } from '@graph-sdk/core';
 import { assembleGraph } from './internal/assemble.js';
 import { parseMermaid } from './internal/mermaid-parse.js';
 

@@ -1,4 +1,4 @@
-import type { Edge } from '@graph-toolkit/core';
+import type { Edge } from '@graph-sdk/core';
 
 const keyOf = (edge: Edge, isDirected: boolean): string =>
   isDirected || edge.source < edge.target

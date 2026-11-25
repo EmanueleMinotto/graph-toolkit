@@ -1,5 +1,5 @@
 {
-  "name": "@graph-toolkit/coloring",
+  "name": "@graph-sdk/coloring",
   "version": "0.1.0",
   "description": "Greedy and DSATUR vertex coloring, bipartiteness",
   "license": "MIT",
@@ -32,10 +32,10 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-toolkit/core": "workspace:*"
+    "@graph-sdk/core": "workspace:*"
   },
   "devDependencies": {
-    "@graph-toolkit/generators": "workspace:*",
+    "@graph-sdk/generators": "workspace:*",
     "fast-check": "^4.11.0"
   }
 }

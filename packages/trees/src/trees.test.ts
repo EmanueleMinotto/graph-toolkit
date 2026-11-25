@@ -1,4 +1,4 @@
-import { GraphBuilder, vertexId, type Graph } from '@graph-toolkit/core';
+import { GraphBuilder, vertexId, type Graph } from '@graph-sdk/core';
 import { describe, expect, it } from 'vitest';
 import { isForest, isTree, minimumSpanningForest } from './index.js';
 

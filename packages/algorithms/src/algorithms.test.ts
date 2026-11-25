@@ -1,5 +1,5 @@
-import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-toolkit/core';
-import { cycleGraph, starGraph } from '@graph-toolkit/generators';
+import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-sdk/core';
+import { cycleGraph, starGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
 import { maxFlow, pageRank } from './index.js';
 

@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { Csr } from '@graph-sdk/core';
 
 /** Breadth-first order of vertex indices reachable from `start`, O(V + E). */
 export function bfsOrder(csr: Csr, start: number, visited: Uint8Array): number[] {

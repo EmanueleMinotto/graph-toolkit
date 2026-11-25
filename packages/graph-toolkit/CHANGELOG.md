@@ -11,16 +11,16 @@
 
 - Updated dependencies [a74da58]
 - Updated dependencies [1c186c7]
-  - @graph-toolkit/algorithms@0.1.0
-  - @graph-toolkit/coloring@0.1.0
-  - @graph-toolkit/core@0.1.0
-  - @graph-toolkit/generators@0.1.0
-  - @graph-toolkit/io@0.1.0
-  - @graph-toolkit/layout@0.1.0
-  - @graph-toolkit/math@0.1.0
-  - @graph-toolkit/matrix@0.1.0
-  - @graph-toolkit/normalize@0.1.0
-  - @graph-toolkit/operations@0.1.0
-  - @graph-toolkit/paths@0.1.0
-  - @graph-toolkit/traversal@0.1.0
-  - @graph-toolkit/trees@0.1.0
+  - @graph-sdk/algorithms@0.1.0
+  - @graph-sdk/coloring@0.1.0
+  - @graph-sdk/core@0.1.0
+  - @graph-sdk/generators@0.1.0
+  - @graph-sdk/io@0.1.0
+  - @graph-sdk/layout@0.1.0
+  - @graph-sdk/math@0.1.0
+  - @graph-sdk/matrix@0.1.0
+  - @graph-sdk/normalize@0.1.0
+  - @graph-sdk/operations@0.1.0
+  - @graph-sdk/paths@0.1.0
+  - @graph-sdk/traversal@0.1.0
+  - @graph-sdk/trees@0.1.0

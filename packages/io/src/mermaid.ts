@@ -1,4 +1,4 @@
-import type { Graph } from '@graph-toolkit/core';
+import type { Graph } from '@graph-sdk/core';
 
 const safeId = (index: number): string => `n${index}`;
 

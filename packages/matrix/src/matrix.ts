@@ -1,4 +1,4 @@
-import { GraphError } from '@graph-toolkit/core';
+import { GraphError } from '@graph-sdk/core';
 import { cellAt, multiplyData, powerData } from './internal/dense.js';
 
 /** Immutable dense row-major matrix of doubles. */

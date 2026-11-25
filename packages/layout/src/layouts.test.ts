@@ -1,6 +1,6 @@
-import { completeGraph, cycleGraph, pathGraph, starGraph } from '@graph-toolkit/generators';
+import { completeGraph, cycleGraph, pathGraph, starGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
-import { GraphBuilder, vertexId } from '@graph-toolkit/core';
+import { GraphBuilder, vertexId } from '@graph-sdk/core';
 import { circularLayout, forceLayout, gridLayout, layeredLayout, radialLayout } from './index.js';
 
 describe('layouts', () => {

@@ -1,5 +1,5 @@
-import { GraphBuilder, vertexId, type Graph } from '@graph-toolkit/core';
-import { completeGraph, pathGraph } from '@graph-toolkit/generators';
+import { GraphBuilder, vertexId, type Graph } from '@graph-sdk/core';
+import { completeGraph, pathGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
 import { assertValidGraph, validateGraph, ValidationError, type GraphSchema } from './index.js';
 

@@ -1,5 +1,5 @@
-import { GraphBuilder, GraphError, vertexId } from '@graph-toolkit/core';
-import { completeGraph, cycleGraph, gridGraph, randomGraph } from '@graph-toolkit/generators';
+import { GraphBuilder, GraphError, vertexId } from '@graph-sdk/core';
+import { completeGraph, cycleGraph, gridGraph, randomGraph } from '@graph-sdk/generators';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import {

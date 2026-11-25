@@ -1,7 +1,7 @@
 {
   "name": "graph-toolkit",
   "version": "0.1.0",
-  "description": "Everything in one import: re-exports all @graph-toolkit packages",
+  "description": "Everything in one import: re-exports all @graph-sdk packages",
   "license": "MIT",
   "engines": {
     "node": ">=22"
@@ -32,18 +32,18 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-toolkit/core": "workspace:*",
-    "@graph-toolkit/math": "workspace:*",
-    "@graph-toolkit/matrix": "workspace:*",
-    "@graph-toolkit/operations": "workspace:*",
-    "@graph-toolkit/traversal": "workspace:*",
-    "@graph-toolkit/paths": "workspace:*",
-    "@graph-toolkit/trees": "workspace:*",
-    "@graph-toolkit/coloring": "workspace:*",
-    "@graph-toolkit/algorithms": "workspace:*",
-    "@graph-toolkit/generators": "workspace:*",
-    "@graph-toolkit/normalize": "workspace:*",
-    "@graph-toolkit/io": "workspace:*",
-    "@graph-toolkit/layout": "workspace:*"
+    "@graph-sdk/core": "workspace:*",
+    "@graph-sdk/math": "workspace:*",
+    "@graph-sdk/matrix": "workspace:*",
+    "@graph-sdk/operations": "workspace:*",
+    "@graph-sdk/traversal": "workspace:*",
+    "@graph-sdk/paths": "workspace:*",
+    "@graph-sdk/trees": "workspace:*",
+    "@graph-sdk/coloring": "workspace:*",
+    "@graph-sdk/algorithms": "workspace:*",
+    "@graph-sdk/generators": "workspace:*",
+    "@graph-sdk/normalize": "workspace:*",
+    "@graph-sdk/io": "workspace:*",
+    "@graph-sdk/layout": "workspace:*"
   }
 }

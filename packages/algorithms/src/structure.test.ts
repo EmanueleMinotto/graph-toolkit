@@ -1,11 +1,11 @@
-import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-toolkit/core';
+import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-sdk/core';
 import {
   completeGraph,
   cycleGraph,
   pathGraph,
   randomGraph,
   starGraph,
-} from '@graph-toolkit/generators';
+} from '@graph-sdk/generators';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import {

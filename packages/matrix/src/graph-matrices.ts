@@ -1,4 +1,4 @@
-import { GraphBuilder, GraphError, vertexId, type Graph, type VertexId } from '@graph-toolkit/core';
+import { GraphBuilder, GraphError, vertexId, type Graph, type VertexId } from '@graph-sdk/core';
 import {
   adjacencyData,
   incidenceData,

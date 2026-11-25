@@ -1,5 +1,5 @@
-import type { Graph } from '@graph-toolkit/core';
-import { adjacencyMatrix, graphFromAdjacency, Matrix } from '@graph-toolkit/matrix';
+import type { Graph } from '@graph-sdk/core';
+import { adjacencyMatrix, graphFromAdjacency, Matrix } from '@graph-sdk/matrix';
 import { ParseError } from './errors.js';
 
 /** Weighted adjacency matrix as comma-separated rows (vertex ids are not preserved). */

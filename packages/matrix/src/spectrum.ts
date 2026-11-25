@@ -1,4 +1,4 @@
-import { GraphError, type Graph } from '@graph-toolkit/core';
+import { GraphError, type Graph } from '@graph-sdk/core';
 import { adjacencyMatrix, laplacianMatrix, type MatrixOptions } from './graph-matrices.js';
 import { isSymmetric } from './internal/dense.js';
 import { jacobiEigen, jacobiEigenvalues, type Eigen } from './internal/jacobi.js';

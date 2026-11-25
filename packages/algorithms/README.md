@@ -1,4 +1,4 @@
-# @graph-toolkit/algorithms
+# @graph-sdk/algorithms
 
 Network algorithms. Depends on `core` and `coloring` (bipartition for matching).
 
@@ -10,7 +10,7 @@ import {
   isPlanar,
   maxFlow,
   maximumBipartiteMatching,
-} from '@graph-toolkit/algorithms';
+} from '@graph-sdk/algorithms';
 
 maxFlow(network, source, sink); // 23
 isPlanar(graph); // true / false

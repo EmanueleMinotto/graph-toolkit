@@ -1,4 +1,4 @@
-# @graph-toolkit/core
+# @graph-sdk/core
 
 ## 0.1.0
 

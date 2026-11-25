@@ -1,5 +1,5 @@
-import { GraphBuilder, vertexId, type Graph } from '@graph-toolkit/core';
-import { completeGraph, cycleGraph, pathGraph } from '@graph-toolkit/generators';
+import { GraphBuilder, vertexId, type Graph } from '@graph-sdk/core';
+import { completeGraph, cycleGraph, pathGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
 import { eulerianTrail, hamiltonianCycle, hamiltonianPath } from './index.js';
 

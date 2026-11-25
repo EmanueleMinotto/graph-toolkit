@@ -1,4 +1,4 @@
-import { GraphBuilder, GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
+import { GraphBuilder, GraphError, type Graph, type VertexId } from '@graph-sdk/core';
 import { biconnectedBlocks, symmetricAdjacency, type Pair } from './internal/biconnected.js';
 import {
   articulationIndices,

@@ -1,4 +1,4 @@
-import { GraphError } from '@graph-toolkit/core';
+import { GraphError } from '@graph-sdk/core';
 import { ParseError } from '../errors.js';
 import { BITS, decodeOrder, encodeOrder, OFFSET } from './graph6-codec.js';
 

@@ -1,11 +1,11 @@
-# @graph-toolkit/trees
+# @graph-sdk/trees
 
 Spanning trees and tree predicates for undirected graphs. Depends on `core`, `math`, `traversal`.
 
 ## Usage
 
 ```ts
-import { minimumSpanningForest, isTree } from '@graph-toolkit/trees';
+import { minimumSpanningForest, isTree } from '@graph-sdk/trees';
 
 const forest = minimumSpanningForest(graph);
 forest.totalWeight; // sum of chosen edge weights

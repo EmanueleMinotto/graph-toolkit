@@ -1,5 +1,5 @@
-import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-toolkit/core';
-import { cycleGraph, gridGraph, pathGraph, starGraph } from '@graph-toolkit/generators';
+import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-sdk/core';
+import { cycleGraph, gridGraph, pathGraph, starGraph } from '@graph-sdk/generators';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { maxFlow, maxFlowDinic, maximumBipartiteMatching } from './index.js';

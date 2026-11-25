@@ -1,4 +1,4 @@
-# @graph-toolkit/algorithms
+# @graph-sdk/algorithms
 
 ## 0.1.0
 
@@ -11,5 +11,5 @@
 
 - Updated dependencies [a74da58]
 - Updated dependencies [1c186c7]
-  - @graph-toolkit/coloring@0.1.0
-  - @graph-toolkit/core@0.1.0
+  - @graph-sdk/coloring@0.1.0
+  - @graph-sdk/core@0.1.0

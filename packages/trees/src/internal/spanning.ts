@@ -1,5 +1,5 @@
-import type { Csr } from '@graph-toolkit/core';
-import { DisjointSet, MinPriorityQueue } from '@graph-toolkit/math';
+import type { Csr } from '@graph-sdk/core';
+import { DisjointSet, MinPriorityQueue } from '@graph-sdk/math';
 
 export interface IndexEdge {
   readonly source: number;

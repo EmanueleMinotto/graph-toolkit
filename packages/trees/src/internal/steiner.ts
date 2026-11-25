@@ -1,5 +1,5 @@
-import type { Csr, Edge, VertexId } from '@graph-toolkit/core';
-import { DisjointSet, MinPriorityQueue } from '@graph-toolkit/math';
+import type { Csr, Edge, VertexId } from '@graph-sdk/core';
+import { DisjointSet, MinPriorityQueue } from '@graph-sdk/math';
 
 export interface Paths {
   readonly distance: Float64Array;

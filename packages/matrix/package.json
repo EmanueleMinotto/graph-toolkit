@@ -1,5 +1,5 @@
 {
-  "name": "@graph-toolkit/matrix",
+  "name": "@graph-sdk/matrix",
   "version": "0.1.0",
   "description": "Adjacency and Laplacian matrices, matrix algebra and graph conversion",
   "license": "MIT",
@@ -32,9 +32,9 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-toolkit/core": "workspace:*"
+    "@graph-sdk/core": "workspace:*"
   },
   "devDependencies": {
-    "@graph-toolkit/generators": "workspace:*"
+    "@graph-sdk/generators": "workspace:*"
   }
 }

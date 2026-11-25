@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { Csr } from '@graph-sdk/core';
 
 const neighborsOf = (csr: Csr, vertex: number): readonly number[] => [
   ...csr.targets.subarray(csr.offsets[vertex], csr.offsets[vertex + 1]),

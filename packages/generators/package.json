@@ -1,5 +1,5 @@
 {
-  "name": "@graph-toolkit/generators",
+  "name": "@graph-sdk/generators",
   "version": "0.1.0",
   "description": "Classic and seeded random graph generators",
   "license": "MIT",
@@ -32,6 +32,6 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-toolkit/core": "workspace:*"
+    "@graph-sdk/core": "workspace:*"
   }
 }

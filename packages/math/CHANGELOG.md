@@ -1,4 +1,4 @@
-# @graph-toolkit/math
+# @graph-sdk/math
 
 ## 0.1.0
 

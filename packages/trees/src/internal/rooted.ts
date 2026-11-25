@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { Csr } from '@graph-sdk/core';
 
 export interface Parents {
   readonly parent: Int32Array;

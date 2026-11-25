@@ -1,5 +1,5 @@
-import { GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
-import { bipartition } from '@graph-toolkit/coloring';
+import { GraphError, type Graph, type VertexId } from '@graph-sdk/core';
+import { bipartition } from '@graph-sdk/coloring';
 import { valueAt } from './internal/access.js';
 import { hopcroftKarp } from './internal/matching.js';
 

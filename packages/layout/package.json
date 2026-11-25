@@ -1,5 +1,5 @@
 {
-  "name": "@graph-toolkit/layout",
+  "name": "@graph-sdk/layout",
   "version": "0.1.0",
   "description": "Deterministic 2D layouts: circular, grid, force-directed",
   "license": "MIT",
@@ -32,10 +32,10 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-toolkit/core": "workspace:*",
-    "@graph-toolkit/matrix": "workspace:*"
+    "@graph-sdk/core": "workspace:*",
+    "@graph-sdk/matrix": "workspace:*"
   },
   "devDependencies": {
-    "@graph-toolkit/generators": "workspace:*"
+    "@graph-sdk/generators": "workspace:*"
   }
 }

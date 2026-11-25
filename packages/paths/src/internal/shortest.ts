@@ -1,5 +1,5 @@
-import type { Csr } from '@graph-toolkit/core';
-import { MinPriorityQueue } from '@graph-toolkit/math';
+import type { Csr } from '@graph-sdk/core';
+import { MinPriorityQueue } from '@graph-sdk/math';
 
 export interface Distances {
   readonly distances: Float64Array;

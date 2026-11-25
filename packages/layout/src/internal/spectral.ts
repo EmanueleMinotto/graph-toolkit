@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { Csr } from '@graph-sdk/core';
 
 /** Row-major Laplacian D − A of the symmetrized, loop-free, unweighted graph. */
 export function symmetricLaplacian(csr: Csr, count: number): Float64Array {

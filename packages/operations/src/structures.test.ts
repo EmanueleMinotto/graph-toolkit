@@ -1,11 +1,5 @@
-import { GraphError, vertexId } from '@graph-toolkit/core';
-import {
-  completeGraph,
-  cycleGraph,
-  gridGraph,
-  pathGraph,
-  starGraph,
-} from '@graph-toolkit/generators';
+import { GraphError, vertexId } from '@graph-sdk/core';
+import { completeGraph, cycleGraph, gridGraph, pathGraph, starGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
 import {
   areIsomorphic,

@@ -1,5 +1,5 @@
 {
-  "name": "@graph-toolkit/trees",
+  "name": "@graph-sdk/trees",
   "version": "0.1.0",
   "description": "Spanning trees and tree/forest predicates",
   "license": "MIT",
@@ -32,12 +32,12 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-toolkit/core": "workspace:*",
-    "@graph-toolkit/math": "workspace:*",
-    "@graph-toolkit/traversal": "workspace:*"
+    "@graph-sdk/core": "workspace:*",
+    "@graph-sdk/math": "workspace:*",
+    "@graph-sdk/traversal": "workspace:*"
   },
   "devDependencies": {
-    "@graph-toolkit/generators": "workspace:*",
+    "@graph-sdk/generators": "workspace:*",
     "fast-check": "^4.11.0"
   }
 }

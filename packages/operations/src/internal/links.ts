@@ -1,4 +1,4 @@
-import { vertexId, type Edge, type VertexId } from '@graph-toolkit/core';
+import { vertexId, type Edge, type VertexId } from '@graph-sdk/core';
 
 const touches = (edge: Edge, vertex: VertexId): boolean =>
   edge.source === vertex || edge.target === vertex;

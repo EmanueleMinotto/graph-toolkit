@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { Csr } from '@graph-sdk/core';
 
 export interface Rings {
   /** Ring number per vertex; unreachable vertices share the outermost ring. */

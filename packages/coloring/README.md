@@ -1,12 +1,12 @@
-# @graph-toolkit/coloring
+# @graph-sdk/coloring
 
 Vertex coloring for undirected, loop-free graphs. Colors are integers starting at 0. Depends on `core`.
 
 ## Usage
 
 ```ts
-import { cycleGraph } from '@graph-toolkit/generators';
-import { bipartition, dsaturColoring } from '@graph-toolkit/coloring';
+import { cycleGraph } from '@graph-sdk/generators';
+import { bipartition, dsaturColoring } from '@graph-sdk/coloring';
 
 const coloring = dsaturColoring(cycleGraph(5));
 coloring.colorCount; // 3

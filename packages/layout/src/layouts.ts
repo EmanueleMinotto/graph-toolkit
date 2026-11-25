@@ -1,5 +1,5 @@
-import type { Graph, VertexId } from '@graph-toolkit/core';
-import { eigenDecomposition, Matrix } from '@graph-toolkit/matrix';
+import type { Graph, VertexId } from '@graph-sdk/core';
+import { eigenDecomposition, Matrix } from '@graph-sdk/matrix';
 import { coordinate, forceKernel } from './internal/force.js';
 import { layer, placementAt } from './internal/layered.js';
 import { ringsAround } from './internal/radial.js';

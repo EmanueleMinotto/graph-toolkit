@@ -1,6 +1,6 @@
-import type { Graph } from '@graph-toolkit/core';
-import { DisjointSet } from '@graph-toolkit/math';
-import { topologicalSort } from '@graph-toolkit/traversal';
+import type { Graph } from '@graph-sdk/core';
+import { DisjointSet } from '@graph-sdk/math';
+import { topologicalSort } from '@graph-sdk/traversal';
 
 function hasUndirectedCycle(graph: Graph): boolean {
   const sets = new DisjointSet(graph.vertexCount);

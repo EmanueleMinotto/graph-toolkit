@@ -1,4 +1,4 @@
-import { GraphError, type Edge, type Graph, type VertexId } from '@graph-toolkit/core';
+import { GraphError, type Edge, type Graph, type VertexId } from '@graph-sdk/core';
 import { dinicKernel } from './internal/dinic.js';
 import { edmondsKarp, sourceSide, type Terminals } from './internal/flow.js';
 import { pageRankKernel, rankAt } from './internal/rank.js';

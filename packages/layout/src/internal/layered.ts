@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { Csr } from '@graph-sdk/core';
 
 function inNeighbors(csr: Csr, count: number): number[][] {
   const incoming: number[][] = Array.from({ length: count }, () => []);

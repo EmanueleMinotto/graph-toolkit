@@ -1,11 +1,11 @@
-# @graph-toolkit/normalize
+# @graph-sdk/normalize
 
 Standardization helpers returning new graphs. Depends on `core` and `math`.
 
 ## Usage
 
 ```ts
-import { canonicalize, reindex } from '@graph-toolkit/normalize';
+import { canonicalize, reindex } from '@graph-sdk/normalize';
 
 canonicalize(graph); // sorted vertices, ordered endpoints, sorted edges
 reindex(graph); // ids "0".."n-1"
@@ -23,7 +23,7 @@ reindex(graph); // ids "0".."n-1"
 ### Validation
 
 ```ts
-import { assertValidGraph, validateGraph } from '@graph-toolkit/normalize';
+import { assertValidGraph, validateGraph } from '@graph-sdk/normalize';
 
 validateGraph(graph, {
   directed: false,

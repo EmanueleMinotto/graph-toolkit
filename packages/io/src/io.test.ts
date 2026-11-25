@@ -1,5 +1,5 @@
-import { DuplicateError, GraphBuilder, vertexId, type Graph } from '@graph-toolkit/core';
-import { cycleGraph, pathGraph } from '@graph-toolkit/generators';
+import { DuplicateError, GraphBuilder, vertexId, type Graph } from '@graph-sdk/core';
+import { cycleGraph, pathGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
 import {
   fromAdjacencyCsv,

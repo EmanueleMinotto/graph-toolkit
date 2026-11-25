@@ -1,4 +1,4 @@
-import { GraphError, type Graph } from '@graph-toolkit/core';
+import { GraphError, type Graph } from '@graph-sdk/core';
 import { boruvkaKernel, primKernel, type IndexEdge } from './internal/spanning.js';
 import type { SpanningForest } from './trees.js';
 

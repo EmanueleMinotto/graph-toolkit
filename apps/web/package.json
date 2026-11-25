@@ -1,5 +1,5 @@
 {
-  "name": "@graph-toolkit/web",
+  "name": "@graph-sdk/web",
   "version": "0.0.0",
   "private": true,
   "type": "module",

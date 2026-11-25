@@ -1,5 +1,5 @@
-import { GraphBuilder, GraphError, vertexId } from '@graph-toolkit/core';
-import { cycleGraph, petersenGraph, pathGraph } from '@graph-toolkit/generators';
+import { GraphBuilder, GraphError, vertexId } from '@graph-sdk/core';
+import { cycleGraph, petersenGraph, pathGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
 import { fromGml, fromGraph6, ParseError, toGml, toGraph6 } from './index.js';
 

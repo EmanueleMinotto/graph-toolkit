@@ -1,12 +1,12 @@
-# @graph-toolkit/matrix
+# @graph-sdk/matrix
 
 Matrix representations of graphs and basic dense matrix algebra. Depends on `core`.
 
 ## Usage
 
 ```ts
-import { cycleGraph } from '@graph-toolkit/generators';
-import { adjacencyMatrix, laplacianMatrix } from '@graph-toolkit/matrix';
+import { cycleGraph } from '@graph-sdk/generators';
+import { adjacencyMatrix, laplacianMatrix } from '@graph-sdk/matrix';
 
 const a = adjacencyMatrix(cycleGraph(4));
 a.power(2).get(0, 0); // 2 closed walks of length 2 at vertex 0

@@ -1,4 +1,4 @@
-import type { Csr, VertexId } from '@graph-toolkit/core';
+import type { Csr, VertexId } from '@graph-sdk/core';
 
 function neighborColors(csr: Csr, vertex: number, colors: Int32Array): Set<number> {
   const used = new Set<number>();

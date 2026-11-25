@@ -1,4 +1,4 @@
-import { GraphBuilder, vertexId, type Graph } from '@graph-toolkit/core';
+import { GraphBuilder, vertexId, type Graph } from '@graph-sdk/core';
 
 export interface ParsedEdge {
   readonly source: string;

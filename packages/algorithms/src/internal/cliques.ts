@@ -1,4 +1,4 @@
-import type { AbortSignalLike, Csr } from '@graph-toolkit/core';
+import type { AbortSignalLike, Csr } from '@graph-sdk/core';
 
 function neighborsOf(csr: Csr, vertex: number): Set<number> {
   return new Set(csr.targets.subarray(csr.offsets[vertex], csr.offsets[vertex + 1]));

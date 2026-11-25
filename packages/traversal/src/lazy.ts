@@ -1,4 +1,4 @@
-import type { Graph, VertexId } from '@graph-toolkit/core';
+import type { Graph, VertexId } from '@graph-sdk/core';
 import { bfsIndices, dfsIndices } from './internal/lazy.js';
 
 /** Lazily yields vertices reachable from `start` in breadth-first order; stop early at will. */

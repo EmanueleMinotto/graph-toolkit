@@ -1,12 +1,12 @@
-# @graph-toolkit/traversal
+# @graph-sdk/traversal
 
-Graph traversal. Depends on `@graph-toolkit/core`.
+Graph traversal. Depends on `@graph-sdk/core`.
 
 ## Usage
 
 ```ts
-import { GraphBuilder, vertexId } from '@graph-toolkit/core';
-import { bfs, connectedComponents, dfs, topologicalSort } from '@graph-toolkit/traversal';
+import { GraphBuilder, vertexId } from '@graph-sdk/core';
+import { bfs, connectedComponents, dfs, topologicalSort } from '@graph-sdk/traversal';
 
 const [a, b, c] = [vertexId('a'), vertexId('b'), vertexId('c')];
 const graph = new GraphBuilder().addVertex(a).addVertex(b).addVertex(c).addEdge(a, b).build();

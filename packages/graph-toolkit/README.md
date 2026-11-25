@@ -1,6 +1,6 @@
 # graph-toolkit
 
-Single entry point re-exporting every `@graph-toolkit/*` package: core model, math structures, matrices, operations, traversal, paths and cycles, trees, coloring, algorithms, generators, normalization, import/export and layouts.
+Single entry point re-exporting every `@graph-sdk/*` package: core model, math structures, matrices, operations, traversal, paths and cycles, trees, coloring, algorithms, generators, normalization, import/export and layouts.
 
 ```ts
 import { cycleGraph, dijkstra, toDot } from 'graph-toolkit';

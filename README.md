@@ -20,26 +20,26 @@ dijkstra(graph, graph.vertices()[0]!).distanceTo(graph.vertices()[2]!); // 2
 toDot(graph);
 ```
 
-`graph-toolkit` re-exports everything; prefer the individual `@graph-toolkit/*` packages when bundle size matters.
+`graph-toolkit` re-exports everything; prefer the individual `@graph-sdk/*` packages when bundle size matters.
 
 ## Packages
 
-| Package                                            | Purpose                                                                                                               |
-| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [`graph-toolkit`](packages/graph-toolkit)          | Facade: one import for all packages below                                                                             |
-| [`@graph-toolkit/core`](packages/core)             | Immutable CSR-backed graph, builder, typed errors                                                                     |
-| [`@graph-toolkit/math`](packages/math)             | Priority queue, disjoint set                                                                                          |
-| [`@graph-toolkit/matrix`](packages/matrix)         | Adjacency and Laplacian matrices, matrix algebra, graph conversion                                                    |
-| [`@graph-toolkit/operations`](packages/operations) | Union, intersection, complement, subgraph, transpose                                                                  |
-| [`@graph-toolkit/traversal`](packages/traversal)   | BFS, DFS, topological order, connected components                                                                     |
-| [`@graph-toolkit/paths`](packages/paths)           | Dijkstra, Bellman-Ford, Floyd-Warshall, cycle detection                                                               |
-| [`@graph-toolkit/trees`](packages/trees)           | Spanning trees, tree/forest predicates                                                                                |
-| [`@graph-toolkit/coloring`](packages/coloring)     | Greedy, DSATUR and exact vertex coloring, edge coloring, bipartiteness                                                |
-| [`@graph-toolkit/algorithms`](packages/algorithms) | Flow and min-cut, matching, assignment, PageRank, centrality, communities, cliques, planarity, connectivity structure |
-| [`@graph-toolkit/generators`](packages/generators) | Classic and seeded random graph generators                                                                            |
-| [`@graph-toolkit/normalize`](packages/normalize)   | Canonical ordering, relabeling, self-loop removal                                                                     |
-| [`@graph-toolkit/io`](packages/io)                 | JSON, edge list/CSV, DOT, GraphML, GEXF, GML, graph6, Mermaid, adjacency CSV                                          |
-| [`@graph-toolkit/layout`](packages/layout)         | Deterministic 2D layouts: circular, grid, force-directed, layered, radial                                             |
+| Package                                        | Purpose                                                                                                               |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [`graph-toolkit`](packages/graph-toolkit)      | Facade: one import for all packages below                                                                             |
+| [`@graph-sdk/core`](packages/core)             | Immutable CSR-backed graph, builder, typed errors                                                                     |
+| [`@graph-sdk/math`](packages/math)             | Priority queue, disjoint set                                                                                          |
+| [`@graph-sdk/matrix`](packages/matrix)         | Adjacency and Laplacian matrices, matrix algebra, graph conversion                                                    |
+| [`@graph-sdk/operations`](packages/operations) | Union, intersection, complement, subgraph, transpose                                                                  |
+| [`@graph-sdk/traversal`](packages/traversal)   | BFS, DFS, topological order, connected components                                                                     |
+| [`@graph-sdk/paths`](packages/paths)           | Dijkstra, Bellman-Ford, Floyd-Warshall, cycle detection                                                               |
+| [`@graph-sdk/trees`](packages/trees)           | Spanning trees, tree/forest predicates                                                                                |
+| [`@graph-sdk/coloring`](packages/coloring)     | Greedy, DSATUR and exact vertex coloring, edge coloring, bipartiteness                                                |
+| [`@graph-sdk/algorithms`](packages/algorithms) | Flow and min-cut, matching, assignment, PageRank, centrality, communities, cliques, planarity, connectivity structure |
+| [`@graph-sdk/generators`](packages/generators) | Classic and seeded random graph generators                                                                            |
+| [`@graph-sdk/normalize`](packages/normalize)   | Canonical ordering, relabeling, self-loop removal                                                                     |
+| [`@graph-sdk/io`](packages/io)                 | JSON, edge list/CSV, DOT, GraphML, GEXF, GML, graph6, Mermaid, adjacency CSV                                          |
+| [`@graph-sdk/layout`](packages/layout)         | Deterministic 2D layouts: circular, grid, force-directed, layered, radial                                             |
 
 ## Apps
 

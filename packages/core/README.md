@@ -1,11 +1,11 @@
-# @graph-toolkit/core
+# @graph-sdk/core
 
 Immutable graph model backed by a compressed sparse row (CSR) adjacency structure.
 
 ## Usage
 
 ```ts
-import { GraphBuilder, vertexId } from '@graph-toolkit/core';
+import { GraphBuilder, vertexId } from '@graph-sdk/core';
 
 const [a, b, c] = [vertexId('a'), vertexId('b'), vertexId('c')];
 const graph = new GraphBuilder({ directed: false })

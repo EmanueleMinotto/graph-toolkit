@@ -1,4 +1,4 @@
-import { type Edge, type Graph, type VertexId } from '@graph-toolkit/core';
+import { type Edge, type Graph, type VertexId } from '@graph-sdk/core';
 import { assemble } from './assemble.js';
 import { assertSameKind } from './guards.js';
 

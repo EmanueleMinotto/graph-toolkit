@@ -1,4 +1,4 @@
-import { GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
+import { GraphError, type Graph, type VertexId } from '@graph-sdk/core';
 import { colorAt, edgeColorKernel, exactKernel } from './internal/exact.js';
 import {
   bipartiteKernel,

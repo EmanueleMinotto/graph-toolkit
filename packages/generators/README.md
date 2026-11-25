@@ -1,11 +1,11 @@
-# @graph-toolkit/generators
+# @graph-sdk/generators
 
 Graph generators. Vertices are named `"0"`..`"n-1"`. Pass `{ directed: true }` for directed variants (edges follow the pair order).
 
 ## Usage
 
 ```ts
-import { cycleGraph, randomGraph } from '@graph-toolkit/generators';
+import { cycleGraph, randomGraph } from '@graph-sdk/generators';
 
 cycleGraph(5).edgeCount; // 5
 randomGraph(100, { probability: 0.05, seed: 42 }); // same graph for the same seed

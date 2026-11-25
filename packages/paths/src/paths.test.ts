@@ -1,4 +1,4 @@
-import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-toolkit/core';
+import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-sdk/core';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { bellmanFord, dijkstra, floydWarshall, hasCycle, NegativeCycleError } from './index.js';

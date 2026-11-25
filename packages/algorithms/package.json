@@ -1,5 +1,5 @@
 {
-  "name": "@graph-toolkit/algorithms",
+  "name": "@graph-sdk/algorithms",
   "version": "0.1.0",
   "description": "Maximum flow and PageRank",
   "license": "MIT",
@@ -32,10 +32,10 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-toolkit/coloring": "workspace:*",
-    "@graph-toolkit/core": "workspace:*"
+    "@graph-sdk/coloring": "workspace:*",
+    "@graph-sdk/core": "workspace:*"
   },
   "devDependencies": {
-    "@graph-toolkit/generators": "workspace:*"
+    "@graph-sdk/generators": "workspace:*"
   }
 }

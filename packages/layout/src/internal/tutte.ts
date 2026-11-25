@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { Csr } from '@graph-sdk/core';
 
 const MAX_CANDIDATES = 200;
 const SWEEPS = 1000;

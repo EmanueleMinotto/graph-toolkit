@@ -2,7 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "paths": {
-      "@graph-toolkit/*": ["./packages/*/src/index.ts"]
+      "@graph-sdk/*": ["./packages/*/src/index.ts"]
     },
     "isolatedDeclarations": false
   },

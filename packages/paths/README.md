@@ -1,12 +1,12 @@
-# @graph-toolkit/paths
+# @graph-sdk/paths
 
 Shortest paths and cycle detection. Depends on `core`, `math`, `traversal`.
 
 ## Usage
 
 ```ts
-import { GraphBuilder, vertexId } from '@graph-toolkit/core';
-import { dijkstra, hasCycle } from '@graph-toolkit/paths';
+import { GraphBuilder, vertexId } from '@graph-sdk/core';
+import { dijkstra, hasCycle } from '@graph-sdk/paths';
 
 const [a, b, c] = [vertexId('a'), vertexId('b'), vertexId('c')];
 const graph = new GraphBuilder({ directed: true })

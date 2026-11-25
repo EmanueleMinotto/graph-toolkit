@@ -1,4 +1,4 @@
-import type { AbortOptions, Graph, VertexId } from '@graph-toolkit/core';
+import type { AbortOptions, Graph, VertexId } from '@graph-sdk/core';
 import { findIsomorphism, imageOf } from './internal/isomorphism.js';
 
 /**

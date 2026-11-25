@@ -1,5 +1,5 @@
-import { GraphBuilder, GraphError, vertexId } from '@graph-toolkit/core';
-import { cycleGraph } from '@graph-toolkit/generators';
+import { GraphBuilder, GraphError, vertexId } from '@graph-sdk/core';
+import { cycleGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
 import { canonicalize, reindex, relabel, removeSelfLoops } from './index.js';
 

@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { Csr } from '@graph-sdk/core';
 import { dijkstraKernel, type Distances } from './shortest.js';
 
 function relaxRound(csr: Csr, height: Float64Array): boolean {

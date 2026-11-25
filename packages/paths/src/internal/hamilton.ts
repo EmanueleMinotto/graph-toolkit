@@ -1,4 +1,4 @@
-import type { AbortSignalLike, Csr } from '@graph-toolkit/core';
+import type { AbortSignalLike, Csr } from '@graph-sdk/core';
 
 interface Search {
   readonly csr: Csr;
