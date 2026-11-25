@@ -1,6 +1,11 @@
 # graph-toolkit
 
-TypeScript monorepo for graph theory: immutable CSR-backed graphs, traversal, shortest paths, spanning trees, coloring, flow, centrality, planarity, import/export, layouts and a visualization web app.
+[![CI](https://github.com/EmanueleMinotto/graph-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/EmanueleMinotto/graph-toolkit/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%E2%89%A522-339933.svg)](.nvmrc)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6.svg)](tsconfig.base.json)
+
+TypeScript monorepo for graph theory: immutable CSR-backed graphs, traversal, shortest paths, spanning trees, coloring, flow, matching, centrality, planarity, spectra, import/export, layouts and a visualization web app.
 
 - [Web app](https://emanueleminotto.github.io/graph-toolkit/app/) — explore, import and analyze graphs in the browser
 - [API reference](https://emanueleminotto.github.io/graph-toolkit/api/) — TypeDoc for every package
@@ -19,22 +24,22 @@ toDot(graph);
 
 ## Packages
 
-| Package                                            | Purpose                                                                   |
-| -------------------------------------------------- | ------------------------------------------------------------------------- |
-| [`graph-toolkit`](packages/graph-toolkit)          | Facade: one import for all packages below                                 |
-| [`@graph-toolkit/core`](packages/core)             | Immutable CSR-backed graph, builder, typed errors                         |
-| [`@graph-toolkit/math`](packages/math)             | Priority queue, disjoint set                                              |
-| [`@graph-toolkit/matrix`](packages/matrix)         | Adjacency and Laplacian matrices, matrix algebra, graph conversion        |
-| [`@graph-toolkit/operations`](packages/operations) | Union, intersection, complement, subgraph, transpose                      |
-| [`@graph-toolkit/traversal`](packages/traversal)   | BFS, DFS, topological order, connected components                         |
-| [`@graph-toolkit/paths`](packages/paths)           | Dijkstra, Bellman-Ford, Floyd-Warshall, cycle detection                   |
-| [`@graph-toolkit/trees`](packages/trees)           | Spanning trees, tree/forest predicates                                    |
-| [`@graph-toolkit/coloring`](packages/coloring)     | Greedy, DSATUR and exact vertex coloring, edge coloring, bipartiteness    |
-| [`@graph-toolkit/algorithms`](packages/algorithms) | Max flow, matching, PageRank, centrality, communities, cliques, planarity |
-| [`@graph-toolkit/generators`](packages/generators) | Classic and seeded random graph generators                                |
-| [`@graph-toolkit/normalize`](packages/normalize)   | Canonical ordering, relabeling, self-loop removal                         |
-| [`@graph-toolkit/io`](packages/io)                 | JSON, edge list/CSV, DOT, GraphML, GEXF, Mermaid, adjacency CSV           |
-| [`@graph-toolkit/layout`](packages/layout)         | Deterministic 2D layouts: circular, grid, force-directed                  |
+| Package                                            | Purpose                                                                                                               |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [`graph-toolkit`](packages/graph-toolkit)          | Facade: one import for all packages below                                                                             |
+| [`@graph-toolkit/core`](packages/core)             | Immutable CSR-backed graph, builder, typed errors                                                                     |
+| [`@graph-toolkit/math`](packages/math)             | Priority queue, disjoint set                                                                                          |
+| [`@graph-toolkit/matrix`](packages/matrix)         | Adjacency and Laplacian matrices, matrix algebra, graph conversion                                                    |
+| [`@graph-toolkit/operations`](packages/operations) | Union, intersection, complement, subgraph, transpose                                                                  |
+| [`@graph-toolkit/traversal`](packages/traversal)   | BFS, DFS, topological order, connected components                                                                     |
+| [`@graph-toolkit/paths`](packages/paths)           | Dijkstra, Bellman-Ford, Floyd-Warshall, cycle detection                                                               |
+| [`@graph-toolkit/trees`](packages/trees)           | Spanning trees, tree/forest predicates                                                                                |
+| [`@graph-toolkit/coloring`](packages/coloring)     | Greedy, DSATUR and exact vertex coloring, edge coloring, bipartiteness                                                |
+| [`@graph-toolkit/algorithms`](packages/algorithms) | Flow and min-cut, matching, assignment, PageRank, centrality, communities, cliques, planarity, connectivity structure |
+| [`@graph-toolkit/generators`](packages/generators) | Classic and seeded random graph generators                                                                            |
+| [`@graph-toolkit/normalize`](packages/normalize)   | Canonical ordering, relabeling, self-loop removal                                                                     |
+| [`@graph-toolkit/io`](packages/io)                 | JSON, edge list/CSV, DOT, GraphML, GEXF, GML, graph6, Mermaid, adjacency CSV                                          |
+| [`@graph-toolkit/layout`](packages/layout)         | Deterministic 2D layouts: circular, grid, force-directed, layered, radial                                             |
 
 ## Apps
 
