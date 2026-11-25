@@ -38,8 +38,11 @@ test.describe('editor', () => {
     };
     await drag();
     await expect(page.locator('svg.graph line')).toHaveCount(7);
-    await drag();
-    await expect(page.getByRole('alert')).toContainText('already exists');
+    // WebKit on Linux sometimes drops a synthetic drag that follows a re-render, so retry it.
+    await expect(async () => {
+      await drag();
+      await expect(page.getByRole('alert')).toContainText('already exists', { timeout: 1500 });
+    }).toPass({ timeout: 10_000 });
     await expect(page.locator('svg.graph line')).toHaveCount(7);
     await page.getByLabel('Allow parallel edges').check();
     await drag();
