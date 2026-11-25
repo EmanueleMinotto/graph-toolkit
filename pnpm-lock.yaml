@@ -128,6 +128,16 @@ importers:
         specifier: workspace:*
         version: link:../generators
 
+  packages/layout:
+    dependencies:
+      '@graph-toolkit/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@graph-toolkit/generators':
+        specifier: workspace:*
+        version: link:../generators
+
   packages/math: {}
 
   packages/matrix:
