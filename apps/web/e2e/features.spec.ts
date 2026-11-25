@@ -1,0 +1,109 @@
+import { expect, test } from '@playwright/test';
+import { choose } from './helpers.js';
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('/');
+});
+
+test('loads an example and keeps it after a reload', async ({ page }) => {
+  await page.getByRole('button', { name: /Petersen graph/ }).click();
+  await expect(page.locator('svg.graph circle')).toHaveCount(10);
+  await expect(page.locator('svg.graph line')).toHaveCount(15);
+  await page.reload();
+  await expect(page.locator('svg.graph circle')).toHaveCount(10);
+});
+
+test('puts the graph in the address bar and restores it from a link', async ({ page, context }) => {
+  await page.getByRole('button', { name: /Cube Q3/ }).click();
+  await expect(page.locator('svg.graph circle')).toHaveCount(8);
+  await expect.poll(() => new URL(page.url()).hash).toMatch(/^#g=/u);
+  const fresh = await context.newPage();
+  await fresh.goto(page.url());
+  await expect(fresh.locator('svg.graph circle')).toHaveCount(8);
+});
+
+test('exports the graph as SVG and PNG', async ({ page }) => {
+  const svg = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export SVG' }).click();
+  const svgFile = await svg;
+  expect(svgFile.suggestedFilename()).toBe('graph.svg');
+  const png = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export PNG' }).click();
+  const pngFile = await png;
+  expect(pngFile.suggestedFilename()).toBe('graph.png');
+});
+
+test('generates scale-free and small-world graphs and uses the radial layout', async ({ page }) => {
+  await choose(page, 'Kind', 'Scale-free (Barabási–Albert)');
+  await page.getByLabel('Size').fill('20');
+  await page.getByRole('button', { name: 'Generate', exact: true }).click();
+  await expect(page.locator('svg.graph circle')).toHaveCount(20);
+  await choose(page, 'Layout', 'Radial');
+  await expect(page.locator('svg.graph circle')).toHaveCount(20);
+});
+
+test('finds bridges with the new analysis tools', async ({ page }) => {
+  await page.getByRole('button', { name: /Bowtie with a tail/ }).click();
+  await choose(page, 'Algorithm', 'Bridges (cut edges)');
+  await expect(page.getByText('1 bridge', { exact: true })).toBeVisible();
+});
+
+test('computes a minimum cut on the flow example', async ({ page }) => {
+  await page.getByRole('button', { name: /Flow network/ }).click();
+  await choose(page, 'Algorithm', 'Minimum cut');
+  await page.locator('svg.graph g[aria-label="Vertex s"]').click();
+  await page.locator('svg.graph g[aria-label="Vertex t"]').click();
+  await expect(page.getByText(/Minimum cut s \| t has capacity/)).toBeVisible();
+});
+
+test('animates an algorithm step by step', async ({ page }) => {
+  await choose(page, 'Algorithm', 'BFS order');
+  await page.locator('svg.graph g[aria-label="Vertex 0"]').click();
+  await expect(page.getByText('6/6')).toBeVisible();
+  await expect(page.locator('svg.graph circle.c1')).toHaveCount(6);
+  await page.getByRole('button', { name: 'Play animation' }).click();
+  await expect(page.getByText('0/6')).toBeVisible();
+  await expect(page.locator('svg.graph circle.c1')).toHaveCount(0);
+  await expect(page.getByText('6/6')).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByRole('button', { name: 'Play animation' })).toBeVisible();
+});
+
+test('selects several vertices with Shift, drags them together and deletes them', async ({
+  page,
+}) => {
+  const vertex = (id: string) => page.locator(`svg.graph g[aria-label="Vertex ${id}"]`);
+  await vertex('0').click({ modifiers: ['Shift'] });
+  await vertex('1').click({ modifiers: ['Shift'] });
+  await expect(page.locator('svg.graph circle.grouped')).toHaveCount(2);
+  const [a, b] = [
+    await vertex('0').getAttribute('transform'),
+    await vertex('1').getAttribute('transform'),
+  ];
+  const box = (await vertex('0').boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 100, box.y + 80, { steps: 5 });
+  await page.mouse.up();
+  await expect(vertex('0')).not.toHaveAttribute('transform', a!);
+  await expect(vertex('1')).not.toHaveAttribute('transform', b!);
+  await page.keyboard.press('Delete');
+  await expect(page.locator('svg.graph circle')).toHaveCount(4);
+  await expect(page.locator('svg.graph circle.grouped')).toHaveCount(0);
+});
+
+test('Escape clears the Shift selection', async ({ page }) => {
+  await page.locator('svg.graph g[aria-label="Vertex 2"]').click({ modifiers: ['Shift'] });
+  await expect(page.locator('svg.graph circle.grouped')).toHaveCount(1);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('svg.graph circle.grouped')).toHaveCount(0);
+});
+
+test('switches the interface to Italian and remembers it', async ({ page }) => {
+  await page.getByRole('button', { name: 'Switch language' }).click();
+  await expect(page.getByRole('button', { name: 'Sposta Nuovo grafo' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Genera', exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Sposta Nuovo grafo' })).toBeVisible();
+  await page.getByRole('button', { name: 'Cambia lingua' }).click();
+  await expect(page.getByRole('button', { name: 'Move New graph' })).toBeVisible();
+});

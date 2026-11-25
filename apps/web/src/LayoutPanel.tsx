@@ -3,6 +3,7 @@ import { ChoiceSelect } from './ChoiceSelect.js';
 import { LAYOUT_CHOICES } from './choices.js';
 import { Panel } from './Controls.js';
 import { type LayoutKind } from './layouts.js';
+import { t } from './i18n.js';
 
 interface Props {
   readonly value: LayoutKind;
@@ -11,8 +12,13 @@ interface Props {
 
 export function LayoutPanel({ value, onChange }: Props) {
   return (
-    <Panel id="layout" title="Layout" icon={IconLayout}>
-      <ChoiceSelect label="Layout" value={value} choices={LAYOUT_CHOICES} onChange={onChange} />
+    <Panel id="layout" title={t('Layout')} icon={IconLayout}>
+      <ChoiceSelect
+        label={t('Layout')}
+        value={value}
+        choices={LAYOUT_CHOICES}
+        onChange={onChange}
+      />
     </Panel>
   );
 }

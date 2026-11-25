@@ -47,6 +47,12 @@
   cursor: pointer;
 }
 
+.node.grouped {
+  stroke: var(--mantine-color-grape-6);
+  stroke-width: 4;
+  stroke-dasharray: 4 3;
+}
+
 .node.selected {
   stroke: var(--mantine-color-orange-6);
   stroke-width: 4;

@@ -1,6 +1,7 @@
 import { type VertexId } from 'graph-toolkit';
 import { useEffect, useRef, useState, type PointerEvent, type RefObject } from 'react';
-import { IDENTITY, panBy, toContent, wheelFactor, zoomAt, type Pt, type View } from './viewport.js';
+import { IDENTITY, panBy, shifted, toContent, wheelFactor, zoomAt } from './viewport.js';
+import type { Pt, View } from './viewport.js';
 
 export interface Box {
   readonly width: number;
@@ -23,6 +24,8 @@ export interface Link {
 
 interface Drag {
   readonly target: VertexId | undefined;
+  /** Shift was held on pointer down: a click toggles group membership instead of picking. */
+  readonly isAdditive: boolean;
   readonly last: Pt;
   readonly travelled: number;
 }
@@ -44,11 +47,21 @@ export interface Options {
   readonly base: ReadonlyMap<VertexId, Pt>;
   readonly box: Box;
   readonly onPick: (id: VertexId) => void;
+  /** Vertices that move together when one of them is dragged. */
+  readonly group: ReadonlySet<VertexId>;
+  readonly onToggle: (id: VertexId) => void;
   readonly edit?: EditHandlers | undefined;
 }
 
 /** Wheel zoom, background panning and vertex dragging for an SVG of size `box`. */
-export function useGraphInteraction({ base, box, onPick, edit }: Options): Interaction {
+export function useGraphInteraction({
+  base,
+  box,
+  onPick,
+  group,
+  onToggle,
+  edit,
+}: Options): Interaction {
   const svg = useRef<SVGSVGElement>(null);
   const drag = useRef<Drag | undefined>(undefined);
   const [view, setView] = useState<View>(IDENTITY);
@@ -85,7 +98,7 @@ export function useGraphInteraction({ base, box, onPick, edit }: Options): Inter
   const startDrag = (event: PointerEvent, target: VertexId | undefined): void => {
     event.stopPropagation();
     svg.current!.setPointerCapture(event.pointerId);
-    drag.current = { target, last: toSvg(event), travelled: 0 };
+    drag.current = { target, isAdditive: event.shiftKey, last: toSvg(event), travelled: 0 };
   };
 
   const moveDrag = (event: PointerEvent): void => {
@@ -103,9 +116,10 @@ export function useGraphInteraction({ base, box, onPick, edit }: Options): Inter
       setView((previous) => panBy(previous, dx, dy));
       return;
     }
-    const from = position(target) ?? point;
-    const next = { x: from.x + dx / view.scale, y: from.y + dy / view.scale };
-    setMoved((previous) => new Map(previous).set(target, next));
+    const movers = (group.has(target) ? [...group] : [target]).map(
+      (id) => [id, position(id) ?? point] as const,
+    );
+    setMoved((previous) => shifted(previous, movers, [dx / view.scale, dy / view.scale]));
   };
 
   const positions = (): ReadonlyMap<VertexId, Pt> =>
@@ -122,13 +136,13 @@ export function useGraphInteraction({ base, box, onPick, edit }: Options): Inter
     if (hit !== undefined && hit !== source) edit?.onLink(source, hit);
   };
 
-  const release = ({ target, last, travelled }: Drag): void => {
+  const release = ({ target, last, travelled, isAdditive }: Drag): void => {
     const isClick = travelled < CLICK_SLOP;
     const point = toContent(view, last);
     if (target === undefined) {
       if (isClick) edit?.onAdd(point);
     } else if (isClick) {
-      onPick(target);
+      (isAdditive ? onToggle : onPick)(target);
     } else {
       finishLink(target, point);
     }

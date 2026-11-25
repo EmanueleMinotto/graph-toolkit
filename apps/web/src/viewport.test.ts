@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { IDENTITY, panBy, toContent, toScreen, wheelFactor, zoomAt } from './viewport.js';
+import { IDENTITY, panBy, shifted, toContent, toScreen, wheelFactor, zoomAt } from './viewport.js';
 
 describe('viewport', () => {
   it('round trips between content and screen', () => {
@@ -31,5 +31,15 @@ describe('viewport', () => {
     expect(wheelFactor(-100)).toBeGreaterThan(1);
     expect(wheelFactor(100)).toBeLessThan(1);
     expect(wheelFactor(0)).toBe(1);
+  });
+});
+
+describe('shifted', () => {
+  it('moves only the listed entries and keeps the others', () => {
+    const moved = new Map([['keep', { x: 1, y: 1 }]]);
+    const result = shifted(moved, [['a', { x: 10, y: 20 }]], [2, -3]);
+    expect(result.get('a')).toEqual({ x: 12, y: 17 });
+    expect(result.get('keep')).toEqual({ x: 1, y: 1 });
+    expect(moved.size).toBe(1);
   });
 });

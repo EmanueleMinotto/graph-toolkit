@@ -45,7 +45,7 @@ const internalKernels = {
 };
 
 export default tseslint.config(
-  { ignores: ['**/dist/**', '**/coverage/**', '**/.turbo/**', 'docs/api/**'] },
+  { ignores: ['**/dist/**', '**/public/**', '**/coverage/**', '**/.turbo/**', 'docs/api/**'] },
   js.configs.recommended,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,

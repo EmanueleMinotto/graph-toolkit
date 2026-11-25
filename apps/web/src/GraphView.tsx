@@ -1,19 +1,29 @@
-import { Button, Paper } from '@mantine/core';
+import { Paper } from '@mantine/core';
 import { type Graph, type Layout, type VertexId } from 'graph-toolkit';
 import { useImperativeHandle, type Ref } from 'react';
 import { edgeKey, type Highlight } from './analysis.js';
+import { ArrowMarker } from './ArrowMarker.js';
+import { ExportBar } from './ExportBar.js';
 import { fitToBox } from './fit.js';
+import { useGroup } from './use-group.js';
+import { VertexNode } from './VertexNode.js';
 import { useGraphInteraction, type EditHandlers } from './use-graph-interaction.js';
+import { t } from './i18n.js';
 
 export const BOX = { width: 800, height: 520, padding: 40 } as const;
 const RADIUS = 14;
 /** Smallest vertex radius, as a fraction of `RADIUS`, when sized by score. */
 const MIN_SCALE = 0.6;
 const PALETTE_SIZE = 8;
+const CROWDED = 300;
+const LABEL_ZOOM = 1.5;
 
-function nodeClass(color: number | undefined, isSelected: boolean): string {
+const isCrowdedAt = (vertexCount: number, scale: number): boolean =>
+  vertexCount > CROWDED && scale < LABEL_ZOOM;
+
+function nodeClass(color: number | undefined, isSelected: boolean, isGrouped: boolean): string {
   const palette = color === undefined ? '' : ` c${color % PALETTE_SIZE}`;
-  return `node${palette}${isSelected ? ' selected' : ''}`;
+  return `node${palette}${isSelected ? ' selected' : ''}${isGrouped ? ' grouped' : ''}`;
 }
 
 export interface GraphViewHandle {
@@ -37,6 +47,8 @@ interface Props {
   readonly highlight: Highlight;
   readonly selected: readonly (VertexId | undefined)[];
   readonly onPick: (id: VertexId) => void;
+  /** Called with the Shift+click group when Delete is pressed. */
+  readonly onRemoveGroup?: ((ids: ReadonlySet<VertexId>) => void) | undefined;
 }
 
 /** SVG graph with wheel zoom, background panning and draggable vertices. */
@@ -49,27 +61,31 @@ export function GraphView({
   highlight,
   selected,
   onPick,
+  onRemoveGroup,
 }: Props) {
+  const group = useGroup(onRemoveGroup);
   const { svg, view, position, link, positions, startDrag, moveDrag, endDrag, reset } =
     useGraphInteraction({
       base: isPinned ? layout : fitToBox(layout, BOX),
       box: BOX,
       onPick,
+      group: group.members,
+      onToggle: group.toggle,
       edit,
     });
   useImperativeHandle(ref, () => ({ snapshot: positions }));
   const { x, y, scale } = view;
+  /** Hundreds of text nodes make panning sluggish; labels return once zoomed in. */
+  const isCrowded = isCrowdedAt(graph.vertexCount, scale);
   return (
     <Paper withBorder radius="md" className="graph-wrap">
-      <Button size="xs" variant="default" className="reset" onClick={reset}>
-        Reset view
-      </Button>
+      <ExportBar svg={svg} onReset={reset} />
       <svg
         ref={svg}
         className={edit === undefined ? 'graph' : 'graph editing'}
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
         role="group"
-        aria-label="Graph"
+        aria-label={t('Graph')}
         onPointerDown={(event) => {
           startDrag(event, undefined);
         }}
@@ -77,19 +93,7 @@ export function GraphView({
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
       >
-        <defs>
-          <marker
-            id="arrow"
-            viewBox="0 0 10 10"
-            refX="10"
-            refY="5"
-            markerWidth="8"
-            markerHeight="8"
-            orient="auto"
-          >
-            <path d="M0 0L10 5L0 10z" className="arrow" />
-          </marker>
-        </defs>
+        <ArrowMarker />
         <g data-testid="viewport" transform={`translate(${x} ${y}) scale(${scale})`}>
           {graph.edges().map((edge) => {
             const from = position(edge.source);
@@ -121,31 +125,27 @@ export function GraphView({
           {graph.vertices().map((id) => {
             const point = position(id);
             if (point === undefined) return null;
+            const size = highlight.sizes?.get(id) ?? 1;
             return (
-              <g
+              <VertexNode
                 key={id}
-                transform={`translate(${point.x} ${point.y})`}
-                role="button"
-                tabIndex={0}
-                aria-label={`Vertex ${id}`}
-                aria-pressed={selected.includes(id)}
-                onKeyDown={(event) => {
-                  if (event.key !== 'Enter' && event.key !== ' ') return;
-                  event.preventDefault();
+                id={id}
+                point={point}
+                radius={RADIUS * (MIN_SCALE + (1 - MIN_SCALE) * size)}
+                className={nodeClass(
+                  highlight.colors.get(id),
+                  selected.includes(id),
+                  group.members.has(id),
+                )}
+                isPressed={selected.includes(id)}
+                isLabelShown={!isCrowded}
+                onActivate={() => {
                   onPick(id);
                 }}
                 onPointerDown={(event) => {
                   startDrag(event, id);
                 }}
-              >
-                <circle
-                  r={RADIUS * (MIN_SCALE + (1 - MIN_SCALE) * (highlight.sizes?.get(id) ?? 1))}
-                  className={nodeClass(highlight.colors.get(id), selected.includes(id))}
-                />
-                <text className="label" textAnchor="middle" dy="0.35em">
-                  {id}
-                </text>
-              </g>
+              />
             );
           })}
         </g>

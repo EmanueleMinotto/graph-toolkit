@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { IconShieldCheck } from '@tabler/icons-react';
 import { Panel } from './Controls.js';
 import { DEFAULT_FORM, validate, type ValidationForm } from './validation.js';
+import { t } from './i18n.js';
 
 type Report = { readonly issues: readonly ValidationIssue[] } | { readonly failure: string };
 
@@ -68,7 +69,7 @@ export function ValidationPanel({ graph }: { readonly graph: Graph }) {
     }
   };
   return (
-    <Panel id="validate" title="Validation" icon={IconShieldCheck}>
+    <Panel id="validate" title={t('Validation')} icon={IconShieldCheck}>
       <SegmentedControl
         fullWidth
         value={form.direction}
@@ -76,55 +77,55 @@ export function ValidationPanel({ graph }: { readonly graph: Graph }) {
         onChange={(value) => set({ direction: value })}
       />
       <Checkbox
-        label="Allow self-loops"
+        label={t('Allow self-loops')}
         checked={form.allowSelfLoops}
         onChange={(event) => set({ allowSelfLoops: event.currentTarget.checked })}
       />
       <Checkbox
-        label="Allow isolated vertices"
+        label={t('Allow isolated vertices')}
         checked={form.allowIsolated}
         onChange={(event) => set({ allowIsolated: event.currentTarget.checked })}
       />
       <Checkbox
-        label="Must be connected"
+        label={t('Must be connected')}
         checked={form.connected}
         onChange={(event) => set({ connected: event.currentTarget.checked })}
       />
       <Group grow>
         <Limit
-          label="Max vertices"
+          label={t('Max vertices')}
           value={form.maxVertices}
           onChange={(value) => set({ maxVertices: value })}
         />
         <Limit
-          label="Max edges"
+          label={t('Max edges')}
           value={form.maxEdges}
           onChange={(value) => set({ maxEdges: value })}
         />
       </Group>
       <Group grow>
         <Limit
-          label="Min weight"
+          label={t('Min weight')}
           value={form.minWeight}
           onChange={(value) => set({ minWeight: value })}
         />
         <Limit
-          label="Max weight"
+          label={t('Max weight')}
           value={form.maxWeight}
           onChange={(value) => set({ maxWeight: value })}
         />
       </Group>
       <Checkbox
-        label="Integer weights only"
+        label={t('Integer weights only')}
         checked={form.isInteger}
         onChange={(event) => set({ isInteger: event.currentTarget.checked })}
       />
       <TextInput
-        label="Vertex id pattern (regex)"
+        label={t('Vertex id pattern (regex)')}
         value={form.pattern}
         onChange={(event) => set({ pattern: event.currentTarget.value })}
       />
-      <Button onClick={run}>Validate</Button>
+      <Button onClick={run}>{t('Validate')}</Button>
       {report === undefined ? null : <Verdict report={report} />}
     </Panel>
   );

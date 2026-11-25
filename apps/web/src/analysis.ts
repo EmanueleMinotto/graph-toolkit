@@ -1,5 +1,7 @@
 import { bfs, dijkstra, type Graph } from 'graph-toolkit';
 import { NONE, pathEdges, type Highlight, type Selection } from './analysis-types.js';
+import { advancedAnalyses, type AdvancedKind } from './analysis-advanced.js';
+import { optimizationAnalyses, type OptimizationKind } from './analysis-optimization.js';
 import { coloringAnalyses, type ColoringKind } from './analysis-coloring.js';
 import { compareAnalyses, type CompareKind } from './analysis-compare.js';
 import { matrixAnalyses, type MatrixKind } from './analysis-matrix.js';
@@ -18,7 +20,9 @@ export type AnalysisKind =
   | ColoringKind
   | NetworkKind
   | CompareKind
-  | MatrixKind;
+  | MatrixKind
+  | AdvancedKind
+  | OptimizationKind;
 
 export { edgeKey, type Highlight, type Selection } from './analysis-types.js';
 
@@ -40,6 +44,7 @@ function breadthFirst(graph: Graph, { from }: Selection): Highlight {
   return {
     ...NONE,
     colors: new Map(order.map((id) => [id, 1])),
+    steps: order.map((vertex) => ({ vertex })),
     summary: `${order.length} vertices reached`,
     table: order.map((id, index) => [String(index + 1), id]),
   };
@@ -57,6 +62,8 @@ const analyses: Readonly<Record<AnalysisKind, (graph: Graph, selection: Selectio
     ...networkAnalyses,
     ...compareAnalyses,
     ...matrixAnalyses,
+    ...advancedAnalyses,
+    ...optimizationAnalyses,
   };
 
 /** Runs an analysis; library errors become the summary text. */

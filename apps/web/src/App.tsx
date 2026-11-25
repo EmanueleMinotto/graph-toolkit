@@ -8,10 +8,13 @@ import { Sidebar } from './Sidebar.js';
 import { EditPanel } from './EditPanel.js';
 import { GeneratePanel } from './GeneratePanel.js';
 import { GraphView, type GraphViewHandle } from './GraphView.js';
+import { ExamplesPanel } from './ExamplesPanel.js';
 import { ImportPanel } from './ImportPanel.js';
 import { Header } from './Header.js';
-import { makeSample } from './formats.js';
-import { computeLayout, type LayoutKind } from './layouts.js';
+import { shareUrl } from './persistence.js';
+import { initialScene, useShell } from './use-persistence.js';
+import { makeSample } from './samples.js';
+import { useLayout } from './use-layout.js';
 import { type Scene } from './scene.js';
 import { ValidationPanel } from './ValidationPanel.js';
 import { useGuard } from './use-guard.js';
@@ -21,10 +24,10 @@ import { useEditor } from './use-editor.js';
 import { useHistory } from './use-history.js';
 
 export function App() {
-  const history = useHistory<Scene>(() => ({ graph: makeSample('cycle', 6), pinned: undefined }));
+  const history = useHistory<Scene>(initialScene);
   const scene = history.present;
   const { graph } = scene;
-  const [layoutKind, setLayoutKind] = useState<LayoutKind>('force');
+  useShell(graph);
   const { kind, count, setCount, choose } = useTool();
   const [picked, setPicked] = useState<readonly VertexId[]>([]);
   const [other, setOther] = useState(() => makeSample('path', 4));
@@ -32,10 +35,7 @@ export function App() {
   const [generation, setGeneration] = useState(0);
   const view = useRef<GraphViewHandle>(null);
 
-  const layout = useMemo(
-    () => scene.pinned ?? computeLayout(layoutKind, graph),
-    [scene, layoutKind, graph],
-  );
+  const { layoutKind, layout, changeLayout } = useLayout(scene, history.push);
   const [from, to] = picked;
   const selection = useMemo(() => ({ from, to, count, other }), [from, to, count, other]);
   const analysis = useAnalysis(kind, graph, selection);
@@ -66,10 +66,6 @@ export function App() {
     },
     guarded,
   });
-  const changeLayout = (next: LayoutKind): void => {
-    if (scene.pinned !== undefined) history.push({ graph, pinned: undefined });
-    setLayoutKind(next);
-  };
 
   return (
     <AppShell header={{ height: 56 }} navbar={{ width: 360, breakpoint: 'sm' }} padding="md">
@@ -79,6 +75,7 @@ export function App() {
           canRedo={history.canRedo}
           onUndo={() => travel(history.undo)}
           onRedo={() => travel(history.redo)}
+          shareLink={() => shareUrl(graph, location)}
         />
       </AppShell.Header>
       <Sidebar
@@ -91,6 +88,7 @@ export function App() {
               }
             />
           ),
+          examples: <ExamplesPanel onSelect={replaceGraph} />,
           import: <ImportPanel graph={graph} onReplace={replaceGraph} guarded={guarded} />,
           layout: <LayoutPanel value={layoutKind} onChange={changeLayout} />,
           operations: (
@@ -127,6 +125,7 @@ export function App() {
               to={to}
               result={analysis.result}
               isPending={analysis.isPending}
+              playback={analysis.playback}
               count={count}
               onCount={setCount}
               onKind={choose}
@@ -144,6 +143,7 @@ export function App() {
           edit={editor.handlers}
           highlight={analysis.result}
           selected={picked}
+          onRemoveGroup={editor.removeVertices}
           onPick={(id) => {
             setPicked((current) => (current.length >= 2 ? [id] : [...current, id]));
           }}

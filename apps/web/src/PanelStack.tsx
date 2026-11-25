@@ -25,11 +25,12 @@ const ORDER_KEY = 'graph-toolkit.panel-order';
 const DRAG_DISTANCE = 5;
 
 export type PanelId =
-  'generate' | 'import' | 'layout' | 'operations' | 'edit' | 'validate' | 'analysis';
+  'generate' | 'examples' | 'import' | 'layout' | 'operations' | 'edit' | 'validate' | 'analysis';
 
 /** Default order; also the set of every panel (all start open). */
 const PANEL_IDS: PanelId[] = [
   'generate',
+  'examples',
   'import',
   'layout',
   'operations',

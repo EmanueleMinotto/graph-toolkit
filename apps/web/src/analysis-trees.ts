@@ -16,6 +16,9 @@ function spanning(name: string, solve: (graph: Graph) => SpanningForest) {
     return {
       ...NONE,
       edges: new Set(forest.edges.map((edge) => edgeKey(edge.source, edge.target, graph.directed))),
+      steps: forest.edges.map((edge) => ({
+        edge: edgeKey(edge.source, edge.target, graph.directed),
+      })),
       summary: `${name}: total weight ${forest.totalWeight}`,
     };
   };

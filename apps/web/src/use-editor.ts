@@ -1,6 +1,14 @@
 import { type Graph, type VertexId } from 'graph-toolkit';
 import { useState, type RefObject } from 'react';
-import { addEdge, addVertex, nextVertexId, removeEdges, removeVertex, setWeight } from './edit.js';
+import {
+  addEdge,
+  addVertex,
+  nextVertexId,
+  removeEdges,
+  removeVertex,
+  removeVertices,
+  setWeight,
+} from './edit.js';
 import { type Mode } from './EditPanel.js';
 import { type GraphViewHandle } from './GraphView.js';
 import { type Scene } from './scene.js';
@@ -26,6 +34,7 @@ export interface Editor {
   /** Canvas gestures, only while in edit mode. */
   readonly handlers: EditHandlers | undefined;
   readonly removeVertex: () => void;
+  readonly removeVertices: (ids: ReadonlySet<VertexId>) => void;
   readonly removeEdge: () => void;
   readonly applyWeight: () => void;
 }
@@ -76,6 +85,10 @@ export function useEditor({ scene, picked, view, commit, clearPicked, guarded }:
     removeVertex: () => {
       if (from === undefined) return;
       change(removeVertex(graph, from));
+      clearPicked();
+    },
+    removeVertices: (ids) => {
+      change(removeVertices(graph, ids));
       clearPicked();
     },
     removeEdge: () => {

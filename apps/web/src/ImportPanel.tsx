@@ -13,6 +13,7 @@ import {
   serializeGraph,
   type Format,
 } from './formats.js';
+import { t } from './i18n.js';
 
 interface Props {
   readonly graph: Graph;
@@ -32,15 +33,20 @@ export function ImportPanel({ graph, onReplace, guarded }: Props) {
     setText(await file.text());
   };
   return (
-    <Panel id="import" title="Import / export" icon={IconFileImport}>
-      <ChoiceSelect label="Format" value={format} choices={FORMAT_CHOICES} onChange={setFormat} />
+    <Panel id="import" title={t('Import / export')} icon={IconFileImport}>
+      <ChoiceSelect
+        label={t('Format')}
+        value={format}
+        choices={FORMAT_CHOICES}
+        onChange={setFormat}
+      />
       <Checkbox
-        label="Directed (edge list / CSV)"
+        label={t('Directed (edge list / CSV)')}
         checked={isDirected}
         onChange={(event) => setDirected(event.currentTarget.checked)}
       />
       <Textarea
-        aria-label="Graph text"
+        aria-label={t('Graph text')}
         value={text}
         onChange={(event) => setText(event.currentTarget.value)}
         rows={8}
@@ -48,13 +54,13 @@ export function ImportPanel({ graph, onReplace, guarded }: Props) {
       />
       <Group grow>
         <Button onClick={() => guarded(() => onReplace(parseGraph(format, text, isDirected)))}>
-          Import
+          {t('Import')}
         </Button>
         <Button
           variant="default"
           onClick={() => guarded(() => setText(serializeGraph(format, graph)))}
         >
-          Export current
+          {t('Export current')}
         </Button>
       </Group>
       <Group grow>
@@ -69,7 +75,7 @@ export function ImportPanel({ graph, onReplace, guarded }: Props) {
           variant="default"
           onClick={() => guarded(() => download(fileName(format), serializeGraph(format, graph)))}
         >
-          Download
+          {t('Download')}
         </Button>
       </Group>
     </Panel>

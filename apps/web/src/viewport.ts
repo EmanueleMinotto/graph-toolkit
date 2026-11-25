@@ -41,3 +41,14 @@ export const panBy = (view: View, dx: number, dy: number): View => ({
 
 /** Wheel delta → zoom factor (scroll up zooms in). */
 export const wheelFactor = (deltaY: number): number => Math.exp(-deltaY * 0.0015);
+
+/** `moved` with each `[key, from]` entry displaced by `delta`. */
+export const shifted = <K>(
+  moved: ReadonlyMap<K, Pt>,
+  entries: readonly (readonly [K, Pt])[],
+  [dx, dy]: readonly [number, number],
+): ReadonlyMap<K, Pt> =>
+  new Map([
+    ...moved,
+    ...entries.map(([key, from]): readonly [K, Pt] => [key, { x: from.x + dx, y: from.y + dy }]),
+  ]);

@@ -3,6 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { Accordion, ActionIcon, Group, Stack } from '@mantine/core';
 import { IconGripVertical, type Icon } from '@tabler/icons-react';
 import { type ReactNode } from 'react';
+import { t } from './i18n.js';
 
 interface PanelProps {
   /** Key used to remember whether the panel is open and where it sits. */
@@ -33,7 +34,7 @@ export function Panel({ id, title, icon: Glyph, children }: PanelProps) {
         <ActionIcon
           variant="subtle"
           color="gray"
-          aria-label={`Move ${title}`}
+          aria-label={`${t('Move')} ${title}`}
           style={{ cursor: 'grab', touchAction: 'none' }}
           {...attributes}
           {...listeners}

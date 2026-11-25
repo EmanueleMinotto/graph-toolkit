@@ -35,6 +35,7 @@ function depthFirst(graph: Graph, { from }: Selection): Highlight {
   return {
     ...NONE,
     colors: new Map(order.map((id) => [id, 1])),
+    steps: order.map((vertex) => ({ vertex })),
     summary: `${order.length} vertices reached`,
     table: order.map((id, index) => [String(index + 1), id]),
   };

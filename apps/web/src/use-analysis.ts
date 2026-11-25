@@ -2,12 +2,14 @@ import { toJson, type Graph } from 'graph-toolkit';
 import { useEffect, useMemo, useState } from 'react';
 import { analyze, type AnalysisKind, type Highlight, type Selection } from './analysis.js';
 import type { WorkerRequest } from './analysis.worker.js';
+import { usePlayback, type Playback } from './use-playback.js';
 
 const IDLE: Highlight = { colors: new Map(), edges: new Set(), summary: '' };
 
 export interface AnalysisState {
   readonly result: Highlight;
   readonly isPending: boolean;
+  readonly playback: Playback;
 }
 
 interface Job extends Selection {
@@ -23,6 +25,17 @@ const hasWorker = typeof Worker !== 'undefined';
  * (jsdom) it runs inline.
  */
 export function useAnalysis(kind: AnalysisKind, graph: Graph, selection: Selection): AnalysisState {
+  const { result, isPending } = useRawAnalysis(kind, graph, selection);
+  const [shown, playback] = usePlayback(result);
+  return { result: shown, isPending, playback };
+}
+
+interface RawAnalysis {
+  readonly result: Highlight;
+  readonly isPending: boolean;
+}
+
+function useRawAnalysis(kind: AnalysisKind, graph: Graph, selection: Selection): RawAnalysis {
   const { from, to, count, other } = selection;
   const job = useMemo<Job>(
     () => ({ kind, graph, from, to, count, other }),

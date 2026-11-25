@@ -6,7 +6,10 @@ import { MatrixGrid, ResultTable } from './ResultViews.js';
 import { ChoiceSelect } from './ChoiceSelect.js';
 import { toolChoices } from './choices.js';
 import { Panel } from './Controls.js';
+import { PlaybackBar } from './PlaybackBar.js';
 import { toolOf, type Param, type Tool } from './tools.js';
+import { type Playback } from './use-playback.js';
+import { t } from './i18n.js';
 
 interface AnalysisProps {
   readonly kind: AnalysisKind;
@@ -15,6 +18,7 @@ interface AnalysisProps {
   readonly to: VertexId | undefined;
   readonly result: Highlight;
   readonly isPending: boolean;
+  readonly playback: Playback;
   readonly count: number;
   readonly onCount: (count: number) => void;
   readonly onKind: (kind: AnalysisKind) => void;
@@ -32,9 +36,9 @@ export function AnalysisPanel(props: AnalysisProps) {
   const active = toolOf(props.kind);
   const hint = selectionHint(active, props.from, props.to);
   return (
-    <Panel id="analysis" title="Analysis" icon={IconChartInfographic}>
+    <Panel id="analysis" title={t('Analysis')} icon={IconChartInfographic}>
       <ChoiceSelect
-        label="Algorithm"
+        label={t('Algorithm')}
         value={props.kind}
         choices={toolChoices(props.graph)}
         isSearchable
@@ -48,12 +52,9 @@ export function AnalysisPanel(props: AnalysisProps) {
           {hint}
         </Text>
       )}
+      {props.playback.total > 0 ? <PlaybackBar playback={props.playback} /> : null}
       {props.isPending ? <Running onCancel={() => props.onKind('none')} /> : null}
-      <Text component="output" aria-live="polite" size="sm" fw={500}>
-        {props.result.summary}
-      </Text>
-      {props.result.table === undefined ? null : <ResultTable rows={props.result.table} />}
-      {props.result.matrix === undefined ? null : <MatrixGrid matrix={props.result.matrix} />}
+      <Output result={props.result} />
     </Panel>
   );
 }
@@ -82,10 +83,22 @@ function Running({ onCancel }: { readonly onCancel: () => void }) {
   return (
     <Group gap="xs">
       <Loader size="xs" />
-      <Text size="sm">Running…</Text>
+      <Text size="sm">{t('Running…')}</Text>
       <Button size="compact-xs" variant="subtle" onClick={onCancel}>
-        Cancel
+        {t('Cancel')}
       </Button>
     </Group>
+  );
+}
+
+function Output({ result }: { readonly result: Highlight }) {
+  return (
+    <>
+      <Text component="output" aria-live="polite" size="sm" fw={500}>
+        {result.summary}
+      </Text>
+      {result.table === undefined ? null : <ResultTable rows={result.table} />}
+      {result.matrix === undefined ? null : <MatrixGrid matrix={result.matrix} />}
+    </>
   );
 }

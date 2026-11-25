@@ -32,12 +32,15 @@ export function addEdge(graph: Graph, edge: Edge, allowParallel: boolean): Graph
   return rebuild(graph, graph.vertices(), [...graph.edges(), edge]);
 }
 
-export const removeVertex = (graph: Graph, id: VertexId): Graph =>
+export const removeVertices = (graph: Graph, ids: ReadonlySet<VertexId>): Graph =>
   rebuild(
     graph,
-    graph.vertices().filter((vertex) => vertex !== id),
-    graph.edges().filter((edge) => edge.source !== id && edge.target !== id),
+    graph.vertices().filter((vertex) => !ids.has(vertex)),
+    graph.edges().filter((edge) => !ids.has(edge.source) && !ids.has(edge.target)),
   );
+
+export const removeVertex = (graph: Graph, id: VertexId): Graph =>
+  removeVertices(graph, new Set([id]));
 
 /** Removes every edge between the two endpoints (both orientations when undirected). */
 export const removeEdges = (graph: Graph, ends: Ends): Graph =>

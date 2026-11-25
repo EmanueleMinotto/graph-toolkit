@@ -12,6 +12,7 @@ import {
   type ShortestPathTree,
   type VertexId,
 } from 'graph-toolkit';
+import { settleOrder } from './analysis-steps.js';
 import { NONE, pathEdges, type Highlight, type Selection } from './analysis-types.js';
 
 export type PathKind =
@@ -52,6 +53,7 @@ function fromSource(solve: (graph: Graph, source: VertexId) => ShortestPathTree,
       edges: new Set(
         reached.flatMap((id) => [...pathEdges(tree.pathTo(id) ?? [], graph.directed)]),
       ),
+      steps: settleOrder(graph, tree, reached),
       summary: `${name}: ${reached.length} of ${graph.vertexCount} vertices reachable`,
       table: graph.vertices().map((id) => [id, show(tree.distanceTo(id))]),
     };

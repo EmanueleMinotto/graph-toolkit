@@ -16,7 +16,9 @@ test('lists options in groups with an icon on each one', async ({ page }) => {
 });
 
 test('filters the long algorithm list by typing', async ({ page }) => {
-  await page.getByRole('combobox', { name: 'Algorithm', exact: true }).fill('planar');
+  const algorithm = page.getByRole('combobox', { name: 'Algorithm', exact: true });
+  await algorithm.click();
+  await algorithm.fill('planar');
   await expect(page.getByRole('option')).toHaveCount(1);
   await page.getByRole('option', { name: 'Planarity test' }).click();
   await expect(page.locator('output')).toContainText('Planar');
@@ -46,7 +48,7 @@ test('reorders panels by dragging a handle and keeps the order after a reload', 
   page,
 }) => {
   const initial = await titles(page);
-  expect(initial.slice(0, 3)).toEqual(['Move New graph', 'Move Import / export', 'Move Layout']);
+  expect(initial.slice(0, 3)).toEqual(['Move New graph', 'Move Examples', 'Move Import / export']);
   const handle = page.getByRole('button', { name: 'Move Layout' });
   const target = page.getByRole('button', { name: 'Move New graph' });
   const [from, to] = [(await handle.boundingBox())!, (await target.boundingBox())!];
@@ -81,7 +83,7 @@ test('reorders panels with the keyboard', async ({ page }) => {
   await expect
     .poll(async () => {
       const order = await titles(page);
-      return order.slice(0, 3);
+      return order.slice(0, 4);
     })
-    .toEqual(['Move New graph', 'Move Layout', 'Move Import / export']);
+    .toEqual(['Move New graph', 'Move Examples', 'Move Layout', 'Move Import / export']);
 });

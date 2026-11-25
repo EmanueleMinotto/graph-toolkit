@@ -1,6 +1,7 @@
 import { Button, Checkbox, Group, NumberInput, SegmentedControl, Text } from '@mantine/core';
 import { IconPencil } from '@tabler/icons-react';
 import { Panel } from './Controls.js';
+import { t } from './i18n.js';
 
 export type Mode = 'select' | 'edit';
 
@@ -21,7 +22,7 @@ interface Props {
 export function EditPanel(props: Props) {
   const hasPair = props.from !== undefined && props.to !== undefined;
   return (
-    <Panel id="edit" title="Edit graph" icon={IconPencil}>
+    <Panel id="edit" title={t('Edit graph')} icon={IconPencil}>
       <SegmentedControl
         fullWidth
         value={props.mode}
@@ -37,13 +38,13 @@ export function EditPanel(props: Props) {
           : 'Switch to edit to change the graph by hand.'}
       </Text>
       <NumberInput
-        label="Edge weight"
+        label={t('Edge weight')}
         value={props.weight}
         onChange={(value) => props.onWeight(Number(value))}
         decimalScale={6}
       />
       <Checkbox
-        label="Allow parallel edges"
+        label={t('Allow parallel edges')}
         checked={props.allowParallel}
         onChange={(event) => props.onParallel(event.currentTarget.checked)}
       />

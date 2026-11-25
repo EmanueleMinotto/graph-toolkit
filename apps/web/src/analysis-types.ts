@@ -14,7 +14,15 @@ export interface MatrixView {
   readonly rows: readonly (readonly number[])[];
 }
 
+/** One thing an algorithm discovers, in order: a vertex, an edge (by `edgeKey`), or both. */
+export interface Step {
+  readonly vertex?: VertexId;
+  readonly edge?: string;
+}
+
 export interface Highlight {
+  /** The order in which the result was built; enables the step-by-step player. */
+  readonly steps?: readonly Step[] | undefined;
   /** Vertex → palette index. */
   readonly colors: ReadonlyMap<VertexId, number>;
   readonly edges: ReadonlySet<string>;
