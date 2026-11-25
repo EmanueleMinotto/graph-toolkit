@@ -73,4 +73,4 @@ To add an analysis: write the function in the matching `analysis-*.ts` (or a new
 
 Logic lives in plain modules covered by unit tests; `App.test.tsx` is a jsdom smoke test. End-to-end tests live in `e2e/` (Playwright, run with `pnpm e2e` after `pnpm build`).
 
-Browsers: the e2e suite runs in Chromium, Firefox and WebKit (`pnpm exec playwright install` once). Screenshot comparisons in `e2e/visual.spec.ts` are skipped unless `VISUAL=1`; their baselines depend on the OS fonts, so create them on the machine that will compare them (`VISUAL=1 pnpm e2e --update-snapshots`).
+Browsers: the e2e suite runs in Chromium, Firefox and WebKit (`pnpm exec playwright install` once). Screenshot comparisons in `e2e/visual.spec.ts` run only with `VISUAL=1` (the `visual` CI job does this). Baselines are per platform (`*-linux.png` are committed); to refresh them, run the job, download its `visual-baselines` artifact and replace the files.
