@@ -1,40 +1,20 @@
 import { Paper } from '@mantine/core';
 import { type Graph, type Layout, type VertexId } from 'graph-toolkit';
 import { useImperativeHandle, type Ref } from 'react';
-import { edgeKey, type Highlight } from './analysis.js';
+import { type Highlight } from './analysis.js';
 import { ArrowMarker } from './ArrowMarker.js';
 import { ExportBar } from './ExportBar.js';
 import { fitToBox } from './fit.js';
 import { useGroup } from './use-group.js';
-import { VertexNode } from './VertexNode.js';
+import { Edges, Vertices } from './GraphLayers.js';
 import { useGraphInteraction, type EditHandlers } from './use-graph-interaction.js';
 import { t } from './i18n.js';
 
 export const BOX = { width: 800, height: 520, padding: 40 } as const;
-const RADIUS = 14;
-/** Smallest vertex radius, as a fraction of `RADIUS`, when sized by score. */
-const MIN_SCALE = 0.6;
-const PALETTE_SIZE = 8;
-const CROWDED = 300;
-const LABEL_ZOOM = 1.5;
-
-const isCrowdedAt = (vertexCount: number, scale: number): boolean =>
-  vertexCount > CROWDED && scale < LABEL_ZOOM;
-
-function nodeClass(color: number | undefined, isSelected: boolean, isGrouped: boolean): string {
-  const palette = color === undefined ? '' : ` c${color % PALETTE_SIZE}`;
-  return `node${palette}${isSelected ? ' selected' : ''}${isGrouped ? ' grouped' : ''}`;
-}
 
 export interface GraphViewHandle {
   /** Current position of every vertex (after drags), in canvas coordinates. */
   readonly snapshot: () => Layout;
-}
-
-function edgeClass(highlight: Highlight, key: string): string {
-  const color = highlight.edgeColors?.get(key);
-  if (color !== undefined) return `edge e${color % PALETTE_SIZE}`;
-  return highlight.edges.has(key) ? 'edge on' : 'edge';
 }
 
 interface Props {
@@ -75,8 +55,6 @@ export function GraphView({
     });
   useImperativeHandle(ref, () => ({ snapshot: positions }));
   const { x, y, scale } = view;
-  /** Hundreds of text nodes make panning sluggish; labels return once zoomed in. */
-  const isCrowded = isCrowdedAt(graph.vertexCount, scale);
   return (
     <Paper withBorder radius="md" className="graph-wrap">
       <ExportBar svg={svg} onReset={reset} />
@@ -95,23 +73,7 @@ export function GraphView({
       >
         <ArrowMarker />
         <g data-testid="viewport" transform={`translate(${x} ${y}) scale(${scale})`}>
-          {graph.edges().map((edge) => {
-            const from = position(edge.source);
-            const to = position(edge.target);
-            if (from === undefined || to === undefined) return null;
-            const key = edgeKey(edge.source, edge.target, graph.directed);
-            return (
-              <line
-                key={key}
-                x1={from.x}
-                y1={from.y}
-                x2={to.x}
-                y2={to.y}
-                className={edgeClass(highlight, key)}
-                markerEnd={graph.directed ? 'url(#arrow)' : undefined}
-              />
-            );
-          })}
+          <Edges graph={graph} view={view} position={position} highlight={highlight} />
           {link === undefined ? null : (
             <line
               className="edge on"
@@ -122,32 +84,16 @@ export function GraphView({
               pointerEvents="none"
             />
           )}
-          {graph.vertices().map((id) => {
-            const point = position(id);
-            if (point === undefined) return null;
-            const size = highlight.sizes?.get(id) ?? 1;
-            return (
-              <VertexNode
-                key={id}
-                id={id}
-                point={point}
-                radius={RADIUS * (MIN_SCALE + (1 - MIN_SCALE) * size)}
-                className={nodeClass(
-                  highlight.colors.get(id),
-                  selected.includes(id),
-                  group.members.has(id),
-                )}
-                isPressed={selected.includes(id)}
-                isLabelShown={!isCrowded}
-                onActivate={() => {
-                  onPick(id);
-                }}
-                onPointerDown={(event) => {
-                  startDrag(event, id);
-                }}
-              />
-            );
-          })}
+          <Vertices
+            graph={graph}
+            view={view}
+            position={position}
+            highlight={highlight}
+            selected={selected}
+            group={group.members}
+            onPick={onPick}
+            startDrag={startDrag}
+          />
         </g>
       </svg>
     </Paper>

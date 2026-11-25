@@ -117,3 +117,15 @@ test('draws the cube with the Tutte layout and bounds its treewidth', async ({ p
   await choose(page, 'Algorithm', 'Treewidth (upper bound)');
   await expect(page.getByText(/Treewidth is at most \d+/)).toBeVisible();
 });
+
+test('only draws the vertices on screen once a big graph is zoomed in', async ({ page }) => {
+  await choose(page, 'Kind', 'Random');
+  await page.getByLabel('Size').fill('800');
+  await page.getByRole('button', { name: 'Generate', exact: true }).click();
+  await expect(page.locator('svg.graph circle')).toHaveCount(800);
+  const box = (await page.locator('svg.graph').boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  for (let step = 0; step < 6; step++) await page.mouse.wheel(0, -400);
+  await expect.poll(() => page.locator('svg.graph circle').count()).toBeLessThan(400);
+  await expect(page.locator('svg.graph text.label').first()).toBeVisible();
+});

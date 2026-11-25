@@ -129,3 +129,7 @@
   stroke: var(--mantine-color-gray-6);
   stroke-width: 4;
 }
+
+.edge.bulk {
+  fill: none;
+}
