@@ -5,6 +5,7 @@ import sonarjs from 'eslint-plugin-sonarjs';
 import unicorn from 'eslint-plugin-unicorn';
 import vitest from '@vitest/eslint-plugin';
 import prettier from 'eslint-config-prettier';
+import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 
@@ -109,6 +110,20 @@ export default tseslint.config(
       'unicorn/max-nested-calls': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'import-x/no-extraneous-dependencies': 'off',
+    },
+  },
+  {
+    // UI code: JSX components are long by nature; keep structure rules, relax size/style ones.
+    files: ['apps/web/**/*.{ts,tsx}'],
+    plugins: { 'react-hooks': reactHooks },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      'max-lines-per-function': 'off',
+      'no-magic-numbers': 'off',
+      'unicorn/filename-case': ['error', { cases: { kebabCase: true, pascalCase: true } }],
+      'unicorn/name-replacements': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/no-confusing-void-expression': 'off',
     },
   },
   {

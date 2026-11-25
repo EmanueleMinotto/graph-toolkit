@@ -1,0 +1,103 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  --edge: #8a8f98;
+  --accent: #e4572e;
+  --node: #3b82f6;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1rem;
+}
+
+aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+textarea {
+  width: 100%;
+  font-family: ui-monospace, monospace;
+}
+
+.graph {
+  width: 100%;
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+}
+
+.edge {
+  stroke: var(--edge);
+  stroke-width: 2;
+}
+
+.edge.on {
+  stroke: var(--accent);
+  stroke-width: 4;
+}
+
+.arrow {
+  fill: var(--edge);
+}
+
+.node {
+  fill: var(--node);
+  stroke: #1e3a8a;
+  stroke-width: 2;
+  cursor: pointer;
+}
+
+.node.selected {
+  stroke: var(--accent);
+  stroke-width: 4;
+}
+
+.label {
+  fill: white;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.c0 {
+  fill: #3b82f6;
+}
+.c1 {
+  fill: #e4572e;
+}
+.c2 {
+  fill: #2fa84f;
+}
+.c3 {
+  fill: #a855f7;
+}
+.c4 {
+  fill: #eab308;
+}
+.c5 {
+  fill: #06b6d4;
+}
+.c6 {
+  fill: #ec4899;
+}
+.c7 {
+  fill: #78716c;
+}
