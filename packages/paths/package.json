@@ -37,6 +37,7 @@
     "@graph-toolkit/traversal": "workspace:*"
   },
   "devDependencies": {
+    "@graph-toolkit/generators": "workspace:*",
     "fast-check": "^4.11.0"
   }
 }
