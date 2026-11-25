@@ -68,7 +68,7 @@ export function GraphView({
         ref={svg}
         className={edit === undefined ? 'graph' : 'graph editing'}
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
-        role="img"
+        role="group"
         aria-label="Graph"
         onPointerDown={(event) => {
           startDrag(event, undefined);
@@ -125,6 +125,15 @@ export function GraphView({
               <g
                 key={id}
                 transform={`translate(${point.x} ${point.y})`}
+                role="button"
+                tabIndex={0}
+                aria-label={`Vertex ${id}`}
+                aria-pressed={selected.includes(id)}
+                onKeyDown={(event) => {
+                  if (event.key !== 'Enter' && event.key !== ' ') return;
+                  event.preventDefault();
+                  onPick(id);
+                }}
                 onPointerDown={(event) => {
                   startDrag(event, id);
                 }}

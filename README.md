@@ -40,7 +40,7 @@ toDot(graph);
 
 | App                                  | Purpose                                                     |
 | ------------------------------------ | ----------------------------------------------------------- |
-| [`apps/web`](apps/web)               | React + Vite graph explorer (zoom, pan, drag, analyses)     |
+| [`apps/web`](apps/web)               | React + Mantine explorer: generate, import, edit, analyze   |
 | [`apps/benchmarks`](apps/benchmarks) | Performance budget tests and on-demand benchmarks (private) |
 
 ## Documentation

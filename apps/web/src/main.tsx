@@ -9,7 +9,7 @@ const container = document.querySelector('#root');
 if (container === null) throw new Error('Missing #root element');
 createRoot(container).render(
   <StrictMode>
-    <MantineProvider defaultColorScheme="auto">
+    <MantineProvider defaultColorScheme="auto" theme={{ primaryShade: { light: 8, dark: 8 } }}>
       <App />
     </MantineProvider>
   </StrictMode>,
