@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { choose } from './helpers.js';
+import { choose, drawnVertices } from './helpers.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -81,8 +81,8 @@ test('generates a large graph quickly and caps oversized input', async ({ page }
   await page.getByLabel('Size').fill('1000');
   const start = Date.now();
   await page.getByRole('button', { name: 'Generate', exact: true }).click();
-  // Big graphs are drawn by one WebGL canvas; the SVG only keeps selected vertices.
-  await expect(page.locator('canvas.gl-layer')).toHaveAttribute('data-vertices', '1000');
+  // Big graphs are drawn by one WebGL canvas (or, without WebGL, as SVG).
+  await drawnVertices(page, 1000);
   expect(Date.now() - start).toBeLessThan(5000);
   await choose(page, 'Kind', 'Complete');
   await page.getByLabel('Size').fill('5000');

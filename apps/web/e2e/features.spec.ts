@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { choose } from './helpers.js';
+import { choose, hasWebgl } from './helpers.js';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -119,6 +119,8 @@ test('draws the cube with the Tutte layout and bounds its treewidth', async ({ p
 });
 
 test('draws big graphs on a WebGL canvas that follows zoom and selection', async ({ page }) => {
+  // Skipped only in browsers without WebGL (headless Firefox on CI), where the SVG fallback is used.
+  test.skip(!(await hasWebgl(page)), 'this browser has no WebGL');
   await choose(page, 'Kind', 'Random');
   await page.getByLabel('Size').fill('800');
   await page.getByRole('button', { name: 'Generate', exact: true }).click();
