@@ -1,0 +1,9 @@
+name: Feature request
+description: Suggest an algorithm, format or app feature
+labels: [enhancement]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      { label: Proposal, description: Algorithm/format name, references, expected complexity }
+    validations: { required: true }

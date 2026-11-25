@@ -1,0 +1,15 @@
+name: Bug report
+description: Something is wrong
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      { label: What happened, description: Include a minimal graph and the call that fails }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: Expected behavior }
+  - type: input
+    id: version
+    attributes: { label: Package and version }
