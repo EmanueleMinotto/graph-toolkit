@@ -4,6 +4,8 @@ import { type KeyboardEvent } from 'react';
 import { type RenderMode } from './GraphLayers.js';
 import { t } from './i18n.js';
 import { buildScene, type SceneInput } from './webgl-scene.js';
+import { LabelLayer } from './LabelLayer.js';
+import { visibleLabels } from './labels.js';
 import { WebglLayer } from './WebglLayer.js';
 import { type View } from './viewport.js';
 
@@ -16,7 +18,19 @@ interface OverlayProps {
 
 /** The WebGL canvas behind the SVG, when the graph is big enough to need it. */
 export function GlOverlay({ mode, scene, view, box }: OverlayProps) {
-  return mode === 'webgl' ? <WebglLayer scene={buildScene(scene)} view={view} box={box} /> : null;
+  if (mode !== 'webgl') return null;
+  const labels = visibleLabels({
+    vertices: scene.graph.vertices(),
+    position: scene.position,
+    view,
+    box,
+  });
+  return (
+    <>
+      <WebglLayer scene={buildScene(scene)} view={view} box={box} />
+      <LabelLayer labels={labels} box={box} />
+    </>
+  );
 }
 
 /** The SVG becomes a tab stop with arrow-key navigation only when a canvas draws the vertices. */

@@ -134,7 +134,8 @@
   fill: none;
 }
 
-.gl-layer {
+.gl-layer,
+.gl-labels {
   position: absolute;
   top: 0;
   left: 0;

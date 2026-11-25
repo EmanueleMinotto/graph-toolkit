@@ -31,6 +31,10 @@ test('draws big graphs on a WebGL canvas that follows zoom and selection', async
     .poll(() => page.locator('svg.graph circle').count(), { timeout: 15_000 })
     .toBeGreaterThan(0);
   await expect(page.locator('svg.graph text.label').first()).toBeVisible();
+  // Every vertex on screen has a label on the 2D canvas, however many there are.
+  await expect
+    .poll(async () => Number(await page.locator('canvas[data-labels]').getAttribute('data-labels')))
+    .toBeGreaterThan(0);
 });
 
 test('translates algorithm names and results into Italian', async ({ page }) => {
