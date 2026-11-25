@@ -1,9 +1,12 @@
 import { GraphBuilder, GraphError, vertexId, type Graph } from '@graph-toolkit/core';
+import { gridGraph } from '@graph-toolkit/generators';
 import { describe, expect, it } from 'vitest';
 import {
   bfs,
+  bfsIterator,
   connectedComponents,
   dfs,
+  dfsIterator,
   stronglyConnectedComponents,
   topologicalSort,
 } from './index.js';
@@ -115,5 +118,20 @@ describe('stronglyConnectedComponents', () => {
 
   it('rejects undirected graphs', () => {
     expect(() => stronglyConnectedComponents(build(false, []))).toThrow(GraphError);
+  });
+});
+
+describe('lazy iterators', () => {
+  it('match bfs/dfs and can stop early', () => {
+    const graph = gridGraph(3, 3);
+    const start = graph.vertices()[0]!;
+    expect([...bfsIterator(graph, start)]).toEqual(bfs(graph, start));
+    expect([...dfsIterator(graph, start)]).toEqual(dfs(graph, start));
+    const firstTwo = [];
+    for (const vertex of bfsIterator(graph, start)) {
+      firstTwo.push(vertex);
+      if (firstTwo.length === 2) break;
+    }
+    expect(firstTwo).toHaveLength(2);
   });
 });
