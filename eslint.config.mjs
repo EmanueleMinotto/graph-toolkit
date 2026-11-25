@@ -35,6 +35,7 @@ const internalKernels = {
   'unicorn/no-for-loop': 'off',
   'unicorn/no-array-reduce': 'off',
   'unicorn/no-null': 'off',
+  'unicorn/no-unreadable-array-destructuring': 'off',
   '@typescript-eslint/no-non-null-assertion': 'off',
   'max-depth': ['error', 3],
   'no-magic-numbers': 'off',
@@ -86,10 +87,10 @@ export default tseslint.config(
       '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
     },
   },
-  { files: ['**/src/internal/**/*.ts'], rules: internalKernels },
+  { files: ['**/src/internal/**/*.ts', '**/src/mutable/**/*.ts'], rules: internalKernels },
   {
-    // Builders are mutable accumulators by design; they only expose immutable results.
-    files: ['**/src/*-builder.ts'],
+    // Builders and public mutable data structures (src/mutable) are mutable by design; they only expose immutable results.
+    files: ['**/src/*-builder.ts', '**/src/mutable/**/*.ts'],
     rules: { 'functional/immutable-data': 'off', 'functional/prefer-readonly-type': 'off' },
   },
   {
@@ -99,6 +100,7 @@ export default tseslint.config(
       ...vitest.configs.recommended.rules,
       'max-lines-per-function': 'off',
       'no-magic-numbers': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
       'functional/immutable-data': 'off',
       'functional/no-let': 'off',
       'functional/prefer-readonly-type': 'off',

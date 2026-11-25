@@ -7,6 +7,7 @@ TypeScript monorepo for graph theory: core model, matrices, operations, traversa
 | Package                                | Purpose                                           |
 | -------------------------------------- | ------------------------------------------------- |
 | [`@graph-toolkit/core`](packages/core) | Immutable CSR-backed graph, builder, typed errors |
+| [`@graph-toolkit/math`](packages/math) | Priority queue, disjoint set                      |
 
 More packages are added incrementally; see [docs/architecture.md](docs/architecture.md) for the planned dependency graph.
 

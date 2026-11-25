@@ -86,6 +86,8 @@ importers:
 
   packages/core: {}
 
+  packages/math: {}
+
 packages:
 
   '@andrewbranch/untar.js@1.0.4':

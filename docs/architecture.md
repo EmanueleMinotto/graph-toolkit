@@ -3,9 +3,10 @@
 ## Dependency graph (acyclic)
 
 ```text
-core ─┬─ math ─┬─ matrix
-      │        ├─ paths ──────┐
-      │        ├─ trees       ├─ algorithms
+math (no deps: heap, union-find)
+core ─┬─ matrix (core)
+      ├─ paths (core, math, traversal) ──┐
+      ├─ trees (core, math, traversal)   ├─ algorithms
       ├─ traversal ───────────┘
       ├─ operations · coloring · generators · normalize · layout
       └─ io (core, matrix, normalize)
