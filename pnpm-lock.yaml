@@ -107,6 +107,16 @@ importers:
 
   packages/math: {}
 
+  packages/matrix:
+    dependencies:
+      '@graph-toolkit/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@graph-toolkit/generators':
+        specifier: workspace:*
+        version: link:../generators
+
   packages/paths:
     dependencies:
       '@graph-toolkit/core':
