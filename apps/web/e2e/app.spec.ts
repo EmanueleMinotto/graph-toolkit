@@ -87,3 +87,24 @@ test('generates a large graph quickly and caps oversized input', async ({ page }
   await page.getByRole('button', { name: 'Generate' }).click();
   await expect(page.locator('svg.graph circle')).toHaveCount(150);
 });
+
+test('undo and redo restore previous graphs', async ({ page }) => {
+  await expect(page.getByRole('button', { name: 'Undo' })).toBeDisabled();
+  await page.getByLabel('Size').fill('9');
+  await page.getByRole('button', { name: 'Generate' }).click();
+  await expect(page.locator('svg.graph circle')).toHaveCount(9);
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(page.locator('svg.graph circle')).toHaveCount(6);
+  await page.getByRole('button', { name: 'Redo' }).click();
+  await expect(page.locator('svg.graph circle')).toHaveCount(9);
+});
+
+test('shows analysis tables and disables tools the graph cannot run', async ({ page }) => {
+  await page.getByLabel('Algorithm').selectOption('coloring');
+  await expect(page.getByRole('cell', { name: '0', exact: true }).first()).toBeVisible();
+  await page.getByLabel('Format').selectOption('edge-list');
+  await page.getByLabel('Directed (edge list / CSV)').check();
+  await page.getByLabel('Graph text').fill('a b');
+  await page.getByRole('button', { name: 'Import' }).click();
+  await expect(page.getByRole('option', { name: /Minimum spanning tree \(needs/ })).toBeDisabled();
+});

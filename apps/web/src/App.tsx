@@ -1,20 +1,13 @@
-import {
-  ActionIcon,
-  Alert,
-  AppShell,
-  Group,
-  Paper,
-  ScrollArea,
-  Stack,
-  Title,
-  useComputedColorScheme,
-  useMantineColorScheme,
-} from '@mantine/core';
+import { Alert, AppShell, Group, Paper, ScrollArea, Stack, Title } from '@mantine/core';
 import { circularLayout, forceLayout, gridLayout, type Graph, type VertexId } from 'graph-toolkit';
 import { useMemo, useState } from 'react';
-import { AnalysisPanel, GeneratePanel, ImportPanel, Select } from './Controls.js';
+import { Toolbar } from './Toolbar.js';
+import { AnalysisPanel } from './AnalysisPanel.js';
+import { GeneratePanel, ImportPanel, Select } from './Controls.js';
 import { GraphView } from './GraphView.js';
-import { analyze, type AnalysisKind } from './analysis.js';
+import { type AnalysisKind } from './analysis.js';
+import { useAnalysis } from './use-analysis.js';
+import { useHistory } from './use-history.js';
 import { makeSample, parseGraph, serializeGraph, type Format } from './formats.js';
 
 type LayoutKind = 'force' | 'circular' | 'grid';
@@ -39,7 +32,8 @@ const layouts = {
 } as const;
 
 export function App() {
-  const [graph, setGraph] = useState(() => makeSample('cycle', 6));
+  const history = useHistory(() => makeSample('cycle', 6));
+  const graph = history.present;
   const [format, setFormat] = useState<Format>('json');
   const [text, setText] = useState('');
   const [isDirected, setDirected] = useState(false);
@@ -51,13 +45,20 @@ export function App() {
 
   const layout = useMemo(() => layouts[layoutKind](graph), [graph, layoutKind]);
   const [from, to] = picked;
-  const highlight = useMemo(() => analyze(kind, graph, { from, to }), [kind, graph, from, to]);
+  const selection = useMemo(() => ({ from, to }), [from, to]);
+  const analysis = useAnalysis(kind, graph, selection);
+  const highlight = analysis.result;
 
   const replaceGraph = (next: Graph): void => {
-    setGraph(next);
+    history.push(next);
     setGeneration((value) => value + 1);
     setPicked([]);
     setError('');
+  };
+  const travel = (move: () => void): void => {
+    move();
+    setGeneration((value) => value + 1);
+    setPicked([]);
   };
   const guarded = (action: () => void): void => {
     try {
@@ -77,7 +78,7 @@ export function App() {
           <Title order={1} size="h3">
             graph-toolkit
           </Title>
-          <SchemeToggle />
+          <Toolbar history={history} onTravel={travel} />
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
@@ -104,10 +105,11 @@ export function App() {
             </Paper>
             <AnalysisPanel
               kind={kind}
-              vertices={graph.vertices()}
+              graph={graph}
               from={from}
               to={to}
-              summary={highlight.summary}
+              result={highlight}
+              isPending={analysis.isPending}
               onKind={setKind}
             />
             {error === '' ? null : (
@@ -129,20 +131,5 @@ export function App() {
         />
       </AppShell.Main>
     </AppShell>
-  );
-}
-
-function SchemeToggle() {
-  const { setColorScheme } = useMantineColorScheme();
-  const scheme = useComputedColorScheme('light');
-  return (
-    <ActionIcon
-      variant="default"
-      size="lg"
-      aria-label="Toggle color scheme"
-      onClick={() => setColorScheme(scheme === 'light' ? 'dark' : 'light')}
-    >
-      {scheme === 'light' ? '☾' : '☀'}
-    </ActionIcon>
   );
 }

@@ -9,14 +9,6 @@ import {
 
 export type AnalysisKind = 'none' | 'bfs' | 'shortest-path' | 'coloring' | 'mst';
 
-export const ANALYSES: readonly AnalysisKind[] = [
-  'none',
-  'bfs',
-  'shortest-path',
-  'coloring',
-  'mst',
-];
-
 export interface Selection {
   readonly from: VertexId | undefined;
   readonly to: VertexId | undefined;
@@ -27,6 +19,8 @@ export interface Highlight {
   readonly colors: ReadonlyMap<VertexId, number>;
   readonly edges: ReadonlySet<string>;
   readonly summary: string;
+  /** Optional two-column detail (e.g. vertex → value). */
+  readonly table?: readonly (readonly [string, string])[];
 }
 
 export function edgeKey(source: VertexId, target: VertexId, isDirected: boolean): string {
@@ -54,7 +48,12 @@ function shortestPath(graph: Graph, { from, to }: Selection): Highlight {
 function breadthFirst(graph: Graph, { from }: Selection): Highlight {
   if (from === undefined) return { ...NONE, summary: 'Pick a start vertex.' };
   const order = bfs(graph, from);
-  return { ...NONE, colors: new Map(order.map((id) => [id, 1])), summary: order.join(', ') };
+  return {
+    ...NONE,
+    colors: new Map(order.map((id) => [id, 1])),
+    summary: `${order.length} vertices reached`,
+    table: order.map((id, index) => [String(index + 1), id]),
+  };
 }
 
 function coloring(graph: Graph): Highlight {
@@ -63,6 +62,7 @@ function coloring(graph: Graph): Highlight {
     ...NONE,
     colors: new Map(result.colors),
     summary: `${result.colorCount} colors (DSATUR)`,
+    table: [...result.colors].map(([id, color]) => [id, String(color)]),
   };
 }
 
