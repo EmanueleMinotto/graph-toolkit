@@ -9,7 +9,7 @@
   "scripts": {
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
-    "lint": "eslint . --max-warnings 0 --report-unused-disable-directives",
+    "lint": "turbo run build && eslint . --max-warnings 0 --report-unused-disable-directives",
     "test": "turbo run test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
