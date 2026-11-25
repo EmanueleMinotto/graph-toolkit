@@ -42,4 +42,4 @@ jobs:
       # The artifact listing API is eventually consistent; deploying immediately can find 0 artifacts.
       - run: sleep 20
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
