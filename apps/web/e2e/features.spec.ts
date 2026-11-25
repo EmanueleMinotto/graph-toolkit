@@ -124,20 +124,26 @@ test('draws big graphs on a WebGL canvas that follows zoom and selection', async
   await choose(page, 'Kind', 'Random');
   await page.getByLabel('Size').fill('800');
   await page.getByRole('button', { name: 'Generate', exact: true }).click();
+  // A grid spreads the vertices evenly, so a zoomed-in screen holds only a few of them.
+  await choose(page, 'Layout', 'Grid');
   const canvas = page.locator('canvas.gl-layer');
   await expect(canvas).toHaveAttribute('data-vertices', '800');
   await expect(page.locator('svg.graph.gl')).toBeVisible();
   const before = await canvas.screenshot();
   const box = (await page.locator('svg.graph').boundingBox())!;
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-  for (let step = 0; step < 4; step++) await page.mouse.wheel(0, -400);
+  for (let step = 0; step < 10; step++) await page.mouse.wheel(0, -400);
   await expect
     .poll(async () => {
       const after = await canvas.screenshot();
       return after.equals(before);
     })
     .toBe(false);
-  await expect(page.locator('svg.graph circle')).toHaveCount(0);
+  // Zoomed in far enough, the vertices on screen come back as focusable SVG with labels.
+  await expect
+    .poll(() => page.locator('svg.graph circle').count(), { timeout: 15_000 })
+    .toBeGreaterThan(0);
+  await expect(page.locator('svg.graph text.label').first()).toBeVisible();
 });
 
 test('translates algorithm names and results into Italian', async ({ page }) => {

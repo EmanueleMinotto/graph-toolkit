@@ -116,6 +116,7 @@ export function createRenderer(canvas: HTMLCanvasElement): Renderer | undefined 
       gl.uniform3f(gl.getUniformLocation(program, 'u_view'), view.x, view.y, view.scale);
       gl.uniform1f(gl.getUniformLocation(program, 'u_pixels'), pixels / surface.box.width);
       drawGroup({ gl, program }, scene.edges, gl.LINES);
+      drawGroup({ gl, program }, scene.arrows, gl.TRIANGLES);
       drawGroup({ gl, program }, scene.vertices, gl.POINTS);
     },
     dispose: () => {

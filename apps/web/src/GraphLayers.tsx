@@ -100,17 +100,29 @@ interface Placed {
   readonly point: Pt;
 }
 
-/** Vertices to draw as SVG: all, those near the screen, or (with WebGL) only selected or grouped ones. */
+/** With WebGL, the SVG also holds the vertices on screen once they are this few (labels, Tab key). */
+const DOM_LIMIT = 150;
+
+/**
+ * Vertices to draw as SVG: all of them, those near the screen, or with WebGL the selected or
+ * grouped ones plus, once zoomed in enough, everything on screen (so labels and keyboard focus
+ * come back).
+ */
 function shown(props: VertexProps): readonly Placed[] {
   const { graph, mode, view, position, selected, group } = props;
-  return graph
+  const placed = graph
     .vertices()
     .map((id) => ({ id, point: position(id) }))
-    .filter((vertex): vertex is Placed => vertex.point !== undefined)
-    .filter(({ id, point }) => {
-      const isKept = group.has(id) || selected.includes(id);
-      return mode === 'webgl' ? isKept : !isOffScreen(point, view, mode === 'culled' && !isKept);
-    });
+    .filter((vertex): vertex is Placed => vertex.point !== undefined);
+  const near = placed.filter(({ point }) => isInView(point, view, BOX));
+  const isKept = ({ id }: Placed): boolean => group.has(id) || selected.includes(id);
+  if (mode === 'webgl') {
+    const pool = near.length <= DOM_LIMIT ? near : [];
+    return placed.filter((vertex) => isKept(vertex) || pool.includes(vertex));
+  }
+  return placed.filter(
+    (vertex) => !isOffScreen(vertex.point, view, mode === 'culled' && !isKept(vertex)),
+  );
 }
 
 /** Vertices, with labels once zoomed in on big graphs. */

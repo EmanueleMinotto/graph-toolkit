@@ -21,6 +21,8 @@ const MIN_SCALE = 0.6;
 export const STRIDE = 7;
 
 export interface Scene {
+  /** Three vertices per arrowhead of a directed edge. */
+  readonly arrows: Float32Array;
   /** Two vertices per edge. */
   readonly edges: Float32Array;
   /** One vertex per graph vertex. */
@@ -50,6 +52,39 @@ const vertexRow = (point: Pt, color: Rgb, diameter: number): readonly number[] =
   diameter,
 ];
 
+const ARROW_LENGTH = 10;
+const ARROW_HALF_WIDTH = 4;
+const TIP_GAP = 14;
+
+/** Triangle rows for an arrowhead whose tip touches the edge's target vertex. */
+function arrowRows(from: Pt, to: Pt, color: readonly number[]): readonly number[] {
+  const length = Math.hypot(to.x - from.x, to.y - from.y);
+  if (length === 0) return [];
+  const [dx, dy] = [(to.x - from.x) / length, (to.y - from.y) / length];
+  const tip = { x: to.x - dx * TIP_GAP, y: to.y - dy * TIP_GAP };
+  const base = { x: tip.x - dx * ARROW_LENGTH, y: tip.y - dy * ARROW_LENGTH };
+  const [red = 0, green = 0, blue = 0, alpha = 1] = color;
+  const row = (point: Pt): readonly number[] => [point.x, point.y, red, green, blue, alpha, 0];
+  return [
+    ...row(tip),
+    ...row({ x: base.x - dy * ARROW_HALF_WIDTH, y: base.y + dx * ARROW_HALF_WIDTH }),
+    ...row({ x: base.x + dy * ARROW_HALF_WIDTH, y: base.y - dx * ARROW_HALF_WIDTH }),
+  ];
+}
+
+function arrowData(
+  graph: Graph,
+  position: SceneInput['position'],
+  highlight: Highlight,
+): readonly number[] {
+  return graph.edges().flatMap((edge) => {
+    const [from, to] = [position(edge.source), position(edge.target)];
+    if (from === undefined || to === undefined) return [];
+    const key = edgeKey(edge.source, edge.target, true);
+    return arrowRows(from, to, edgeColor(highlight, key));
+  });
+}
+
 /** Flat vertex data for every drawable edge and vertex of the graph. */
 export function buildScene({ graph, position, highlight }: SceneInput): Scene {
   const edges = graph.edges().flatMap((edge) => {
@@ -69,5 +104,10 @@ export function buildScene({ graph, position, highlight }: SceneInput): Scene {
     const color = paletteAt(highlight.colors.get(id) ?? 0);
     return vertexRow(point, color, VERTEX_DIAMETER * size);
   });
-  return { edges: Float32Array.from(edges), vertices: Float32Array.from(vertices) };
+  const arrows = graph.directed ? arrowData(graph, position, highlight) : [];
+  return {
+    edges: Float32Array.from(edges),
+    vertices: Float32Array.from(vertices),
+    arrows: Float32Array.from(arrows),
+  };
 }

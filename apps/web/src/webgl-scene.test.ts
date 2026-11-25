@@ -46,4 +46,25 @@ describe('buildScene', () => {
     const highlight: Highlight = { ...NONE, edgeColors: new Map([[key, 3]]) };
     expect(buildScene({ graph, position, highlight }).edges[2]).toBeCloseTo(PALETTE[3]![0]);
   });
+
+  it('adds an arrowhead per edge of a directed graph, pointing at the target', () => {
+    const directed = pathGraph(2, { directed: true });
+    const { arrows } = buildScene({ graph: directed, position, highlight: NONE });
+    expect(arrows).toHaveLength(3 * STRIDE);
+    expect(arrows[0]).toBeLessThan(10);
+    expect(arrows[0]).toBeGreaterThan(arrows[STRIDE]!);
+    expect(buildScene({ graph, position, highlight: NONE }).arrows).toHaveLength(0);
+  });
+
+  it('skips arrowheads for zero-length or unplaced edges', () => {
+    const directed = pathGraph(2, { directed: true });
+    const same = buildScene({ graph: directed, position: () => ({ x: 1, y: 1 }), highlight: NONE });
+    expect(same.arrows).toHaveLength(0);
+    const missing = buildScene({
+      graph: directed,
+      position: (id) => (id === '1' ? undefined : position(id)),
+      highlight: NONE,
+    });
+    expect(missing.arrows).toHaveLength(0);
+  });
 });
