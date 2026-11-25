@@ -81,9 +81,8 @@ function pushFlow(residual: Residual, edges: readonly number[]): number {
   return bottleneck;
 }
 
-/** Edmonds–Karp, O(V·E²). Arc weights are capacities. */
-export function edmondsKarp(csr: Csr, vertexCount: number, terminals: Terminals): number {
-  const residual = buildResidual(csr, vertexCount);
+/** Pushes augmenting paths until none is left; mutates `residual`. Returns the flow value. */
+export function saturate(residual: Residual, terminals: Terminals): number {
   let total = 0;
   for (
     let path = findAugmentingPath(residual, terminals);
@@ -93,4 +92,28 @@ export function edmondsKarp(csr: Csr, vertexCount: number, terminals: Terminals)
     total += pushFlow(residual, pathEdges(residual, path, terminals));
   }
   return total;
+}
+
+/** Edmonds–Karp, O(V·E²). Arc weights are capacities. */
+export function edmondsKarp(csr: Csr, vertexCount: number, terminals: Terminals): number {
+  return saturate(buildResidual(csr, vertexCount), terminals);
+}
+
+/** Vertices reachable from the source in the residual graph after a maximum flow. */
+export function sourceSide(csr: Csr, vertexCount: number, terminals: Terminals): Uint8Array {
+  const residual = buildResidual(csr, vertexCount);
+  saturate(residual, terminals);
+  const reached = new Uint8Array(vertexCount);
+  reached[terminals.source] = 1;
+  const queue = [terminals.source];
+  for (let head = 0; head < queue.length; head++) {
+    const outgoing = residual.adjacency[queue[head]!]!;
+    for (const edge of outgoing) {
+      const target = residual.to[edge]!;
+      if (reached[target] === 1 || residual.capacity[edge]! <= 0) continue;
+      reached[target] = 1;
+      queue.push(target);
+    }
+  }
+  return reached;
 }

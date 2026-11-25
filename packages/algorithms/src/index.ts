@@ -1,4 +1,11 @@
-export { maxFlow, maxFlowDinic, pageRank, type PageRankOptions } from './algorithms.js';
+export {
+  maxFlow,
+  maxFlowDinic,
+  minCut,
+  pageRank,
+  type MinCut,
+  type PageRankOptions,
+} from './algorithms.js';
 export {
   betweennessCentrality,
   closenessCentrality,
@@ -9,3 +16,23 @@ export { maximalCliques, maximumClique } from './cliques.js';
 export { communities } from './communities.js';
 export { maximumBipartiteMatching, type Matching } from './matching.js';
 export { isPlanar } from './planarity.js';
+export {
+  articulationPoints,
+  averageClustering,
+  biconnectedComponents,
+  bridges,
+  center,
+  clusteringCoefficients,
+  diameter,
+  eccentricities,
+  kCores,
+  radius,
+  transitiveClosure,
+} from './structure.js';
+export {
+  maximumMatching,
+  minCostFlow,
+  minimumCostAssignment,
+  type Assignment,
+  type MinCostFlowOptions,
+} from './optimization.js';

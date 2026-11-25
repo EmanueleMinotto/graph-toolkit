@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { AbortSignalLike, Csr } from '@graph-toolkit/core';
 
 function neighborsOf(csr: Csr, vertex: number): Set<number> {
   return new Set(csr.targets.subarray(csr.offsets[vertex], csr.offsets[vertex + 1]));
@@ -7,6 +7,7 @@ function neighborsOf(csr: Csr, vertex: number): Set<number> {
 interface Frame {
   readonly adjacency: readonly Set<number>[];
   readonly found: number[][];
+  readonly signal: AbortSignalLike | undefined;
 }
 
 function pivotOf(
@@ -41,6 +42,7 @@ function branch(frame: Frame, { clique, sets }: Node, vertex: number): void {
 }
 
 function expand(frame: Frame, clique: readonly number[], sets: Sets): void {
+  frame.signal?.throwIfAborted();
   if (sets.candidates.size === 0 && sets.excluded.size === 0) {
     frame.found.push([...clique]);
     return;
@@ -51,10 +53,14 @@ function expand(frame: Frame, clique: readonly number[], sets: Sets): void {
 }
 
 /** Bron–Kerbosch with pivoting; loops are ignored. Output size can be exponential. */
-export function maximalCliqueKernel(csr: Csr, vertexCount: number): number[][] {
+export function maximalCliqueKernel(
+  csr: Csr,
+  vertexCount: number,
+  signal?: AbortSignalLike,
+): number[][] {
   const adjacency = Array.from({ length: vertexCount }, (_, vertex) => neighborsOf(csr, vertex));
   for (const [vertex, around] of adjacency.entries()) around.delete(vertex);
-  const frame: Frame = { adjacency, found: [] };
+  const frame: Frame = { adjacency, found: [], signal };
   const all = new Set(Array.from({ length: vertexCount }, (_, vertex) => vertex));
   if (vertexCount > 0) expand(frame, [], { candidates: all, excluded: new Set() });
   return frame.found;

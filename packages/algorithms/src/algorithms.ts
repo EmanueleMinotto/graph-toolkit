@@ -1,7 +1,30 @@
-import { GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
+import { GraphError, type Edge, type Graph, type VertexId } from '@graph-toolkit/core';
 import { dinicKernel } from './internal/dinic.js';
-import { edmondsKarp, type Terminals } from './internal/flow.js';
+import { edmondsKarp, sourceSide, type Terminals } from './internal/flow.js';
 import { pageRankKernel, rankAt } from './internal/rank.js';
+
+export interface MinCut {
+  /** Total capacity of the cut, equal to the maximum flow. */
+  readonly value: number;
+  readonly sourceSide: readonly VertexId[];
+  readonly sinkSide: readonly VertexId[];
+  /** Edges going from the source side to the sink side. */
+  readonly edges: readonly Edge[];
+}
+
+/** Minimum s–t cut (max-flow min-cut theorem); same contract as {@link maxFlow}. */
+export function minCut(graph: Graph, source: VertexId, sink: VertexId): MinCut {
+  const terminals = terminalsOf(graph, source, sink);
+  const reached = sourceSide(graph.csr, graph.vertexCount, terminals);
+  const onSource = (id: VertexId): boolean => reached[graph.indexOf(id)] === 1;
+  const edges = graph.edges().filter((edge) => onSource(edge.source) && !onSource(edge.target));
+  return {
+    value: edges.reduce((sum, edge) => sum + edge.weight, 0),
+    sourceSide: graph.vertices().filter((id) => onSource(id)),
+    sinkSide: graph.vertices().filter((id) => !onSource(id)),
+    edges,
+  };
+}
 
 const DEFAULT_DAMPING = 0.85;
 const DEFAULT_ITERATIONS = 100;
