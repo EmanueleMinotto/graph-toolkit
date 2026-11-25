@@ -1,0 +1,49 @@
+{
+  "name": "graph-toolkit",
+  "version": "0.0.0",
+  "description": "Everything in one import: re-exports all @graph-toolkit packages",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@graph-toolkit/core": "workspace:*",
+    "@graph-toolkit/math": "workspace:*",
+    "@graph-toolkit/matrix": "workspace:*",
+    "@graph-toolkit/operations": "workspace:*",
+    "@graph-toolkit/traversal": "workspace:*",
+    "@graph-toolkit/paths": "workspace:*",
+    "@graph-toolkit/trees": "workspace:*",
+    "@graph-toolkit/coloring": "workspace:*",
+    "@graph-toolkit/algorithms": "workspace:*",
+    "@graph-toolkit/generators": "workspace:*",
+    "@graph-toolkit/normalize": "workspace:*",
+    "@graph-toolkit/io": "workspace:*",
+    "@graph-toolkit/layout": "workspace:*"
+  }
+}

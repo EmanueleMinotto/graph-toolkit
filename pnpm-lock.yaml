@@ -115,6 +115,48 @@ importers:
         specifier: workspace:*
         version: link:../core
 
+  packages/graph-toolkit:
+    dependencies:
+      '@graph-toolkit/algorithms':
+        specifier: workspace:*
+        version: link:../algorithms
+      '@graph-toolkit/coloring':
+        specifier: workspace:*
+        version: link:../coloring
+      '@graph-toolkit/core':
+        specifier: workspace:*
+        version: link:../core
+      '@graph-toolkit/generators':
+        specifier: workspace:*
+        version: link:../generators
+      '@graph-toolkit/io':
+        specifier: workspace:*
+        version: link:../io
+      '@graph-toolkit/layout':
+        specifier: workspace:*
+        version: link:../layout
+      '@graph-toolkit/math':
+        specifier: workspace:*
+        version: link:../math
+      '@graph-toolkit/matrix':
+        specifier: workspace:*
+        version: link:../matrix
+      '@graph-toolkit/normalize':
+        specifier: workspace:*
+        version: link:../normalize
+      '@graph-toolkit/operations':
+        specifier: workspace:*
+        version: link:../operations
+      '@graph-toolkit/paths':
+        specifier: workspace:*
+        version: link:../paths
+      '@graph-toolkit/traversal':
+        specifier: workspace:*
+        version: link:../traversal
+      '@graph-toolkit/trees':
+        specifier: workspace:*
+        version: link:../trees
+
   packages/io:
     dependencies:
       '@graph-toolkit/core':
