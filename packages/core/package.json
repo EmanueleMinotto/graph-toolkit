@@ -1,6 +1,6 @@
 {
   "name": "@graph-toolkit/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Immutable graph model, builder and typed errors",
   "license": "MIT",
   "engines": {

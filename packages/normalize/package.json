@@ -1,6 +1,6 @@
 {
   "name": "@graph-toolkit/normalize",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Graph standardization: canonical ordering, relabeling, self-loop removal",
   "license": "MIT",
   "engines": {

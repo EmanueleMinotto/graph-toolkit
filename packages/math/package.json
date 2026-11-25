@@ -1,6 +1,6 @@
 {
   "name": "@graph-toolkit/math",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Priority queue and disjoint-set data structures for graph algorithms",
   "license": "MIT",
   "engines": {

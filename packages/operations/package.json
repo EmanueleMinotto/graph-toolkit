@@ -1,6 +1,6 @@
 {
   "name": "@graph-toolkit/operations",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Set-style operations on graphs: union, intersection, complement, subgraph, transpose",
   "license": "MIT",
   "engines": {

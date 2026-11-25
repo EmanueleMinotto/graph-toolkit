@@ -1,6 +1,6 @@
 {
   "name": "@graph-toolkit/layout",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Deterministic 2D layouts: circular, grid, force-directed",
   "license": "MIT",
   "engines": {
