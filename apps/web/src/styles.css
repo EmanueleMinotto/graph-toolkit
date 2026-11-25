@@ -73,3 +73,7 @@
 .c7 {
   fill: var(--mantine-color-gray-6);
 }
+
+.graph.editing {
+  cursor: crosshair;
+}

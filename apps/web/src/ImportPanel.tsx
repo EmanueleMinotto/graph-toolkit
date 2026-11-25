@@ -1,44 +1,57 @@
 import { Button, Checkbox, FileButton, Group, Textarea } from '@mantine/core';
+import { type Graph } from 'graph-toolkit';
+import { useState } from 'react';
 import { Panel, Select } from './Controls.js';
-import { FORMATS, formatFromFileName, type Format } from './formats.js';
+import { download } from './download.js';
+import {
+  FORMATS,
+  fileName,
+  formatFromFileName,
+  parseGraph,
+  serializeGraph,
+  type Format,
+} from './formats.js';
 
 interface Props {
-  readonly format: Format;
-  readonly text: string;
-  readonly isDirected: boolean;
-  readonly onFormat: (format: Format) => void;
-  readonly onText: (text: string) => void;
-  readonly onDirected: (isDirected: boolean) => void;
-  readonly onImport: () => void;
-  readonly onExport: () => void;
-  readonly onDownload: () => void;
+  readonly graph: Graph;
+  readonly onReplace: (graph: Graph) => void;
+  /** Runs an action and reports thrown errors to the user. */
+  readonly guarded: (action: () => void) => void;
 }
 
-export function ImportPanel(props: Props) {
+export function ImportPanel({ graph, onReplace, guarded }: Props) {
+  const [format, setFormat] = useState<Format>('json');
+  const [text, setText] = useState('');
+  const [isDirected, setDirected] = useState(false);
   const upload = async (file: File | null): Promise<void> => {
     if (file === null) return;
     const format = formatFromFileName(file.name);
-    if (format !== undefined) props.onFormat(format);
-    props.onText(await file.text());
+    if (format !== undefined) setFormat(format);
+    setText(await file.text());
   };
   return (
     <Panel title="Import / export">
-      <Select label="Format" value={props.format} options={FORMATS} onChange={props.onFormat} />
+      <Select label="Format" value={format} options={FORMATS} onChange={setFormat} />
       <Checkbox
         label="Directed (edge list / CSV)"
-        checked={props.isDirected}
-        onChange={(event) => props.onDirected(event.currentTarget.checked)}
+        checked={isDirected}
+        onChange={(event) => setDirected(event.currentTarget.checked)}
       />
       <Textarea
         aria-label="Graph text"
-        value={props.text}
-        onChange={(event) => props.onText(event.currentTarget.value)}
+        value={text}
+        onChange={(event) => setText(event.currentTarget.value)}
         rows={8}
         styles={{ input: { fontFamily: 'var(--mantine-font-family-monospace)' } }}
       />
       <Group grow>
-        <Button onClick={props.onImport}>Import</Button>
-        <Button variant="default" onClick={props.onExport}>
+        <Button onClick={() => guarded(() => onReplace(parseGraph(format, text, isDirected)))}>
+          Import
+        </Button>
+        <Button
+          variant="default"
+          onClick={() => guarded(() => setText(serializeGraph(format, graph)))}
+        >
           Export current
         </Button>
       </Group>
@@ -50,7 +63,10 @@ export function ImportPanel(props: Props) {
             </Button>
           )}
         </FileButton>
-        <Button variant="default" onClick={props.onDownload}>
+        <Button
+          variant="default"
+          onClick={() => guarded(() => download(fileName(format), serializeGraph(format, graph)))}
+        >
           Download
         </Button>
       </Group>

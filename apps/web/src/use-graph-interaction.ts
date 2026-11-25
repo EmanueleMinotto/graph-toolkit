@@ -1,6 +1,6 @@
 import { type VertexId } from 'graph-toolkit';
 import { useEffect, useRef, useState, type PointerEvent, type RefObject } from 'react';
-import { IDENTITY, panBy, wheelFactor, zoomAt, type Pt, type View } from './viewport.js';
+import { IDENTITY, panBy, toContent, wheelFactor, zoomAt, type Pt, type View } from './viewport.js';
 
 export interface Box {
   readonly width: number;
@@ -8,6 +8,18 @@ export interface Box {
 }
 
 const CLICK_SLOP = 3;
+const HIT_RADIUS = 18;
+
+/** Gestures that edit the graph; passing `undefined` leaves the canvas in select mode. */
+export interface EditHandlers {
+  readonly onAdd: (at: Pt) => void;
+  readonly onLink: (from: VertexId, to: VertexId) => void;
+}
+
+export interface Link {
+  readonly from: VertexId;
+  readonly to: Pt;
+}
 
 interface Drag {
   readonly target: VertexId | undefined;
@@ -19,22 +31,29 @@ export interface Interaction {
   readonly svg: RefObject<SVGSVGElement | null>;
   readonly view: View;
   readonly position: (id: VertexId) => Pt | undefined;
+  /** Rubber-band edge while dragging from a vertex in edit mode. */
+  readonly link: Link | undefined;
+  readonly positions: () => ReadonlyMap<VertexId, Pt>;
   readonly startDrag: (event: PointerEvent, target: VertexId | undefined) => void;
   readonly moveDrag: (event: PointerEvent) => void;
   readonly endDrag: () => void;
   readonly reset: () => void;
 }
 
+export interface Options {
+  readonly base: ReadonlyMap<VertexId, Pt>;
+  readonly box: Box;
+  readonly onPick: (id: VertexId) => void;
+  readonly edit?: EditHandlers | undefined;
+}
+
 /** Wheel zoom, background panning and vertex dragging for an SVG of size `box`. */
-export function useGraphInteraction(
-  base: ReadonlyMap<VertexId, Pt>,
-  box: Box,
-  onPick: (id: VertexId) => void,
-): Interaction {
+export function useGraphInteraction({ base, box, onPick, edit }: Options): Interaction {
   const svg = useRef<SVGSVGElement>(null);
   const drag = useRef<Drag | undefined>(undefined);
   const [view, setView] = useState<View>(IDENTITY);
   const [moved, setMoved] = useState<ReadonlyMap<VertexId, Pt>>(new Map());
+  const [link, setLink] = useState<Link | undefined>();
   const position = (id: VertexId): Pt | undefined => moved.get(id) ?? base.get(id);
 
   const toSvg = (event: { readonly clientX: number; readonly clientY: number }): Pt => {
@@ -76,6 +95,10 @@ export function useGraphInteraction(
     const [dx, dy] = [point.x - current.last.x, point.y - current.last.y];
     drag.current = { ...current, last: point, travelled: current.travelled + Math.hypot(dx, dy) };
     const { target } = current;
+    if (target !== undefined && edit !== undefined) {
+      setLink({ from: target, to: toContent(view, point) });
+      return;
+    }
     if (target === undefined) {
       setView((previous) => panBy(previous, dx, dy));
       return;
@@ -85,10 +108,37 @@ export function useGraphInteraction(
     setMoved((previous) => new Map(previous).set(target, next));
   };
 
+  const positions = (): ReadonlyMap<VertexId, Pt> =>
+    new Map([...base.keys()].map((id) => [id, position(id) ?? { x: 0, y: 0 }]));
+
+  const vertexAt = (point: Pt): VertexId | undefined =>
+    base.keys().find((id) => {
+      const at = position(id);
+      return at !== undefined && Math.hypot(at.x - point.x, at.y - point.y) <= HIT_RADIUS;
+    });
+
+  const finishLink = (source: VertexId, point: Pt): void => {
+    const hit = vertexAt(point);
+    if (hit !== undefined && hit !== source) edit?.onLink(source, hit);
+  };
+
+  const release = ({ target, last, travelled }: Drag): void => {
+    const isClick = travelled < CLICK_SLOP;
+    const point = toContent(view, last);
+    if (target === undefined) {
+      if (isClick) edit?.onAdd(point);
+    } else if (isClick) {
+      onPick(target);
+    } else {
+      finishLink(target, point);
+    }
+  };
+
   const endDrag = (): void => {
     const current = drag.current;
     drag.current = undefined;
-    if (current?.target !== undefined && current.travelled < CLICK_SLOP) onPick(current.target);
+    setLink(undefined);
+    if (current !== undefined) release(current);
   };
 
   const reset = (): void => {
@@ -96,5 +146,5 @@ export function useGraphInteraction(
     setMoved(new Map());
   };
 
-  return { svg, view, position, startDrag, moveDrag, endDrag, reset };
+  return { svg, view, position, link, positions, startDrag, moveDrag, endDrag, reset };
 }

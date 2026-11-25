@@ -16,6 +16,7 @@ pnpm --filter @graph-toolkit/web build   # static site in apps/web/dist
 - Import / export JSON, edge list, DOT, GraphML, GEXF, Mermaid and adjacency CSV: paste text then **Import**, **Export current** fills the box, **Upload file** / **Download** use files (the format is guessed from the extension).
 - Layouts: force-directed, circular, grid, layered. **Undo / Redo** (header) step through up to 50 previous graphs.
 - Navigation: mouse wheel zooms around the cursor, dragging the background pans, dragging a vertex moves it (a plain click still selects it), **Reset view** restores zoom and positions.
+- Editor: switch **Edit graph** to _Edit_, then click the canvas to add a vertex and drag from one vertex to another to add an edge (weight and _Allow parallel edges_ are set in the panel). With one or two vertices selected, **Remove vertex**, **Remove edge** and **Set weight on edge** act on them. Manual edits pin every vertex position and are undoable.
 - Analyses: BFS order, shortest path (click a start and a target vertex), DSATUR coloring, minimum spanning tree. Library errors (e.g. MST on a directed graph) are shown as messages.
 
 ## Structure
