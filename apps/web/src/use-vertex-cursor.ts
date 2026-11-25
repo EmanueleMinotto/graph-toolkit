@@ -1,5 +1,5 @@
 import { type VertexId } from 'graph-toolkit';
-import { useState, type KeyboardEvent } from 'react';
+import { useState, type KeyboardEvent, type PointerEvent } from 'react';
 import { nextInDirection, type Heading } from './culling.js';
 import { type Pt } from './viewport.js';
 
@@ -15,10 +15,14 @@ export interface CursorOptions {
   readonly vertices: readonly VertexId[];
   readonly position: (id: VertexId) => Pt | undefined;
   readonly onPick: (id: VertexId) => void;
+  /** The vertex under the pointer, if any. */
+  readonly hit: (event: PointerEvent) => VertexId | undefined;
 }
 
 export interface VertexCursor {
+  /** The keyboard cursor, or the vertex under the pointer: it is drawn as SVG with its label. */
   readonly cursor: VertexId | undefined;
+  readonly onPointerMove: (event: PointerEvent) => void;
   readonly onKeyDown: (event: KeyboardEvent) => void;
 }
 
@@ -27,8 +31,9 @@ export interface VertexCursor {
  * that direction, Enter or Space picks it, Escape drops it. Only active while `isActive`.
  */
 export function useVertexCursor(options: CursorOptions): VertexCursor {
-  const { isActive, vertices, position, onPick } = options;
+  const { isActive, vertices, position, onPick, hit } = options;
   const [cursor, setCursor] = useState<VertexId | undefined>();
+  const [hovered, setHovered] = useState<VertexId | undefined>();
   const move = (heading: Heading): void => {
     const from = cursor === undefined ? undefined : position(cursor);
     if (from === undefined) {
@@ -52,5 +57,8 @@ export function useVertexCursor(options: CursorOptions): VertexCursor {
     else return;
     event.preventDefault();
   };
-  return { cursor: isActive ? cursor : undefined, onKeyDown };
+  const onPointerMove = (event: PointerEvent): void => {
+    if (isActive) setHovered(hit(event));
+  };
+  return { cursor: isActive ? (hovered ?? cursor) : undefined, onPointerMove, onKeyDown };
 }

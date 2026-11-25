@@ -70,6 +70,7 @@ export function GraphView({
     vertices: graph.vertices(),
     position,
     onPick,
+    hit,
   });
   return (
     <Paper withBorder radius="md" className="graph-wrap">
@@ -84,7 +85,10 @@ export function GraphView({
         onPointerDown={(event) => {
           startDrag(event, mode === 'webgl' ? hit(event) : undefined);
         }}
-        onPointerMove={moveDrag}
+        onPointerMove={(event) => {
+          moveDrag(event);
+          keys.onPointerMove(event);
+        }}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         {...keyProps(mode, keys.onKeyDown)}

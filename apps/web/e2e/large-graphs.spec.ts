@@ -63,3 +63,27 @@ test('moves through the vertices of a big graph with the arrow keys', async ({ p
   await page.keyboard.press('Enter');
   await expect(page.locator('svg.graph circle.selected')).toHaveCount(1);
 });
+
+test('shows the label of the vertex under the pointer on a big graph', async ({ page }) => {
+  // Skipped only in browsers without WebGL, where every label is already drawn.
+  test.skip(!(await hasWebgl(page)), 'this browser has no WebGL');
+  await choose(page, 'Kind', 'Path');
+  await page.getByLabel('Size').fill('400');
+  await page.getByRole('button', { name: 'Generate', exact: true }).click();
+  await choose(page, 'Layout', 'Grid');
+  await expect(page.locator('canvas.gl-layer')).toHaveAttribute('data-vertices', '400');
+  await expect(page.locator('svg.graph text.label')).toHaveCount(0);
+  const box = (await page.locator('svg.graph').boundingBox())!;
+  // Sweep the drawing until the pointer lands on a vertex.
+  await expect(async () => {
+    for (let step = 0; step < 40; step++) {
+      await page.mouse.move(
+        box.x + box.width * (0.1 + (0.8 * ((step * 7) % 10)) / 10),
+        box.y + box.height * (0.1 + (0.8 * (step % 10)) / 10),
+      );
+      if ((await page.locator('svg.graph text.label').count()) > 0) return;
+    }
+    throw new Error('no vertex was hovered');
+  }).toPass({ timeout: 15_000 });
+  await expect(page.locator('svg.graph text.label')).toHaveCount(1);
+});
