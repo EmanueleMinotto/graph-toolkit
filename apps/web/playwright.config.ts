@@ -7,8 +7,8 @@ export default defineConfig({
   // Pointer-drag tests are occasionally dropped by WebKit on CI runners; a retry settles it.
   retries: process.env.CI === undefined ? 0 : 2,
   reporter: [['list']],
-  // Baselines are per OS, so they live next to the specs without a platform suffix.
-  snapshotPathTemplate: '{testDir}/__screenshots__/{testFilePath}/{arg}{ext}',
+  // Baselines depend on the OS fonts, so each platform keeps its own.
+  snapshotPathTemplate: '{testDir}/__screenshots__/{testFilePath}/{arg}-{platform}{ext}',
   use: { baseURL: 'http://127.0.0.1:4173' },
   projects: [
     { name: 'chromium', use: devices['Desktop Chrome'] },
