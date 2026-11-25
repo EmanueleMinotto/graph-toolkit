@@ -23,3 +23,9 @@ laplacianMatrix(cycleGraph(4)).toRows(); // each row sums to 0
 | `graphFromAdjacency(m, { isDirected? })` | Vertices `"0"`..`"n-1"`; undirected input must be symmetric.                    |
 
 Planned: incidence matrix, spectrum (eigenvalues).
+
+## Incidence matrix and spectrum
+
+- `incidenceMatrix(graph)`: vertices × edges (columns follow `graph.edges()`); directed arcs use −1 at the source, +1 at the target.
+- `eigenvalues(matrix)`: ascending eigenvalues of a symmetric matrix (Jacobi method).
+- `adjacencySpectrum(graph)`, `laplacianSpectrum(graph)`, `algebraicConnectivity(graph)`: spectral graph measures (Fiedler value is 0 iff the graph is disconnected).

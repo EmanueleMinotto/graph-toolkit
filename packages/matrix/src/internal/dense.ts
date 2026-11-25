@@ -87,3 +87,17 @@ export function nonZeroEntries(data: Float64Array, size: number, isUpperOnly: bo
 export function cellAt(data: Float64Array, index: number): number {
   return data[index]!;
 }
+
+/** Row-major vertices × edges incidence data; `pairs` are (source, target) index pairs. */
+export function incidenceData(
+  size: number,
+  pairs: readonly (readonly [number, number])[],
+  isDirected: boolean,
+): Float64Array {
+  const data = new Float64Array(size * pairs.length);
+  for (const [column, [from, to]] of pairs.entries()) {
+    data[from * pairs.length + column] = isDirected ? -1 : 1;
+    data[to * pairs.length + column] = 1;
+  }
+  return data;
+}

@@ -1,5 +1,11 @@
 import { GraphBuilder, GraphError, vertexId, type Graph, type VertexId } from '@graph-toolkit/core';
-import { adjacencyData, isSymmetric, laplacianData, nonZeroEntries } from './internal/dense.js';
+import {
+  adjacencyData,
+  incidenceData,
+  isSymmetric,
+  laplacianData,
+  nonZeroEntries,
+} from './internal/dense.js';
 import { Matrix } from './matrix.js';
 
 export interface MatrixOptions {
@@ -12,6 +18,18 @@ export function adjacencyMatrix(graph: Graph, options: MatrixOptions = {}): Matr
   const { vertexCount } = graph;
   const data = adjacencyData(graph.csr, vertexCount, options.isWeighted ?? false);
   return new Matrix(vertexCount, vertexCount, data);
+}
+
+/**
+ * Vertex–edge incidence matrix (columns follow `graph.edges()`): undirected edges mark both
+ * endpoints with 1; directed arcs use −1 at the source and +1 at the target.
+ */
+export function incidenceMatrix(graph: Graph): Matrix {
+  const pairs = graph
+    .edges()
+    .map((edge) => [graph.indexOf(edge.source), graph.indexOf(edge.target)] as const);
+  const data = incidenceData(graph.vertexCount, pairs, graph.directed);
+  return new Matrix(graph.vertexCount, pairs.length, data);
 }
 
 /** Laplacian L = D − A of an undirected graph (rows sum to zero). */
