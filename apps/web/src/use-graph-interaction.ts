@@ -41,6 +41,8 @@ export interface Interaction {
   readonly moveDrag: (event: PointerEvent) => void;
   readonly endDrag: () => void;
   readonly reset: () => void;
+  /** The vertex under the pointer, if any (for canvases that draw vertices themselves). */
+  readonly hit: (event: PointerEvent) => VertexId | undefined;
 }
 
 export interface Options {
@@ -160,5 +162,8 @@ export function useGraphInteraction({
     setMoved(new Map());
   };
 
-  return { svg, view, position, link, positions, startDrag, moveDrag, endDrag, reset };
+  const hit = (event: PointerEvent): VertexId | undefined =>
+    vertexAt(toContent(view, toSvg(event)));
+
+  return { svg, view, position, link, positions, startDrag, moveDrag, endDrag, reset, hit };
 }

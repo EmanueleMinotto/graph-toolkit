@@ -133,3 +133,17 @@
 .edge.bulk {
   fill: none;
 }
+
+.gl-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 800 / 520;
+  pointer-events: none;
+}
+
+.graph.gl {
+  position: relative;
+  background: transparent;
+}

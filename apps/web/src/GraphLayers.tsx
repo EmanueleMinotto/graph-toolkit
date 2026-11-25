@@ -23,8 +23,17 @@ function edgeClass(highlight: Highlight, key: string): string {
   return highlight.edges.has(key) ? 'edge on' : 'edge';
 }
 
+/** `full`: everything as SVG; `culled`: SVG near the screen; `webgl`: a canvas draws it all. */
+export type RenderMode = 'full' | 'culled' | 'webgl';
+
+export function renderMode(graph: Graph, canUseWebgl: boolean): RenderMode {
+  if (graph.vertexCount <= CULL_ABOVE) return 'full';
+  return canUseWebgl ? 'webgl' : 'culled';
+}
+
 interface Common {
   readonly graph: Graph;
+  readonly mode: RenderMode;
   readonly view: View;
   readonly position: (id: VertexId) => Pt | undefined;
   readonly highlight: Highlight;
@@ -33,7 +42,6 @@ interface Common {
 const isOffScreen = (point: Pt, view: View, isCulled: boolean): boolean =>
   isCulled && !isInView(point, view, BOX);
 
-const isCulling = (graph: Graph): boolean => graph.vertexCount > CULL_ABOVE;
 const isPlain = (highlight: Highlight, key: string): boolean =>
   !highlight.edges.has(key) && !highlight.edgeColors?.has(key);
 
@@ -44,7 +52,8 @@ interface Drawn {
 }
 
 /** Edges as lines; on big graphs the plain ones near the screen become a single path. */
-export function Edges({ graph, view, position, highlight }: Common) {
+export function Edges({ graph, mode, view, position, highlight }: Common) {
+  if (mode === 'webgl') return null;
   const drawn = graph
     .edges()
     .map((edge) => ({
@@ -53,7 +62,7 @@ export function Edges({ graph, view, position, highlight }: Common) {
       to: position(edge.target),
     }))
     .filter((edge): edge is Drawn => edge.from !== undefined && edge.to !== undefined);
-  const culling = isCulling(graph);
+  const culling = mode === 'culled';
   const near = culling
     ? drawn.filter((edge) => isInView(edge.from, view, BOX) || isInView(edge.to, view, BOX))
     : drawn;
@@ -91,24 +100,23 @@ interface Placed {
   readonly point: Pt;
 }
 
-/** Vertices to draw: all of them, or on big graphs only those on screen, selected or grouped. */
+/** Vertices to draw as SVG: all, those near the screen, or (with WebGL) only selected or grouped ones. */
 function shown(props: VertexProps): readonly Placed[] {
-  const { graph, view, position, selected, group } = props;
-  const culling = isCulling(graph);
+  const { graph, mode, view, position, selected, group } = props;
   return graph
     .vertices()
     .map((id) => ({ id, point: position(id) }))
     .filter((vertex): vertex is Placed => vertex.point !== undefined)
     .filter(({ id, point }) => {
       const isKept = group.has(id) || selected.includes(id);
-      return !isOffScreen(point, view, culling && !isKept);
+      return mode === 'webgl' ? isKept : !isOffScreen(point, view, mode === 'culled' && !isKept);
     });
 }
 
 /** Vertices, with labels once zoomed in on big graphs. */
 export function Vertices(props: VertexProps) {
-  const { graph, view, highlight, selected, group, onPick, startDrag } = props;
-  const isLabelShown = !isCulling(graph) || view.scale >= LABEL_ZOOM;
+  const { mode, view, highlight, selected, group, onPick, startDrag } = props;
+  const isLabelShown = mode !== 'culled' || view.scale >= LABEL_ZOOM;
   return shown(props).map(({ id, point }) => (
     <VertexNode
       key={id}

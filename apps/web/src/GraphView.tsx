@@ -6,11 +6,20 @@ import { ArrowMarker } from './ArrowMarker.js';
 import { ExportBar } from './ExportBar.js';
 import { fitToBox } from './fit.js';
 import { useGroup } from './use-group.js';
-import { Edges, Vertices } from './GraphLayers.js';
+import { Edges, renderMode, Vertices, type RenderMode } from './GraphLayers.js';
+import { hasWebgl } from './webgl-renderer.js';
+import { buildScene } from './webgl-scene.js';
+import { WebglLayer } from './WebglLayer.js';
 import { useGraphInteraction, type EditHandlers } from './use-graph-interaction.js';
 import { t } from './i18n.js';
 
 export const BOX = { width: 800, height: 520, padding: 40 } as const;
+
+function svgClass(isEditing: boolean, mode: RenderMode): string {
+  return ['graph', isEditing ? 'editing' : '', mode === 'webgl' ? 'gl' : '']
+    .filter(Boolean)
+    .join(' ');
+}
 
 export interface GraphViewHandle {
   /** Current position of every vertex (after drags), in canvas coordinates. */
@@ -44,7 +53,7 @@ export function GraphView({
   onRemoveGroup,
 }: Props) {
   const group = useGroup(onRemoveGroup);
-  const { svg, view, position, link, positions, startDrag, moveDrag, endDrag, reset } =
+  const { svg, view, position, link, positions, startDrag, moveDrag, endDrag, reset, hit } =
     useGraphInteraction({
       base: isPinned ? layout : fitToBox(layout, BOX),
       box: BOX,
@@ -55,17 +64,21 @@ export function GraphView({
     });
   useImperativeHandle(ref, () => ({ snapshot: positions }));
   const { x, y, scale } = view;
+  const mode = renderMode(graph, hasWebgl());
   return (
     <Paper withBorder radius="md" className="graph-wrap">
       <ExportBar svg={svg} onReset={reset} />
+      {mode === 'webgl' ? (
+        <WebglLayer scene={buildScene({ graph, position, highlight })} view={view} box={BOX} />
+      ) : null}
       <svg
         ref={svg}
-        className={edit === undefined ? 'graph' : 'graph editing'}
+        className={svgClass(edit !== undefined, mode)}
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
         role="group"
         aria-label={t('Graph')}
         onPointerDown={(event) => {
-          startDrag(event, undefined);
+          startDrag(event, mode === 'webgl' ? hit(event) : undefined);
         }}
         onPointerMove={moveDrag}
         onPointerUp={endDrag}
@@ -73,7 +86,7 @@ export function GraphView({
       >
         <ArrowMarker />
         <g data-testid="viewport" transform={`translate(${x} ${y}) scale(${scale})`}>
-          <Edges graph={graph} view={view} position={position} highlight={highlight} />
+          <Edges graph={graph} mode={mode} view={view} position={position} highlight={highlight} />
           {link === undefined ? null : (
             <line
               className="edge on"
@@ -86,6 +99,7 @@ export function GraphView({
           )}
           <Vertices
             graph={graph}
+            mode={mode}
             view={view}
             position={position}
             highlight={highlight}
