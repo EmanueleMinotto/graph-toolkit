@@ -10,6 +10,6 @@
 
 - `pnpm docs:api` builds the TypeDoc API reference into `docs/api` (git-ignored; published to GitHub Pages by `.github/workflows/pages.yml`).
 - `apps/benchmarks` holds performance budget tests (run with the normal test task) and an on-demand `bench` script.
-- Releases use Changesets: add a note with `pnpm changeset`. On `main`, `.github/workflows/release.yml` opens a "version packages" pull request; merging it publishes to npm with provenance (needs the `NPM_TOKEN` repository secret).
+- Releases use Changesets: add a note with `pnpm changeset`. On `main`, `.github/workflows/release.yml` opens a "version packages" pull request; merging it publishes to npm with provenance (inactive until the `NPM_TOKEN` repository secret exists; the repository must also allow GitHub Actions to create pull requests, under Settings → Actions → General).
 - CI also checks package exports with publint and Are the Types Wrong (`attw`), enforces 100% test coverage in every library package and uploads the coverage reports as an artifact.
 - `pnpm --filter @graph-toolkit/web e2e` runs the Playwright end-to-end tests against `vite preview` (build first; run `pnpm --filter @graph-toolkit/web exec playwright install` once (Chromium, Firefox, WebKit)).
