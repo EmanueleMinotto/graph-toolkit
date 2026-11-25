@@ -94,6 +94,22 @@ importers:
 
   packages/math: {}
 
+  packages/paths:
+    dependencies:
+      '@graph-toolkit/core':
+        specifier: workspace:*
+        version: link:../core
+      '@graph-toolkit/math':
+        specifier: workspace:*
+        version: link:../math
+      '@graph-toolkit/traversal':
+        specifier: workspace:*
+        version: link:../traversal
+    devDependencies:
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
+
   packages/traversal:
     dependencies:
       '@graph-toolkit/core':
