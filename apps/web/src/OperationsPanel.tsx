@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { ChoiceSelect } from './ChoiceSelect.js';
 import { OPERATION_CHOICES, SAMPLE_CHOICES } from './choices.js';
 import { Panel } from './Controls.js';
-import { MAX_SIZE, makeSample, type SampleKind } from './formats.js';
+import { MAX_SIZE, makeSample, randomSeed, type SampleKind } from './formats.js';
 import { applyOperation, OPERATIONS, type OperationKind } from './operations.js';
 
 const DEFAULT_SIZE = 4;
@@ -50,7 +50,11 @@ export function OperationsPanel({ graph, other, picked, onOther, onResult, guard
         variant="default"
         onClick={() =>
           onOther(
-            makeSample(kind, size, { directed: graph.directed, seed: 7, probability: undefined }),
+            makeSample(kind, size, {
+              directed: graph.directed,
+              seed: randomSeed(),
+              probability: undefined,
+            }),
           )
         }
       >

@@ -127,3 +127,22 @@ test('exports Mermaid, downloads it and uploads a file back', async ({ page }) =
   await page.getByRole('button', { name: 'Import', exact: true }).click();
   await expect(page.locator('svg.graph circle')).toHaveCount(3);
 });
+
+test('random generation differs every time unless a seed is typed', async ({ page }) => {
+  await choose(page, 'Kind', 'Random');
+  await page.getByLabel('Size').fill('30');
+  const edges = async () => {
+    await page.getByRole('button', { name: 'Generate', exact: true }).click();
+    return page
+      .locator('svg.graph line')
+      .evaluateAll((lines) =>
+        lines.map((line) => `${line.getAttribute('x1')},${line.getAttribute('y1')}`).join(';'),
+      );
+  };
+  const first = await edges();
+  await expect(page.getByText(/Last seed: \d+/)).toBeVisible();
+  expect(await edges()).not.toBe(first);
+  await page.getByLabel('Seed').fill('42');
+  await page.getByRole('button', { name: 'Generate', exact: true }).click();
+  await expect(page.getByText('Last seed: 42')).toBeVisible();
+});

@@ -114,6 +114,10 @@ export interface GenerateOptions {
   readonly probability: number | undefined;
 }
 
+/** A fresh seed, so every generation from the UI yields a different graph. */
+export const randomSeed = (): number => crypto.getRandomValues(new Uint32Array(1))[0] ?? 0;
+
+/** Fixed seed for reproducible tests; the UI always passes `randomSeed()` unless the user types one. */
 export const DEFAULT_OPTIONS: GenerateOptions = {
   directed: false,
   seed: 7,

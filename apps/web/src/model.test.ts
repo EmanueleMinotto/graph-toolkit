@@ -8,6 +8,7 @@ import {
   formatFromFileName,
   makeSample,
   parseGraph,
+  randomSeed,
   SAMPLES,
   serializeGraph,
 } from './formats.js';
@@ -139,5 +140,12 @@ describe('generation options and file formats', () => {
     expect(fileName('mermaid')).toBe('graph.mmd');
     expect(formatFromFileName('NOTES.GRAPHML')).toBe('graphml');
     expect(formatFromFileName('image.png')).toBeUndefined();
+  });
+});
+
+describe('randomSeed', () => {
+  it('returns different seeds', () => {
+    const seeds = new Set(Array.from({ length: 10 }, () => randomSeed()));
+    expect(seeds.size).toBeGreaterThan(1);
   });
 });
