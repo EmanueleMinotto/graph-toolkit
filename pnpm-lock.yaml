@@ -116,6 +116,18 @@ importers:
         specifier: workspace:*
         version: link:../core
 
+  packages/trees:
+    dependencies:
+      '@graph-toolkit/core':
+        specifier: workspace:*
+        version: link:../core
+      '@graph-toolkit/math':
+        specifier: workspace:*
+        version: link:../math
+      '@graph-toolkit/traversal':
+        specifier: workspace:*
+        version: link:../traversal
+
 packages:
 
   '@andrewbranch/untar.js@1.0.4':

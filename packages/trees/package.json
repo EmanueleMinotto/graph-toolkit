@@ -1,0 +1,39 @@
+{
+  "name": "@graph-toolkit/trees",
+  "version": "0.0.0",
+  "description": "Spanning trees and tree/forest predicates",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@graph-toolkit/core": "workspace:*",
+    "@graph-toolkit/math": "workspace:*",
+    "@graph-toolkit/traversal": "workspace:*"
+  }
+}
