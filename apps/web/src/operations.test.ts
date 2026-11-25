@@ -1,11 +1,11 @@
-import { cycleGraph, pathGraph, completeGraph, vertexId } from 'graph-toolkit';
+import { completeGraph, cycleGraph, GraphBuilder, pathGraph, vertexId } from 'graph-toolkit';
 import { describe, expect, it } from 'vitest';
 import { analyze } from './analysis.js';
 import { applyOperation, OPERATIONS, type OperationKind } from './operations.js';
 
 const id = vertexId;
 const run = (kind: OperationKind, extra: Partial<Parameters<typeof applyOperation>[2]> = {}) =>
-  applyOperation(kind, cycleGraph(4), { other: pathGraph(3), picked: [], keep: '', ...extra });
+  applyOperation(kind, cycleGraph(4), { other: pathGraph(3), picked: [], text: '', ...extra });
 
 describe('graph operations', () => {
   it('combines two graphs', () => {
@@ -19,8 +19,25 @@ describe('graph operations', () => {
     expect(run('complement').edgeCount).toBe(2);
     expect(run('line-graph').vertexCount).toBe(4);
     expect(run('transpose').edgeCount).toBe(4);
-    expect(run('subgraph', { keep: ' 0, 1 ,2 ' }).edgeCount).toBe(2);
+    expect(run('subgraph', { text: ' 0, 1 ,2 ' }).edgeCount).toBe(2);
     expect(run('contract', { picked: [id('0'), id('1')] }).vertexCount).toBe(3);
+  });
+
+  it('normalizes ids and edges', () => {
+    const loops = new GraphBuilder()
+      .addVertex(id('b'))
+      .addVertex(id('a'))
+      .addEdge(id('b'), id('b'))
+      .addEdge(id('b'), id('a'))
+      .build();
+    const input = { other: pathGraph(2), picked: [], text: '' };
+    expect(applyOperation('remove-loops', loops, input).edgeCount).toBe(1);
+    expect(applyOperation('canonicalize', loops, input).vertices()).toEqual(['a', 'b']);
+    expect(applyOperation('reindex', loops, input).vertices()).toEqual(['0', '1']);
+    expect(applyOperation('relabel', loops, { ...input, text: 'n' }).vertices()).toEqual([
+      'nb',
+      'na',
+    ]);
   });
 
   it('explains missing input', () => {
@@ -31,7 +48,7 @@ describe('graph operations', () => {
 
   it('refuses results that would be too large', () => {
     const big = completeGraph(80);
-    const input = { other: big, picked: [], keep: '' };
+    const input = { other: big, picked: [], text: '' };
     expect(() => applyOperation('cartesian', big, input)).toThrow('too large');
     expect(() => applyOperation('tensor', big, input)).toThrow('too large');
     expect(() => applyOperation('line-graph', big, input)).toThrow('too large');

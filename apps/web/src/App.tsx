@@ -12,6 +12,7 @@ import { Header } from './Header.js';
 import { makeSample } from './formats.js';
 import { computeLayout, LAYOUTS, type LayoutKind } from './layouts.js';
 import { type Scene } from './scene.js';
+import { ValidationPanel } from './ValidationPanel.js';
 import { useGuard } from './use-guard.js';
 import { useTool } from './use-tool.js';
 import { useAnalysis } from './use-analysis.js';
@@ -112,6 +113,7 @@ export function App() {
               onRemoveEdge={editor.removeEdge}
               onSetWeight={editor.applyWeight}
             />
+            <ValidationPanel graph={graph} />
             <AnalysisPanel
               kind={kind}
               graph={graph}

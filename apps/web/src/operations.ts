@@ -1,10 +1,14 @@
 import {
+  canonicalize,
   cartesianProduct,
   complement,
   contractEdge,
   inducedSubgraph,
   intersection,
   lineGraph,
+  reindex,
+  relabel,
+  removeSelfLoops,
   tensorProduct,
   transpose,
   union,
@@ -22,12 +26,18 @@ export type OperationKind =
   | 'transpose'
   | 'line-graph'
   | 'subgraph'
-  | 'contract';
+  | 'contract'
+  | 'canonicalize'
+  | 'reindex'
+  | 'relabel'
+  | 'remove-loops';
 
 export interface Operation {
   readonly id: OperationKind;
   readonly label: string;
-  readonly group: 'Two graphs' | 'One graph';
+  readonly group: 'Two graphs' | 'One graph' | 'Normalize';
+  /** Label of the free-text input this operation reads, if any. */
+  readonly field?: string;
 }
 
 export const OPERATIONS: readonly Operation[] = [
@@ -38,16 +48,20 @@ export const OPERATIONS: readonly Operation[] = [
   { id: 'complement', label: 'Complement', group: 'One graph' },
   { id: 'transpose', label: 'Transpose (reverse arcs)', group: 'One graph' },
   { id: 'line-graph', label: 'Line graph', group: 'One graph' },
-  { id: 'subgraph', label: 'Induced subgraph', group: 'One graph' },
+  { id: 'subgraph', label: 'Induced subgraph', group: 'One graph', field: 'Keep vertices' },
   { id: 'contract', label: 'Contract edge (selected pair)', group: 'One graph' },
+  { id: 'canonicalize', label: 'Canonicalize (sorted ids and edges)', group: 'Normalize' },
+  { id: 'reindex', label: 'Reindex ids to 0..n-1', group: 'Normalize' },
+  { id: 'relabel', label: 'Relabel with a prefix', group: 'Normalize', field: 'Prefix' },
+  { id: 'remove-loops', label: 'Remove self-loops', group: 'Normalize' },
 ];
 
 /** Everything an operation may read besides the graphs. */
 export interface OperationInput {
   readonly other: Graph;
   readonly picked: readonly VertexId[];
-  /** Comma-separated vertex ids for the induced subgraph. */
-  readonly keep: string;
+  /** Free text for operations with a `field`: vertex ids to keep, or an id prefix. */
+  readonly text: string;
 }
 
 const MAX_RESULT = 5000;
@@ -97,8 +111,12 @@ const runs: Readonly<Record<OperationKind, Run>> = {
   transpose: (graph) => transpose(graph),
   'line-graph': (graph) =>
     limited(Math.max(graph.edgeCount, adjacentEdgePairs(graph)), () => lineGraph(graph)),
-  subgraph: (graph, { keep }) => subgraph(graph, keep),
+  subgraph: (graph, { text }) => subgraph(graph, text),
   contract: (graph, { picked }) => contraction(graph, picked),
+  canonicalize: (graph) => canonicalize(graph),
+  reindex: (graph) => reindex(graph),
+  relabel: (graph, { text }) => relabel(graph, (id) => vertexId(`${text}${id}`)),
+  'remove-loops': (graph) => removeSelfLoops(graph),
 };
 
 /** Applies `kind`; library and guard errors propagate as `Error`s for the UI to show. */

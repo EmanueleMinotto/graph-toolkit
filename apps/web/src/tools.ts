@@ -52,6 +52,7 @@ const flows = inGroup('Flow and matching');
 const ranking = inGroup('Centrality and communities');
 const cliques = inGroup('Cliques and planarity');
 const compare = inGroup('Compare');
+const matrices = inGroup('Matrices');
 
 export const TOOLS: readonly Tool[] = [
   NO_TOOL,
@@ -100,6 +101,12 @@ export const TOOLS: readonly Tool[] = [
   cliques('maximum-clique', 'Maximum clique', undirected),
   cliques('planar', 'Planarity test', undirected),
   compare('isomorphism', 'Isomorphism with second graph', { usesOther: true }),
+  matrices('adjacency', 'Adjacency matrix'),
+  matrices('weighted-adjacency', 'Weighted adjacency matrix'),
+  matrices('laplacian', 'Laplacian matrix', undirected),
+  matrices('adjacency-power', 'Walk counts (adjacency power)', {
+    param: { label: 'Length (k)', initial: 2, min: 1, max: 20 },
+  }),
 ];
 
 export const toolOf = (id: AnalysisKind): Tool => TOOLS.find((entry) => entry.id === id) ?? NO_TOOL;

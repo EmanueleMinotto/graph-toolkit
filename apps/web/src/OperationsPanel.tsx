@@ -7,7 +7,7 @@ import { applyOperation, OPERATIONS, type OperationKind } from './operations.js'
 
 const DEFAULT_SIZE = 4;
 
-const groups = ['Two graphs', 'One graph'].map((group) => ({
+const groups = ['Two graphs', 'One graph', 'Normalize'].map((group) => ({
   group,
   items: OPERATIONS.filter((operation) => operation.group === group).map((operation) => ({
     value: operation.id,
@@ -32,7 +32,8 @@ export function OperationsPanel({ graph, other, picked, onOther, onResult, guard
   const [kind, setKind] = useState<SampleKind>('cycle');
   const [size, setSize] = useState(DEFAULT_SIZE);
   const [operation, setOperation] = useState<OperationKind>('union');
-  const [keep, setKeep] = useState('');
+  const [text, setText] = useState('');
+  const field = OPERATIONS.find((entry) => entry.id === operation)?.field;
   return (
     <Panel title="Operations">
       <Group grow align="flex-end">
@@ -69,16 +70,16 @@ export function OperationsPanel({ graph, other, picked, onOther, onResult, guard
         value={operation}
         onChange={(event) => setOperation(event.currentTarget.value as OperationKind)}
       />
-      {operation === 'subgraph' ? (
+      {field === undefined ? null : (
         <TextInput
-          label="Keep vertices"
-          value={keep}
-          onChange={(event) => setKeep(event.currentTarget.value)}
+          label={field}
+          value={text}
+          onChange={(event) => setText(event.currentTarget.value)}
         />
-      ) : null}
+      )}
       <Button
         onClick={() =>
-          guarded(() => onResult(applyOperation(operation, graph, { other, picked, keep })))
+          guarded(() => onResult(applyOperation(operation, graph, { other, picked, text })))
         }
       >
         Apply

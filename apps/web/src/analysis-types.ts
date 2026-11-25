@@ -9,6 +9,11 @@ export interface Selection {
   readonly other?: Graph | undefined;
 }
 
+export interface MatrixView {
+  readonly labels: readonly string[];
+  readonly rows: readonly (readonly number[])[];
+}
+
 export interface Highlight {
   /** Vertex → palette index. */
   readonly colors: ReadonlyMap<VertexId, number>;
@@ -16,6 +21,8 @@ export interface Highlight {
   /** Edge key → palette index, for edge colorings. */
   /** Vertex → relative size in [0, 1], for scores such as centrality. */
   readonly sizes?: ReadonlyMap<VertexId, number> | undefined;
+  /** A labelled square matrix, rendered as a grid. */
+  readonly matrix?: MatrixView | undefined;
   readonly edgeColors?: ReadonlyMap<string, number> | undefined;
   readonly summary: string;
   /** Optional two-column detail (e.g. vertex → value). */

@@ -1,16 +1,8 @@
 /* eslint-disable functional/prefer-readonly-type -- Mantine's `data` prop only accepts mutable arrays */
-import {
-  Button,
-  Group,
-  Loader,
-  NativeSelect,
-  NumberInput,
-  ScrollArea,
-  Table,
-  Text,
-} from '@mantine/core';
+import { Button, Group, Loader, NativeSelect, NumberInput, Text } from '@mantine/core';
 import { type Graph, type VertexId } from 'graph-toolkit';
 import { type AnalysisKind, type Highlight } from './analysis.js';
+import { MatrixGrid, ResultTable } from './ResultViews.js';
 import { Panel } from './Controls.js';
 import { toolOf, TOOLS, unavailableReason, type Param, type Tool } from './tools.js';
 
@@ -87,6 +79,7 @@ export function AnalysisPanel(props: AnalysisProps) {
         {props.result.summary}
       </Text>
       {props.result.table === undefined ? null : <ResultTable rows={props.result.table} />}
+      {props.result.matrix === undefined ? null : <MatrixGrid matrix={props.result.matrix} />}
     </Panel>
   );
 }
@@ -120,22 +113,5 @@ function Running({ onCancel }: { readonly onCancel: () => void }) {
         Cancel
       </Button>
     </Group>
-  );
-}
-
-function ResultTable({ rows }: { readonly rows: readonly (readonly [string, string])[] }) {
-  return (
-    <ScrollArea.Autosize mah={200}>
-      <Table fz="xs" striped>
-        <Table.Tbody>
-          {rows.map(([key, value]) => (
-            <Table.Tr key={key}>
-              <Table.Td>{key}</Table.Td>
-              <Table.Td>{value}</Table.Td>
-            </Table.Tr>
-          ))}
-        </Table.Tbody>
-      </Table>
-    </ScrollArea.Autosize>
   );
 }

@@ -35,3 +35,27 @@ test('checks isomorphism against the second graph', async ({ page }) => {
   await page.getByLabel('Algorithm').selectOption('isomorphism');
   await expect(page.getByRole('status')).toContainText('Isomorphic');
 });
+
+test('shows the adjacency matrix and its square', async ({ page }) => {
+  await page.getByLabel('Algorithm').selectOption('adjacency-power');
+  await expect(page.getByRole('status')).toContainText('Walks of length 2');
+  await expect(page.getByRole('columnheader', { name: '5' })).toBeVisible();
+  await page.getByLabel('Length (k)').fill('3');
+  await expect(page.getByRole('status')).toContainText('length 3');
+});
+
+test('normalizes with a prefix and validates the result', async ({ page }) => {
+  await page.getByLabel('Operation').selectOption('relabel');
+  await page.getByLabel('Prefix').fill('v');
+  await page.getByRole('button', { name: 'Apply' }).click();
+  await expect(
+    page.locator('svg.graph [data-testid=viewport] > g', { hasText: 'v0' }),
+  ).toBeVisible();
+  await page.getByLabel('Vertex id pattern (regex)').fill('^[0-9]+$');
+  await page.getByLabel('Must be connected').check();
+  await page.getByRole('button', { name: 'Validate' }).click();
+  await expect(page.getByText('vertex-id').first()).toBeVisible();
+  await page.getByLabel('Vertex id pattern (regex)').fill('(');
+  await page.getByRole('button', { name: 'Validate' }).click();
+  await expect(page.getByRole('alert')).toContainText('regular expression');
+});
