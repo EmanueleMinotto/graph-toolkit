@@ -18,4 +18,5 @@ forceLayout(graph, { seed: 42, iterations: 300 }); // coordinates in [0, 1]²
 | `circularLayout(g, radius?)`                | Even spacing on a circle.                                                            | O(V)                     |
 | `gridLayout(g, spacing?)`                   | Row-major, ⌈√V⌉ columns.                                                             | O(V)                     |
 | `layeredLayout(g, { layerGap?, nodeGap? })` | DAG longest-path layers (BFS depth otherwise), barycenter ordering, centered layers. | O(V + E) per sweep       |
+| `radialLayout(g, { root?, ringGap? })`      | BFS rings around `root`; unreachable vertices on an extra outer ring.                | O(V + E)                 |
 | `forceLayout(g, options?)`                  | Fruchterman–Reingold; same seed ⇒ same result.                                       | O(iterations · (V² + E)) |

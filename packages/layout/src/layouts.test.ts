@@ -1,7 +1,7 @@
-import { completeGraph, cycleGraph, pathGraph } from '@graph-toolkit/generators';
+import { completeGraph, cycleGraph, pathGraph, starGraph } from '@graph-toolkit/generators';
 import { describe, expect, it } from 'vitest';
 import { GraphBuilder, vertexId } from '@graph-toolkit/core';
-import { circularLayout, forceLayout, gridLayout, layeredLayout } from './index.js';
+import { circularLayout, forceLayout, gridLayout, layeredLayout, radialLayout } from './index.js';
 
 describe('layouts', () => {
   it('places vertices on a circle', () => {
@@ -79,5 +79,30 @@ describe('layeredLayout', () => {
 
   it('handles empty graphs', () => {
     expect(layeredLayout(pathGraph(0)).size).toBe(0);
+  });
+});
+
+describe('radialLayout', () => {
+  it('puts the root at the origin and neighbors on ring 1', () => {
+    const layout = radialLayout(starGraph(5));
+    expect(layout.get(vertexId('0'))).toEqual({ x: 0, y: 0 });
+    for (const leaf of ['1', '2', '3', '4']) {
+      const point = layout.get(vertexId(leaf))!;
+      expect(Math.hypot(point.x, point.y)).toBeCloseTo(1);
+    }
+  });
+
+  it('honors root and ringGap, and parks unreachable vertices on the outer ring', () => {
+    const builder = new GraphBuilder({ directed: false });
+    builder.addVertex(vertexId('a')).addVertex(vertexId('b')).addVertex(vertexId('c'));
+    builder.addEdge(vertexId('a'), vertexId('b'));
+    const layout = radialLayout(builder.build(), { root: vertexId('b'), ringGap: 2 });
+    expect(layout.get(vertexId('b'))).toEqual({ x: 0, y: 0 });
+    const { x, y } = layout.get(vertexId('c'))!;
+    expect(Math.hypot(x, y)).toBeCloseTo(4);
+  });
+
+  it('handles the empty graph', () => {
+    expect(radialLayout(pathGraph(0)).size).toBe(0);
   });
 });

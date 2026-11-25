@@ -1,6 +1,7 @@
 import type { Graph, VertexId } from '@graph-toolkit/core';
 import { coordinate, forceKernel } from './internal/force.js';
 import { layer, placementAt } from './internal/layered.js';
+import { ringsAround } from './internal/radial.js';
 
 export interface Point {
   readonly x: number;
@@ -77,6 +78,31 @@ export function layeredLayout(graph: Graph, options: LayeredLayoutOptions = {}):
       const width = placementAt(placement.widths, level);
       const offset = placementAt(placement.rank, index) - (width - 1) / 2;
       return [id, { x: offset * nodeGap, y: level * layerGap }];
+    }),
+  );
+}
+
+export interface RadialLayoutOptions {
+  /** Center vertex, default the first one. */
+  readonly root?: VertexId;
+  /** Distance between consecutive rings, default 1. */
+  readonly ringGap?: number;
+}
+
+/**
+ * Radial layout: `root` at the origin, every other vertex on the ring matching its hop distance
+ * (unreachable vertices share one extra outer ring), evenly spaced on each ring.
+ */
+export function radialLayout(graph: Graph, options: RadialLayoutOptions = {}): Layout {
+  const { root = graph.vertices()[0], ringGap = 1 } = options;
+  if (root === undefined) return new Map();
+  const { ring, rank, sizes } = ringsAround(graph.csr, graph.vertexCount, graph.indexOf(root));
+  return new Map(
+    graph.vertices().map((id, index) => {
+      const level = placementAt(ring, index);
+      const angle = (2 * Math.PI * placementAt(rank, index)) / placementAt(sizes, level);
+      const radius = level * ringGap;
+      return [id, { x: radius * Math.cos(angle), y: radius * Math.sin(angle) }];
     }),
   );
 }
