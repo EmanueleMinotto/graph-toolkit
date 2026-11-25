@@ -11,6 +11,8 @@ export interface Highlight {
   /** Vertex → palette index. */
   readonly colors: ReadonlyMap<VertexId, number>;
   readonly edges: ReadonlySet<string>;
+  /** Edge key → palette index, for edge colorings. */
+  readonly edgeColors?: ReadonlyMap<string, number> | undefined;
   readonly summary: string;
   /** Optional two-column detail (e.g. vertex → value). */
   readonly table?: readonly (readonly [string, string])[];

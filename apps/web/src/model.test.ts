@@ -17,10 +17,23 @@ const [zero, one, two] = [vertexId('0'), vertexId('1'), vertexId('2')] as const;
 describe('formats', () => {
   it('round trips every format through the model', () => {
     const graph = cycleGraph(4);
-    for (const format of FORMATS) {
+    const roundTrippable = FORMATS.filter((entry) => entry !== 'prufer');
+    for (const format of roundTrippable) {
       const text = serializeGraph(format, graph);
       expect(parseGraph(format, text, false).edgeCount).toBe(graph.edgeCount);
     }
+  });
+
+  it('round trips trees through the Prüfer code and rejects non-trees', () => {
+    const star = makeSample('star', 6);
+    const code = serializeGraph('prufer', star);
+    expect(code).toBe('0 0 0 0');
+    const rebuilt = parseGraph('prufer', code, false);
+    expect(rebuilt.edgeCount).toBe(5);
+    expect(serializeGraph('prufer', rebuilt)).toBe(code);
+    expect(parseGraph('prufer', '', false).vertexCount).toBe(2);
+    expect(() => serializeGraph('prufer', cycleGraph(4))).toThrow('tree');
+    expect(() => parseGraph('prufer', '9', false)).toThrow();
   });
 });
 

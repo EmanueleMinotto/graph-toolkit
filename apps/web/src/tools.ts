@@ -68,7 +68,14 @@ export const TOOLS: readonly Tool[] = [
   structure('tree', 'Tree / forest check', undirected),
   structure('bipartite', 'Bipartition', undirected),
   coloring('coloring', 'DSATUR coloring', undirected),
-  trees('mst', 'Minimum spanning tree', undirected),
+  coloring('greedy-coloring', 'Greedy coloring (Welsh–Powell)', undirected),
+  coloring('exact-coloring', 'Exact coloring (chromatic number)', undirected),
+  coloring('edge-coloring', 'Edge coloring', undirected),
+  trees('mst', 'Minimum spanning tree (Kruskal)', undirected),
+  trees('prim', 'Minimum spanning tree (Prim)', undirected),
+  trees('boruvka', 'Minimum spanning tree (Borůvka)', undirected),
+  trees('rooted-tree', 'Rooted tree: depth and parent', { ...undirected, needs: 1 }),
+  trees('lca', 'Lowest common ancestor', { ...undirected, needs: 2 }),
 ];
 
 export const toolOf = (id: AnalysisKind): Tool => TOOLS.find((entry) => entry.id === id) ?? NO_TOOL;

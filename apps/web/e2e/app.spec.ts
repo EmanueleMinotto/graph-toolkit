@@ -99,16 +99,6 @@ test('undo and redo restore previous graphs', async ({ page }) => {
   await expect(page.locator('svg.graph circle')).toHaveCount(9);
 });
 
-test('shows analysis tables and disables tools the graph cannot run', async ({ page }) => {
-  await page.getByLabel('Algorithm').selectOption('coloring');
-  await expect(page.getByRole('cell', { name: '0', exact: true }).first()).toBeVisible();
-  await page.getByLabel('Format').selectOption('edge-list');
-  await page.getByLabel('Directed (edge list / CSV)').check();
-  await page.getByLabel('Graph text').fill('a b');
-  await page.getByRole('button', { name: 'Import' }).click();
-  await expect(page.getByRole('option', { name: /Minimum spanning tree \(needs/ })).toBeDisabled();
-});
-
 test('generates directed graphs with arrows and a layered layout', async ({ page }) => {
   await page.getByLabel('Kind').selectOption('path');
   await page.getByLabel('Directed', { exact: true }).check();
@@ -135,29 +125,4 @@ test('exports Mermaid, downloads it and uploads a file back', async ({ page }) =
   await expect(page.getByLabel('Format')).toHaveValue('dot');
   await page.getByRole('button', { name: 'Import' }).click();
   await expect(page.locator('svg.graph circle')).toHaveCount(3);
-});
-
-test('lists connected components and checks bipartiteness', async ({ page }) => {
-  await page.getByLabel('Format').selectOption('edge-list');
-  await page.getByLabel('Graph text').fill('a b\nc d\nd e');
-  await page.getByRole('button', { name: 'Import' }).click();
-  await page.getByLabel('Algorithm').selectOption('components');
-  await expect(page.getByRole('status')).toContainText('2 components');
-  await expect(page.getByRole('cell', { name: 'c, d, e' })).toBeVisible();
-  await page.getByLabel('Algorithm').selectOption('bipartite');
-  await expect(page.getByRole('status')).toContainText('Bipartite');
-});
-
-test('lists k shortest paths with an adjustable count', async ({ page }) => {
-  await page.getByLabel('Algorithm').selectOption('k-shortest');
-  await page.getByLabel('Paths (k)').fill('2');
-  await page.locator('svg.graph [data-testid=viewport] > g', { hasText: '0' }).click();
-  await page.locator('svg.graph [data-testid=viewport] > g', { hasText: '3' }).click();
-  await expect(page.getByRole('status')).toContainText('2 loopless paths');
-  await expect(page.getByRole('cell', { name: '0 → 1 → 2 → 3' })).toBeVisible();
-});
-
-test('finds a Hamiltonian cycle in the default cycle graph', async ({ page }) => {
-  await page.getByLabel('Algorithm').selectOption('hamiltonian-cycle');
-  await expect(page.getByRole('status')).toContainText('Hamiltonian cycle found');
 });

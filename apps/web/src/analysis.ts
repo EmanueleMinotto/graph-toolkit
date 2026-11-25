@@ -1,10 +1,12 @@
-import { bfs, dijkstra, dsaturColoring, minimumSpanningForest, type Graph } from 'graph-toolkit';
-import { edgeKey, NONE, pathEdges, type Highlight, type Selection } from './analysis-types.js';
+import { bfs, dijkstra, type Graph } from 'graph-toolkit';
+import { NONE, pathEdges, type Highlight, type Selection } from './analysis-types.js';
+import { coloringAnalyses, type ColoringKind } from './analysis-coloring.js';
 import { pathAnalyses, type PathKind } from './analysis-paths.js';
+import { treeAnalyses, type TreeKind } from './analysis-trees.js';
 import { structureAnalyses, type StructureKind } from './analysis-structure.js';
 
 export type AnalysisKind =
-  'none' | 'bfs' | 'shortest-path' | 'coloring' | 'mst' | StructureKind | PathKind;
+  'none' | 'bfs' | 'shortest-path' | StructureKind | PathKind | TreeKind | ColoringKind;
 
 export { edgeKey, type Highlight, type Selection } from './analysis-types.js';
 
@@ -31,33 +33,14 @@ function breadthFirst(graph: Graph, { from }: Selection): Highlight {
   };
 }
 
-function coloring(graph: Graph): Highlight {
-  const result = dsaturColoring(graph);
-  return {
-    ...NONE,
-    colors: new Map(result.colors),
-    summary: `${result.colorCount} colors (DSATUR)`,
-    table: [...result.colors].map(([id, color]) => [id, String(color)]),
-  };
-}
-
-function spanningTree(graph: Graph): Highlight {
-  const forest = minimumSpanningForest(graph);
-  return {
-    ...NONE,
-    edges: new Set(forest.edges.map((edge) => edgeKey(edge.source, edge.target, graph.directed))),
-    summary: `Total weight ${forest.totalWeight}`,
-  };
-}
-
 const analyses: Readonly<Record<AnalysisKind, (graph: Graph, selection: Selection) => Highlight>> =
   {
     none: () => NONE,
     bfs: breadthFirst,
     'shortest-path': shortestPath,
-    coloring: (graph) => coloring(graph),
-    mst: (graph) => spanningTree(graph),
     ...structureAnalyses,
+    ...treeAnalyses,
+    ...coloringAnalyses,
     ...pathAnalyses,
   };
 

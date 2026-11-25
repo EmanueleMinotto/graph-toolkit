@@ -77,3 +77,36 @@
 .graph.editing {
   cursor: crosshair;
 }
+
+.edge.e0 {
+  stroke: var(--mantine-color-blue-6);
+  stroke-width: 4;
+}
+.edge.e1 {
+  stroke: var(--mantine-color-orange-6);
+  stroke-width: 4;
+}
+.edge.e2 {
+  stroke: var(--mantine-color-green-6);
+  stroke-width: 4;
+}
+.edge.e3 {
+  stroke: var(--mantine-color-grape-6);
+  stroke-width: 4;
+}
+.edge.e4 {
+  stroke: var(--mantine-color-yellow-6);
+  stroke-width: 4;
+}
+.edge.e5 {
+  stroke: var(--mantine-color-cyan-6);
+  stroke-width: 4;
+}
+.edge.e6 {
+  stroke: var(--mantine-color-pink-6);
+  stroke-width: 4;
+}
+.edge.e7 {
+  stroke: var(--mantine-color-gray-6);
+  stroke-width: 4;
+}

@@ -10,6 +10,9 @@ import {
   fromMermaid,
   gridGraph,
   pathGraph,
+  pruferCode,
+  treeFromPruferCode,
+  vertexId,
   randomGraph,
   starGraph,
   toAdjacencyCsv,
@@ -23,7 +26,7 @@ import {
 } from 'graph-toolkit';
 
 export type Format =
-  'json' | 'edge-list' | 'dot' | 'graphml' | 'gexf' | 'adjacency-csv' | 'mermaid';
+  'json' | 'edge-list' | 'dot' | 'graphml' | 'gexf' | 'adjacency-csv' | 'mermaid' | 'prufer';
 
 export const FORMATS: readonly Format[] = [
   'json',
@@ -33,7 +36,21 @@ export const FORMATS: readonly Format[] = [
   'gexf',
   'adjacency-csv',
   'mermaid',
+  'prufer',
 ];
+
+/** Space-separated Prüfer code: the tree has vertices "0".."n+1" for a code of length n. */
+const fromPrufer = (text: string): Graph => {
+  const code =
+    text.trim() === ''
+      ? []
+      : text
+          .trim()
+          .split(/\s+/u)
+          .map((id) => vertexId(id));
+  const vertices = Array.from({ length: code.length + 2 }, (_, index) => vertexId(String(index)));
+  return treeFromPruferCode(vertices, code);
+};
 
 const importers: Readonly<Record<Format, (text: string, isDirected: boolean) => Graph>> = {
   json: (text) => fromJson(text),
@@ -43,6 +60,7 @@ const importers: Readonly<Record<Format, (text: string, isDirected: boolean) => 
   gexf: (text) => fromGexf(text),
   'adjacency-csv': (text, isDirected) => fromAdjacencyCsv(text, { isDirected }),
   mermaid: (text) => fromMermaid(text),
+  prufer: (text) => fromPrufer(text),
 };
 
 const exporters: Readonly<Record<Format, (graph: Graph) => string>> = {
@@ -53,6 +71,7 @@ const exporters: Readonly<Record<Format, (graph: Graph) => string>> = {
   gexf: (graph) => toGexf(graph),
   'adjacency-csv': (graph) => toAdjacencyCsv(graph),
   mermaid: (graph) => toMermaid(graph),
+  prufer: (graph) => pruferCode(graph).join(' '),
 };
 
 export const parseGraph = (format: Format, text: string, isDirected: boolean): Graph =>
@@ -68,6 +87,7 @@ const EXTENSIONS: Readonly<Record<Format, string>> = {
   gexf: 'gexf',
   'adjacency-csv': 'csv',
   mermaid: 'mmd',
+  prufer: 'prufer',
 };
 
 export const fileName = (format: Format): string => `graph.${EXTENSIONS[format]}`;

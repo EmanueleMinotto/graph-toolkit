@@ -19,6 +19,12 @@ export interface GraphViewHandle {
   readonly snapshot: () => Layout;
 }
 
+function edgeClass(highlight: Highlight, key: string): string {
+  const color = highlight.edgeColors?.get(key);
+  if (color !== undefined) return `edge e${color % PALETTE_SIZE}`;
+  return highlight.edges.has(key) ? 'edge on' : 'edge';
+}
+
 interface Props {
   readonly graph: Graph;
   readonly layout: Layout;
@@ -95,7 +101,7 @@ export function GraphView({
                 y1={from.y}
                 x2={to.x}
                 y2={to.y}
-                className={highlight.edges.has(key) ? 'edge on' : 'edge'}
+                className={edgeClass(highlight, key)}
                 markerEnd={graph.directed ? 'url(#arrow)' : undefined}
               />
             );
