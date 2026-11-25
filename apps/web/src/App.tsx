@@ -1,18 +1,28 @@
 import { Alert, AppShell, Group, Paper, ScrollArea, Stack, Title } from '@mantine/core';
-import { circularLayout, forceLayout, gridLayout, type Graph, type VertexId } from 'graph-toolkit';
+import {
+  circularLayout,
+  forceLayout,
+  gridLayout,
+  layeredLayout,
+  type Graph,
+  type VertexId,
+} from 'graph-toolkit';
 import { useMemo, useState } from 'react';
 import { Toolbar } from './Toolbar.js';
 import { AnalysisPanel } from './AnalysisPanel.js';
-import { GeneratePanel, ImportPanel, Select } from './Controls.js';
+import { Select } from './Controls.js';
+import { download } from './download.js';
+import { GeneratePanel } from './GeneratePanel.js';
+import { ImportPanel } from './ImportPanel.js';
 import { GraphView } from './GraphView.js';
 import { type AnalysisKind } from './analysis.js';
 import { useAnalysis } from './use-analysis.js';
 import { useHistory } from './use-history.js';
-import { makeSample, parseGraph, serializeGraph, type Format } from './formats.js';
+import { fileName, makeSample, parseGraph, serializeGraph, type Format } from './formats.js';
 
-type LayoutKind = 'force' | 'circular' | 'grid';
+type LayoutKind = 'force' | 'circular' | 'grid' | 'layered';
 
-const LAYOUTS: readonly LayoutKind[] = ['force', 'circular', 'grid'];
+const LAYOUTS: readonly LayoutKind[] = ['force', 'circular', 'grid', 'layered'];
 
 const FULL_QUALITY_VERTICES = 200;
 const FULL_ITERATIONS = 300;
@@ -29,6 +39,7 @@ const layouts = {
   force: (graph: Graph) => forceLayout(graph, { iterations: forceIterations(graph.vertexCount) }),
   circular: (graph: Graph) => circularLayout(graph),
   grid: (graph: Graph) => gridLayout(graph),
+  layered: (graph: Graph) => layeredLayout(graph),
 } as const;
 
 export function App() {
@@ -84,7 +95,11 @@ export function App() {
       <AppShell.Navbar p="md">
         <AppShell.Section grow component={ScrollArea}>
           <Stack gap="md">
-            <GeneratePanel onGenerate={(sample, size) => replaceGraph(makeSample(sample, size))} />
+            <GeneratePanel
+              onGenerate={(sample, size, options) =>
+                replaceGraph(makeSample(sample, size, options))
+              }
+            />
             <ImportPanel
               format={format}
               text={text}
@@ -94,6 +109,9 @@ export function App() {
               onDirected={setDirected}
               onImport={() => guarded(() => replaceGraph(parseGraph(format, text, isDirected)))}
               onExport={() => guarded(() => setText(serializeGraph(format, graph)))}
+              onDownload={() =>
+                guarded(() => download(fileName(format), serializeGraph(format, graph)))
+              }
             />
             <Paper withBorder p="md" radius="md">
               <Select

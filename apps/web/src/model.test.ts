@@ -2,7 +2,15 @@ import { cycleGraph, pathGraph, vertexId } from 'graph-toolkit';
 import { describe, expect, it } from 'vitest';
 import { analyze, edgeKey } from './analysis.js';
 import { fitToBox } from './fit.js';
-import { FORMATS, makeSample, parseGraph, SAMPLES, serializeGraph } from './formats.js';
+import {
+  fileName,
+  FORMATS,
+  formatFromFileName,
+  makeSample,
+  parseGraph,
+  SAMPLES,
+  serializeGraph,
+} from './formats.js';
 
 const [zero, one, two] = [vertexId('0'), vertexId('1'), vertexId('2')] as const;
 
@@ -95,5 +103,28 @@ describe('makeSample at scale', () => {
     expect(makeSample('random', 1000).edgeCount).toBeLessThan(5000);
     expect(makeSample('complete', 10_000).vertexCount).toBe(150);
     expect(makeSample('cycle', 0).vertexCount).toBe(1);
+  });
+});
+
+describe('generation options and file formats', () => {
+  it('builds directed graphs, paths and seeded random graphs', () => {
+    const options = { directed: true, seed: 1, probability: undefined };
+    expect(makeSample('path', 4, options).directed).toBe(true);
+    expect(makeSample('path', 4).directed).toBe(false);
+    expect(makeSample('path', 4).edgeCount).toBe(3);
+    const dense = makeSample('random', 10, { ...options, probability: 1 });
+    expect(dense.edgeCount).toBe(45); // arcs follow the pair order, so no reciprocal arcs
+    const again = makeSample('random', 30, options).edges();
+    expect(makeSample('random', 30, options).edges()).toEqual(again);
+    expect(makeSample('random', 30, { ...options, seed: 2 }).edges()).not.toEqual(again);
+  });
+
+  it('round-trips Mermaid and maps file names to formats', () => {
+    const graph = makeSample('cycle', 4, { directed: true, seed: 1, probability: undefined });
+    const text = serializeGraph('mermaid', graph);
+    expect(parseGraph('mermaid', text, false).edgeCount).toBe(4);
+    expect(fileName('mermaid')).toBe('graph.mmd');
+    expect(formatFromFileName('NOTES.GRAPHML')).toBe('graphml');
+    expect(formatFromFileName('image.png')).toBeUndefined();
   });
 });

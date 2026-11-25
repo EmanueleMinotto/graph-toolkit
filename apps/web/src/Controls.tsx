@@ -1,18 +1,5 @@
-import {
-  Button,
-  Checkbox,
-  Group,
-  NativeSelect,
-  NumberInput,
-  Paper,
-  Stack,
-  Textarea,
-  Title,
-} from '@mantine/core';
-import { useState, type ReactNode } from 'react';
-import { FORMATS, MAX_SIZE, SAMPLES, type Format, type SampleKind } from './formats.js';
-
-const DEFAULT_SIZE = 6;
+import { NativeSelect, Paper, Stack, Title } from '@mantine/core';
+import { type ReactNode } from 'react';
 
 interface SelectProps<T extends string> {
   readonly label: string;
@@ -46,80 +33,5 @@ export function Panel({
         {children}
       </Stack>
     </Paper>
-  );
-}
-
-interface GenerateProps {
-  readonly onGenerate: (kind: SampleKind, size: number) => void;
-}
-
-export function GeneratePanel({ onGenerate }: GenerateProps) {
-  const [kind, setKind] = useState<SampleKind>('cycle');
-  return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        onGenerate(data.get('kind') as SampleKind, Number(data.get('size')));
-      }}
-    >
-      <Panel title="Generate">
-        <Group grow align="flex-end">
-          <NativeSelect
-            label="Kind"
-            name="kind"
-            data={[...SAMPLES]}
-            value={kind}
-            onChange={(event) => setKind(event.currentTarget.value as SampleKind)}
-          />
-          <NumberInput
-            label="Size"
-            name="size"
-            min={1}
-            max={MAX_SIZE[kind]}
-            defaultValue={DEFAULT_SIZE}
-            description={`max ${MAX_SIZE[kind]}`}
-          />
-        </Group>
-        <Button type="submit">Generate</Button>
-      </Panel>
-    </form>
-  );
-}
-
-interface ImportProps {
-  readonly format: Format;
-  readonly text: string;
-  readonly isDirected: boolean;
-  readonly onFormat: (format: Format) => void;
-  readonly onText: (text: string) => void;
-  readonly onDirected: (isDirected: boolean) => void;
-  readonly onImport: () => void;
-  readonly onExport: () => void;
-}
-
-export function ImportPanel(props: ImportProps) {
-  return (
-    <Panel title="Import / export">
-      <Select label="Format" value={props.format} options={FORMATS} onChange={props.onFormat} />
-      <Checkbox
-        label="Directed (edge list / CSV)"
-        checked={props.isDirected}
-        onChange={(event) => props.onDirected(event.currentTarget.checked)}
-      />
-      <Textarea
-        aria-label="Graph text"
-        value={props.text}
-        onChange={(event) => props.onText(event.currentTarget.value)}
-        rows={8}
-        styles={{ input: { fontFamily: 'var(--mantine-font-family-monospace)' } }}
-      />
-      <Group grow>
-        <Button onClick={props.onImport}>Import</Button>
-        <Button variant="default" onClick={props.onExport}>
-          Export current
-        </Button>
-      </Group>
-    </Panel>
   );
 }

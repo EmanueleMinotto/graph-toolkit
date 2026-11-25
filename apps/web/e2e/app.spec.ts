@@ -108,3 +108,31 @@ test('shows analysis tables and disables tools the graph cannot run', async ({ p
   await page.getByRole('button', { name: 'Import' }).click();
   await expect(page.getByRole('option', { name: /Minimum spanning tree \(needs/ })).toBeDisabled();
 });
+
+test('generates directed graphs with arrows and a layered layout', async ({ page }) => {
+  await page.getByLabel('Kind').selectOption('path');
+  await page.getByLabel('Directed', { exact: true }).check();
+  await page.getByRole('button', { name: 'Generate' }).click();
+  await expect(page.locator('svg.graph line[marker-end]')).toHaveCount(5);
+  await page.getByLabel('Layout').selectOption('layered');
+  await expect(page.locator('svg.graph circle')).toHaveCount(6);
+});
+
+test('random graphs honor seed and probability', async ({ page }) => {
+  await page.getByLabel('Kind').selectOption('random');
+  await page.getByLabel('Probability').fill('1');
+  await page.getByRole('button', { name: 'Generate' }).click();
+  await expect(page.locator('svg.graph line')).toHaveCount(15);
+});
+
+test('exports Mermaid, downloads it and uploads a file back', async ({ page }) => {
+  await page.getByLabel('Format').selectOption('mermaid');
+  const pending = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download' }).click();
+  const saved = await pending;
+  expect(saved.suggestedFilename()).toBe('graph.mmd');
+  await page.locator('input[type=file]').setInputFiles('e2e/fixtures/tiny.dot');
+  await expect(page.getByLabel('Format')).toHaveValue('dot');
+  await page.getByRole('button', { name: 'Import' }).click();
+  await expect(page.locator('svg.graph circle')).toHaveCount(3);
+});

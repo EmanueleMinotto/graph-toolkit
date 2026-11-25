@@ -7,7 +7,9 @@ import {
   fromGexf,
   fromGraphMl,
   fromJson,
+  fromMermaid,
   gridGraph,
+  pathGraph,
   randomGraph,
   starGraph,
   toAdjacencyCsv,
@@ -16,10 +18,12 @@ import {
   toGexf,
   toGraphMl,
   toJson,
+  toMermaid,
   type Graph,
 } from 'graph-toolkit';
 
-export type Format = 'json' | 'edge-list' | 'dot' | 'graphml' | 'gexf' | 'adjacency-csv';
+export type Format =
+  'json' | 'edge-list' | 'dot' | 'graphml' | 'gexf' | 'adjacency-csv' | 'mermaid';
 
 export const FORMATS: readonly Format[] = [
   'json',
@@ -28,6 +32,7 @@ export const FORMATS: readonly Format[] = [
   'graphml',
   'gexf',
   'adjacency-csv',
+  'mermaid',
 ];
 
 const importers: Readonly<Record<Format, (text: string, isDirected: boolean) => Graph>> = {
@@ -37,6 +42,7 @@ const importers: Readonly<Record<Format, (text: string, isDirected: boolean) => 
   graphml: (text) => fromGraphMl(text),
   gexf: (text) => fromGexf(text),
   'adjacency-csv': (text, isDirected) => fromAdjacencyCsv(text, { isDirected }),
+  mermaid: (text) => fromMermaid(text),
 };
 
 const exporters: Readonly<Record<Format, (graph: Graph) => string>> = {
@@ -46,6 +52,7 @@ const exporters: Readonly<Record<Format, (graph: Graph) => string>> = {
   graphml: (graph) => toGraphMl(graph),
   gexf: (graph) => toGexf(graph),
   'adjacency-csv': (graph) => toAdjacencyCsv(graph),
+  mermaid: (graph) => toMermaid(graph),
 };
 
 export const parseGraph = (format: Format, text: string, isDirected: boolean): Graph =>
@@ -53,16 +60,52 @@ export const parseGraph = (format: Format, text: string, isDirected: boolean): G
 
 export const serializeGraph = (format: Format, graph: Graph): string => exporters[format](graph);
 
-export type SampleKind = 'cycle' | 'complete' | 'grid' | 'star' | 'random';
+const EXTENSIONS: Readonly<Record<Format, string>> = {
+  json: 'json',
+  'edge-list': 'txt',
+  dot: 'dot',
+  graphml: 'graphml',
+  gexf: 'gexf',
+  'adjacency-csv': 'csv',
+  mermaid: 'mmd',
+};
 
-export const SAMPLES: readonly SampleKind[] = ['cycle', 'complete', 'grid', 'star', 'random'];
+export const fileName = (format: Format): string => `graph.${EXTENSIONS[format]}`;
 
-const SEED = 7;
+/** Guesses the format from a file name; `.txt` is the edge list, `.csv` the adjacency matrix. */
+export const formatFromFileName = (name: string): Format | undefined =>
+  FORMATS.find((format) => name.toLowerCase().endsWith(`.${EXTENSIONS[format]}`));
+
+export type SampleKind = 'path' | 'cycle' | 'complete' | 'grid' | 'star' | 'random';
+
+export const SAMPLES: readonly SampleKind[] = [
+  'path',
+  'cycle',
+  'complete',
+  'grid',
+  'star',
+  'random',
+];
+
+export interface GenerateOptions {
+  readonly directed: boolean;
+  readonly seed: number;
+  /** Edge probability for `random`; `undefined` picks a density that keeps large graphs sparse. */
+  readonly probability: number | undefined;
+}
+
+export const DEFAULT_OPTIONS: GenerateOptions = {
+  directed: false,
+  seed: 7,
+  probability: undefined,
+};
+
 const EDGE_PROBABILITY = 0.25;
 const AVERAGE_DEGREE = 6;
 
 /** Largest accepted size per kind; dense kinds are capped lower to keep the SVG responsive. */
 export const MAX_SIZE: Readonly<Record<SampleKind, number>> = {
+  path: 2000,
   cycle: 2000,
   star: 2000,
   random: 1000,
@@ -74,16 +117,23 @@ export const MAX_SIZE: Readonly<Record<SampleKind, number>> = {
 const randomProbability = (size: number): number =>
   Math.min(EDGE_PROBABILITY, AVERAGE_DEGREE / Math.max(size - 1, 1));
 
-const samples: Readonly<Record<SampleKind, (size: number) => Graph>> = {
-  cycle: (size) => cycleGraph(size),
-  complete: (size) => completeGraph(size),
-  grid: (size) => gridGraph(size, size),
-  star: (size) => starGraph(size),
-  random: (size) => randomGraph(size, { probability: randomProbability(size), seed: SEED }),
+type Builder = (size: number, options: GenerateOptions) => Graph;
+
+const samples: Readonly<Record<SampleKind, Builder>> = {
+  path: (size, { directed }) => pathGraph(size, { directed }),
+  cycle: (size, { directed }) => cycleGraph(size, { directed }),
+  complete: (size, { directed }) => completeGraph(size, { directed }),
+  grid: (size, { directed }) => gridGraph(size, size, { directed }),
+  star: (size, { directed }) => starGraph(size, { directed }),
+  random: (size, { directed, seed, probability }) =>
+    randomGraph(size, { directed, seed, probability: probability ?? randomProbability(size) }),
 };
 
 const clampSize = (kind: SampleKind, size: number): number =>
   Math.min(Math.max(size, 1), MAX_SIZE[kind]);
 
-export const makeSample = (kind: SampleKind, size: number): Graph =>
-  samples[kind](clampSize(kind, Math.trunc(size)));
+export const makeSample = (
+  kind: SampleKind,
+  size: number,
+  options: GenerateOptions = DEFAULT_OPTIONS,
+): Graph => samples[kind](clampSize(kind, Math.trunc(size)), options);
