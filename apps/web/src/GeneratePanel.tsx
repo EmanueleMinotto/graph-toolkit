@@ -1,4 +1,4 @@
-import { Button, Checkbox, Group, NumberInput } from '@mantine/core';
+import { Button, Checkbox, Group, NumberInput, Stack } from '@mantine/core';
 import { IconWand } from '@tabler/icons-react';
 import { useState } from 'react';
 import { ChoiceSelect } from './ChoiceSelect.js';
@@ -26,42 +26,45 @@ const readOptions = (data: FormData): GenerateOptions => {
 export function GeneratePanel({ onGenerate }: Props) {
   const [kind, setKind] = useState<SampleKind>('cycle');
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        onGenerate(kind, Number(data.get('size')), readOptions(data));
-      }}
-    >
-      <Panel id="generate" title="New graph" icon={IconWand}>
-        <Group grow align="flex-end">
-          <ChoiceSelect label="Kind" value={kind} choices={SAMPLE_CHOICES} onChange={setKind} />
-          <NumberInput
-            label="Size"
-            name="size"
-            min={1}
-            max={MAX_SIZE[kind]}
-            defaultValue={DEFAULT_SIZE}
-            description={`max ${MAX_SIZE[kind]}`}
-          />
-        </Group>
-        <Checkbox label="Directed" name="directed" />
-        {kind === 'random' ? (
-          <Group grow align="flex-end">
-            <NumberInput label="Seed" name="seed" min={0} defaultValue={DEFAULT_SEED} />
+    <Panel id="generate" title="New graph" icon={IconWand}>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          const data = new FormData(event.currentTarget);
+          onGenerate(kind, Number(data.get('size')), readOptions(data));
+        }}
+      >
+        <Stack gap="sm">
+          <Group grow align="flex-start">
+            <ChoiceSelect label="Kind" value={kind} choices={SAMPLE_CHOICES} onChange={setKind} />
             <NumberInput
-              label="Probability"
-              name="probability"
-              min={0}
-              max={1}
-              step={0.05}
-              decimalScale={3}
-              placeholder="auto"
+              label="Size"
+              name="size"
+              min={1}
+              max={MAX_SIZE[kind]}
+              defaultValue={DEFAULT_SIZE}
+              description={`max ${MAX_SIZE[kind]}`}
+              inputWrapperOrder={['label', 'input', 'description', 'error']}
             />
           </Group>
-        ) : null}
-        <Button type="submit">Generate</Button>
-      </Panel>
-    </form>
+          <Checkbox label="Directed" name="directed" />
+          {kind === 'random' ? (
+            <Group grow align="flex-end">
+              <NumberInput label="Seed" name="seed" min={0} defaultValue={DEFAULT_SEED} />
+              <NumberInput
+                label="Probability"
+                name="probability"
+                min={0}
+                max={1}
+                step={0.05}
+                decimalScale={3}
+                placeholder="auto"
+              />
+            </Group>
+          ) : null}
+          <Button type="submit">Generate</Button>
+        </Stack>
+      </form>
+    </Panel>
   );
 }

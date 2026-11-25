@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 
 test('applies an operation with a generated second graph, then undoes it', async ({ page }) => {
   await choose(page, 'Second graph', 'Path');
-  await page.getByLabel('Vertices in second graph').fill('3');
+  await page.getByLabel('Vertices', { exact: true }).fill('3');
   await page.getByRole('button', { name: 'Create second graph' }).click();
   await expect(page.getByText('Second graph: 3 vertices, 2 edges')).toBeVisible();
   await choose(page, 'Operation', 'Cartesian product');
@@ -31,7 +31,7 @@ test('takes the complement and reports missing input', async ({ page }) => {
 
 test('checks isomorphism against the second graph', async ({ page }) => {
   await choose(page, 'Second graph', 'Cycle');
-  await page.getByLabel('Vertices in second graph').fill('6');
+  await page.getByLabel('Vertices', { exact: true }).fill('6');
   await page.getByRole('button', { name: 'Create second graph' }).click();
   await choose(page, 'Algorithm', 'Isomorphism with second graph');
   await expect(page.getByRole('status')).toContainText('Isomorphic');

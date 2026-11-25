@@ -24,7 +24,13 @@ export function PanelStack({ children }: { readonly children: ReactNode }) {
     getInitialValueInEffect: false,
   });
   return (
-    <Accordion multiple variant="separated" value={open} onChange={setOpen}>
+    <Accordion
+      multiple
+      variant="separated"
+      value={open}
+      onChange={setOpen}
+      styles={{ label: { fontWeight: 600 } }}
+    >
       {children}
     </Accordion>
   );

@@ -39,7 +39,7 @@ export function OperationsPanel({ graph, other, picked, onOther, onResult, guard
           onChange={setKind}
         />
         <NumberInput
-          label="Vertices in second graph"
+          label="Vertices"
           min={1}
           max={MAX_SIZE[kind]}
           value={size}
