@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import {
   adjacencySpectrum,
   algebraicConnectivity,
+  eigenDecomposition,
   eigenvalues,
   incidenceMatrix,
   laplacianSpectrum,
@@ -70,5 +71,35 @@ describe('incidenceMatrix', () => {
 
   it('signs directed arcs', () => {
     expect(incidenceMatrix(pathGraph(2, { directed: true })).toRows()).toEqual([[-1], [1]]);
+  });
+});
+
+describe('eigenDecomposition', () => {
+  it('returns eigenvectors that satisfy A v = λ v', () => {
+    const matrix = Matrix.fromRows([
+      [2, 1, 0],
+      [1, 2, 1],
+      [0, 1, 2],
+    ]);
+    const { values, vectors } = eigenDecomposition(matrix);
+    for (const [index, value] of values.entries()) {
+      const vector = vectors[index]!;
+      const product = matrix
+        .toRows()
+        .map((row) => row.reduce((sum, cell, k) => sum + cell * vector[k]!, 0));
+      for (const [k, entry] of product.entries()) expect(entry).toBeCloseTo(value * vector[k]!);
+    }
+    expect(Math.hypot(...vectors[0]!)).toBeCloseTo(1);
+  });
+
+  it('rejects non-symmetric input', () => {
+    expect(() =>
+      eigenDecomposition(
+        Matrix.fromRows([
+          [0, 1],
+          [0, 0],
+        ]),
+      ),
+    ).toThrow(GraphError);
   });
 });

@@ -1,16 +1,25 @@
 import { GraphError, type Graph } from '@graph-toolkit/core';
 import { adjacencyMatrix, laplacianMatrix, type MatrixOptions } from './graph-matrices.js';
 import { isSymmetric } from './internal/dense.js';
-import { jacobiEigenvalues } from './internal/jacobi.js';
+import { jacobiEigen, jacobiEigenvalues, type Eigen } from './internal/jacobi.js';
 import type { Matrix } from './matrix.js';
+
+function assertSymmetric(matrix: Matrix): void {
+  if (matrix.rows !== matrix.columns || !isSymmetric(matrix.toArray(), matrix.rows)) {
+    throw new GraphError('eigenvalues requires a symmetric matrix');
+  }
+}
 
 /** Eigenvalues in ascending order of a symmetric matrix (Jacobi method, O(n³) per sweep). */
 export function eigenvalues(matrix: Matrix): readonly number[] {
-  const data = matrix.toArray();
-  if (matrix.rows !== matrix.columns || !isSymmetric(data, matrix.rows)) {
-    throw new GraphError('eigenvalues requires a symmetric matrix');
-  }
-  return jacobiEigenvalues(data, matrix.rows);
+  assertSymmetric(matrix);
+  return jacobiEigenvalues(matrix.toArray(), matrix.rows);
+}
+
+/** Eigenvalues (ascending) with their unit eigenvectors, for a symmetric matrix. */
+export function eigenDecomposition(matrix: Matrix): Eigen {
+  assertSymmetric(matrix);
+  return jacobiEigen(matrix.toArray(), matrix.rows);
 }
 
 /** Adjacency spectrum of an undirected graph, ascending. */

@@ -255,6 +255,9 @@ importers:
       '@graph-toolkit/core':
         specifier: workspace:*
         version: link:../core
+      '@graph-toolkit/matrix':
+        specifier: workspace:*
+        version: link:../matrix
     devDependencies:
       '@graph-toolkit/generators':
         specifier: workspace:*

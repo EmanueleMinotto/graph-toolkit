@@ -4,6 +4,8 @@ export {
   gridLayout,
   layeredLayout,
   radialLayout,
+  spectralLayout,
+  tutteLayout,
   type ForceLayoutOptions,
   type LayeredLayoutOptions,
   type Layout,

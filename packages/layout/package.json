@@ -32,7 +32,8 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-toolkit/core": "workspace:*"
+    "@graph-toolkit/core": "workspace:*",
+    "@graph-toolkit/matrix": "workspace:*"
   },
   "devDependencies": {
     "@graph-toolkit/generators": "workspace:*"

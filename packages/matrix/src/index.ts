@@ -10,6 +10,7 @@ export { Matrix } from './matrix.js';
 export {
   adjacencySpectrum,
   algebraicConnectivity,
+  eigenDecomposition,
   eigenvalues,
   laplacianSpectrum,
 } from './spectrum.js';

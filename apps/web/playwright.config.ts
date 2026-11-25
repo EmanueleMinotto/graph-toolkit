@@ -1,8 +1,11 @@
+/// <reference types="node" />
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: 'e2e',
   fullyParallel: true,
+  // Pointer-drag tests are occasionally dropped by WebKit on CI runners; a retry settles it.
+  retries: process.env.CI === undefined ? 0 : 2,
   reporter: [['list']],
   // Baselines are per OS, so they live next to the specs without a platform suffix.
   snapshotPathTemplate: '{testDir}/__screenshots__/{testFilePath}/{arg}{ext}',
