@@ -72,4 +72,22 @@ describe('GraphBuilder', () => {
       ),
     );
   });
+
+  it('allows parallel edges only when asked', () => {
+    const multi = new GraphBuilder({ allowParallelEdges: true })
+      .addVertex(a)
+      .addVertex(b)
+      .addEdge(a, b, 1)
+      .addEdge(b, a, 3)
+      .addEdge(a, a)
+      .build();
+    expect(multi.edgeCount).toBe(3);
+    expect(
+      multi
+        .edges()
+        .map((edge) => edge.weight)
+        .toSorted((x, y) => x - y),
+    ).toEqual([1, 1, 3]);
+    expect(multi.degree(a)).toBe(3);
+  });
 });

@@ -1,4 +1,4 @@
-import { GraphError } from '@graph-toolkit/core';
+import { GraphBuilder, GraphError, vertexId } from '@graph-toolkit/core';
 import { completeGraph, cycleGraph, pathGraph } from '@graph-toolkit/generators';
 import { describe, expect, it } from 'vitest';
 import { adjacencyMatrix, graphFromAdjacency, laplacianMatrix, Matrix } from './index.js';
@@ -40,6 +40,17 @@ describe('Matrix', () => {
 });
 
 describe('graph matrices', () => {
+  it('sums parallel edges of multigraphs', () => {
+    const multi = new GraphBuilder({ allowParallelEdges: true })
+      .addVertex(vertexId('x'))
+      .addVertex(vertexId('y'))
+      .addEdge(vertexId('x'), vertexId('y'), 2)
+      .addEdge(vertexId('x'), vertexId('y'), 3)
+      .build();
+    expect(adjacencyMatrix(multi).get(0, 1)).toBe(2);
+    expect(adjacencyMatrix(multi, { isWeighted: true }).get(1, 0)).toBe(5);
+  });
+
   it('builds adjacency matrices and counts walks', () => {
     const triangle = adjacencyMatrix(completeGraph(3));
     expect(triangle.toRows()).toEqual([

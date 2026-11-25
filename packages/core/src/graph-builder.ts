@@ -5,11 +5,14 @@ import { DEFAULT_WEIGHT, type Graph, type VertexId, type Weight } from './types.
 
 export interface GraphBuilderOptions {
   readonly directed?: boolean;
+  /** Allow several edges between the same endpoints (multigraph). Default false. */
+  readonly allowParallelEdges?: boolean;
 }
 
 /** Mutable accumulator that produces an immutable {@link Graph} via `build()`. */
 export class GraphBuilder {
   readonly #directed: boolean;
+  readonly #allowParallel: boolean;
   readonly #indices = new Map<VertexId, number>();
   readonly #edgeKeys = new Set<string>();
   readonly #sources: number[] = [];
@@ -18,6 +21,7 @@ export class GraphBuilder {
 
   public constructor(options: GraphBuilderOptions = {}) {
     this.#directed = options.directed ?? false;
+    this.#allowParallel = options.allowParallelEdges ?? false;
   }
 
   public addVertex(id: VertexId): this {
@@ -30,7 +34,9 @@ export class GraphBuilder {
     const from = this.#indexOf(source);
     const to = this.#indexOf(target);
     const key = this.#directed || from <= to ? `${from}:${to}` : `${to}:${from}`;
-    if (this.#edgeKeys.has(key)) throw new DuplicateError(`Duplicate edge: ${source} -> ${target}`);
+    if (!this.#allowParallel && this.#edgeKeys.has(key)) {
+      throw new DuplicateError(`Duplicate edge: ${source} -> ${target}`);
+    }
     this.#edgeKeys.add(key);
     this.#sources.push(from);
     this.#targets.push(to);

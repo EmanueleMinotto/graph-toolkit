@@ -2,11 +2,12 @@ import type { Csr } from '@graph-toolkit/core';
 
 export type Entry = readonly [row: number, column: number, value: number];
 
+/** Sums parallel arcs, so multigraph entries count (or add up) multiplicities. */
 export function adjacencyData(csr: Csr, size: number, isWeighted: boolean): Float64Array {
   const data = new Float64Array(size * size);
   for (let row = 0; row < size; row++) {
     for (let slot = csr.offsets[row]!; slot < csr.offsets[row + 1]!; slot++) {
-      data[row * size + csr.targets[slot]!] = isWeighted ? csr.weights[slot]! : 1;
+      data[row * size + csr.targets[slot]!]! += isWeighted ? csr.weights[slot]! : 1;
     }
   }
   return data;

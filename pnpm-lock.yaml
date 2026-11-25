@@ -253,6 +253,9 @@ importers:
       '@graph-toolkit/core':
         specifier: workspace:*
         version: link:../core
+      '@graph-toolkit/math':
+        specifier: workspace:*
+        version: link:../math
     devDependencies:
       '@graph-toolkit/generators':
         specifier: workspace:*
