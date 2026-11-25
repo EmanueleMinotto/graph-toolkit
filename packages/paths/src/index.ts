@@ -1,9 +1,11 @@
 export { hasCycle } from './cycles.js';
 export {
   bellmanFord,
+  dagShortestPaths,
   dijkstra,
   DistanceMatrix,
   floydWarshall,
+  johnson,
   NegativeCycleError,
   ShortestPathTree,
 } from './shortest-paths.js';

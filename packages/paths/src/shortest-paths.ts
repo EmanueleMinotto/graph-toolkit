@@ -1,4 +1,6 @@
 import { GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
+import { dagKernel, johnsonKernel } from './internal/johnson.js';
+import { topologicalSort } from '@graph-toolkit/traversal';
 import {
   bellmanFordKernel,
   dijkstraKernel,
@@ -76,4 +78,24 @@ export function floydWarshall(graph: Graph): DistanceMatrix {
     throw new NegativeCycleError('Graph contains a negative cycle');
   }
   return new DistanceMatrix(graph, cells);
+}
+
+/**
+ * Johnson all-pairs shortest paths, O(V·E log V): better than {@link floydWarshall} on sparse
+ * graphs, and supports negative weights. Throws {@link NegativeCycleError}.
+ */
+export function johnson(graph: Graph): DistanceMatrix {
+  const cells = johnsonKernel(graph.csr, graph.vertexCount);
+  if (cells === undefined) throw new NegativeCycleError('Graph contains a negative cycle');
+  return new DistanceMatrix(graph, cells);
+}
+
+/** Single-source shortest paths on a DAG in O(V + E); negative weights allowed. */
+export function dagShortestPaths(graph: Graph, source: VertexId): ShortestPathTree {
+  const order = topologicalSort(graph);
+  if (order === undefined || !graph.directed) {
+    throw new GraphError('dagShortestPaths requires a directed acyclic graph');
+  }
+  const indices = order.map((id) => graph.indexOf(id));
+  return new ShortestPathTree(graph, dagKernel(graph.csr, indices, graph.indexOf(source)));
 }

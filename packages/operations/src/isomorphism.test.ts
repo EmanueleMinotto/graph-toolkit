@@ -98,3 +98,25 @@ describe('isomorphism', () => {
     ).toBe(true);
   });
 });
+
+const aborted = (): { aborted: boolean; throwIfAborted: () => void } => ({
+  aborted: true,
+  throwIfAborted: () => {
+    throw new Error('stop');
+  },
+});
+const live = {
+  aborted: false,
+  throwIfAborted: () => {
+    /* never aborted */
+  },
+};
+
+describe('cancellation', () => {
+  it('aborts the search', () => {
+    const signal = aborted();
+    expect(() => findGraphIsomorphism(cycleGraph(5), cycleGraph(5), { signal })).toThrow('stop');
+    expect(() => areIsomorphic(cycleGraph(5), cycleGraph(5), { signal })).toThrow('stop');
+    expect(areIsomorphic(cycleGraph(5), cycleGraph(5), { signal: live })).toBe(true);
+  });
+});

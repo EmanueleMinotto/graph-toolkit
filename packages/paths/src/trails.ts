@@ -1,4 +1,4 @@
-import type { Graph, VertexId } from '@graph-toolkit/core';
+import type { AbortOptions, Graph, VertexId } from '@graph-toolkit/core';
 import { hierholzer, trailStart, type EulerInput } from './internal/euler.js';
 import { hamiltonian } from './internal/hamilton.js';
 
@@ -30,14 +30,22 @@ const named = (
 ): readonly VertexId[] | undefined => path?.map((index) => graph.vertexAt(index));
 
 /** Path visiting every vertex once (backtracking, exponential; keep V small). */
-export function hamiltonianPath(graph: Graph): readonly VertexId[] | undefined {
-  return named(graph, hamiltonian(graph.csr, graph.vertexCount, false));
+export function hamiltonianPath(
+  graph: Graph,
+  options: AbortOptions = {},
+): readonly VertexId[] | undefined {
+  const mode = { mustClose: false, signal: options.signal };
+  return named(graph, hamiltonian(graph.csr, graph.vertexCount, mode));
 }
 
 /** Cycle visiting every vertex once, returned without repeating the start; needs V ≥ 3. */
-export function hamiltonianCycle(graph: Graph): readonly VertexId[] | undefined {
+export function hamiltonianCycle(
+  graph: Graph,
+  options: AbortOptions = {},
+): readonly VertexId[] | undefined {
   const minimumSize = 3;
+  const mode = { mustClose: true, signal: options.signal };
   return graph.vertexCount < minimumSize
     ? undefined
-    : named(graph, hamiltonian(graph.csr, graph.vertexCount, true));
+    : named(graph, hamiltonian(graph.csr, graph.vertexCount, mode));
 }

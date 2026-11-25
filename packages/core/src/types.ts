@@ -11,6 +11,17 @@ export const DEFAULT_WEIGHT: Weight = 1;
 /** Brands a string as a {@link VertexId}. */
 export const vertexId = (value: string): VertexId => value as VertexId;
 
+/** The part of the standard `AbortSignal` the algorithms use (no DOM or Node typings needed). */
+export interface AbortSignalLike {
+  readonly aborted: boolean;
+  readonly throwIfAborted: () => void;
+}
+
+/** Lets callers cancel long-running (exponential-time) algorithms; they throw the abort reason. */
+export interface AbortOptions {
+  readonly signal?: AbortSignalLike;
+}
+
 export interface Edge {
   readonly source: VertexId;
   readonly target: VertexId;

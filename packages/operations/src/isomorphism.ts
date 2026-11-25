@@ -1,4 +1,4 @@
-import type { Graph, VertexId } from '@graph-toolkit/core';
+import type { AbortOptions, Graph, VertexId } from '@graph-toolkit/core';
 import { findIsomorphism, imageOf } from './internal/isomorphism.js';
 
 /**
@@ -8,17 +8,20 @@ import { findIsomorphism, imageOf } from './internal/isomorphism.js';
 export function findGraphIsomorphism(
   left: Graph,
   right: Graph,
+  options: AbortOptions = {},
 ): ReadonlyMap<VertexId, VertexId> | undefined {
   const isComparable =
     left.directed === right.directed &&
     left.vertexCount === right.vertexCount &&
     left.edgeCount === right.edgeCount;
-  const image = isComparable ? findIsomorphism([left.csr, right.csr], left.vertexCount) : undefined;
+  const image = isComparable
+    ? findIsomorphism([left.csr, right.csr], left.vertexCount, options.signal)
+    : undefined;
   return image === undefined
     ? undefined
     : new Map(left.vertices().map((id, index) => [id, right.vertexAt(imageOf(image, index))]));
 }
 
-export function areIsomorphic(left: Graph, right: Graph): boolean {
-  return findGraphIsomorphism(left, right) !== undefined;
+export function areIsomorphic(left: Graph, right: Graph, options: AbortOptions = {}): boolean {
+  return findGraphIsomorphism(left, right, options) !== undefined;
 }

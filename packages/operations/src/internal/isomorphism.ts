@@ -1,4 +1,4 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { AbortSignalLike, Csr } from '@graph-toolkit/core';
 
 interface Side {
   readonly size: number;
@@ -28,6 +28,7 @@ interface Search {
   readonly order: readonly number[];
   readonly image: Int32Array;
   readonly isUsed: Uint8Array;
+  readonly signal: AbortSignalLike | undefined;
 }
 
 function degreesMatch(search: Search, vertex: number, candidate: number): boolean {
@@ -60,7 +61,7 @@ function isConsistent(search: Search, depth: number, candidate: number): boolean
   );
 }
 
-function extend(search: Search, depth: number): boolean {
+function step(search: Search, depth: number): boolean {
   if (depth === search.order.length) return true;
   for (let candidate = 0; candidate < search.right.size; candidate++) {
     if (search.isUsed[candidate] === 1 || !isConsistent(search, depth, candidate)) continue;
@@ -72,6 +73,11 @@ function extend(search: Search, depth: number): boolean {
   return false;
 }
 
+function extend(search: Search, depth: number): boolean {
+  search.signal?.throwIfAborted();
+  return step(search, depth);
+}
+
 /**
  * Backtracking isomorphism test (degrees + adjacency, weights ignored); exponential worst case.
  * Returns the vertex-index mapping left → right, or `undefined`.
@@ -79,6 +85,7 @@ function extend(search: Search, depth: number): boolean {
 export function findIsomorphism(
   graphs: readonly [left: Csr, right: Csr],
   size: number,
+  signal?: AbortSignalLike,
 ): Int32Array | undefined {
   const [left, right] = [sideOf(graphs[0], size), sideOf(graphs[1], size)];
   const order = Array.from({ length: size }, (_, vertex) => vertex).toSorted(
@@ -90,6 +97,7 @@ export function findIsomorphism(
     order,
     image: new Int32Array(size),
     isUsed: new Uint8Array(size),
+    signal,
   };
   return extend(search, 0) ? search.image : undefined;
 }

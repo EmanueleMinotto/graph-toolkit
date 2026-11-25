@@ -1,13 +1,14 @@
-import type { Csr } from '@graph-toolkit/core';
+import type { AbortSignalLike, Csr } from '@graph-toolkit/core';
 
 interface Search {
   readonly csr: Csr;
   readonly visited: Uint8Array;
   readonly path: number[];
   readonly mustClose: boolean;
+  readonly signal: AbortSignalLike | undefined;
 }
 
-function extend(search: Search): boolean {
+function step(search: Search): boolean {
   const { csr, visited, path } = search;
   const last = path.at(-1)!;
   if (path.length === visited.length) {
@@ -28,17 +29,24 @@ function extend(search: Search): boolean {
   return false;
 }
 
+function extend(search: Search): boolean {
+  search.signal?.throwIfAborted();
+  return step(search);
+}
+
 /** Backtracking, exponential in V. Returns a Hamiltonian path (or cycle) as indices. */
-export function hamiltonian(
-  csr: Csr,
-  vertexCount: number,
-  mustClose: boolean,
-): number[] | undefined {
+export interface Mode {
+  readonly mustClose: boolean;
+  readonly signal: AbortSignalLike | undefined;
+}
+
+export function hamiltonian(csr: Csr, vertexCount: number, mode: Mode): number[] | undefined {
+  const { mustClose, signal } = mode;
   const starts = mustClose ? [0] : Array.from({ length: vertexCount }, (_, vertex) => vertex);
   for (const start of starts.slice(0, vertexCount)) {
     const visited = new Uint8Array(vertexCount);
     visited[start] = 1;
-    const search: Search = { csr, visited, path: [start], mustClose };
+    const search: Search = { csr, visited, path: [start], mustClose, signal };
     if (extend(search)) return search.path;
   }
   return undefined;

@@ -29,3 +29,5 @@ union(pathGraph(3), cycleGraph(4)).edgeCount; // 4
 | `lineGraph(g)`                                      | One vertex per edge (`a--b` / `a->b`). O(E²).                               |
 | `contractEdge(g, keep, merge)`                      | Drops loops, keeps first parallel edge.                                     |
 | `areIsomorphic(a, b)`, `findGraphIsomorphism(a, b)` | Backtracking on degrees/adjacency, weights ignored; exponential worst case. |
+
+`areIsomorphic` and `findGraphIsomorphism` accept `{ signal }` to cancel long searches.
