@@ -1,20 +1,29 @@
 import { GraphError, type Graph, type VertexId } from '@graph-toolkit/core';
-import { edmondsKarp } from './internal/flow.js';
+import { dinicKernel } from './internal/dinic.js';
+import { edmondsKarp, type Terminals } from './internal/flow.js';
 import { pageRankKernel, rankAt } from './internal/rank.js';
 
 const DEFAULT_DAMPING = 0.85;
 const DEFAULT_ITERATIONS = 100;
 const DEFAULT_TOLERANCE = 1e-10;
 
-/** Maximum flow from `source` to `sink` on a directed graph whose weights are capacities. */
-export function maxFlow(graph: Graph, source: VertexId, sink: VertexId): number {
+function terminalsOf(graph: Graph, source: VertexId, sink: VertexId): Terminals {
   if (!graph.directed) throw new GraphError('maxFlow requires a directed graph');
   if (source === sink) throw new GraphError('source and sink must differ');
   if (graph.csr.weights.some((capacity) => capacity < 0)) {
     throw new GraphError('capacities must be non-negative');
   }
-  const terminals = { source: graph.indexOf(source), sink: graph.indexOf(sink) };
-  return edmondsKarp(graph.csr, graph.vertexCount, terminals);
+  return { source: graph.indexOf(source), sink: graph.indexOf(sink) };
+}
+
+/** Maximum flow (Edmonds–Karp, O(V·E²)); directed graph, weights are capacities ≥ 0. */
+export function maxFlow(graph: Graph, source: VertexId, sink: VertexId): number {
+  return edmondsKarp(graph.csr, graph.vertexCount, terminalsOf(graph, source, sink));
+}
+
+/** Maximum flow with Dinic's algorithm, O(V²·E); same contract as {@link maxFlow}. */
+export function maxFlowDinic(graph: Graph, source: VertexId, sink: VertexId): number {
+  return dinicKernel(graph.csr, graph.vertexCount, terminalsOf(graph, source, sink));
 }
 
 export interface PageRankOptions {

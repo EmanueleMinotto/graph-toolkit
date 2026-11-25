@@ -1,21 +1,36 @@
 # @graph-toolkit/algorithms
 
-Network algorithms. Depends on `core`.
+Network algorithms. Depends on `core` and `coloring` (bipartition for matching).
 
 ## Usage
 
 ```ts
-import { maxFlow, pageRank } from '@graph-toolkit/algorithms';
+import {
+  betweennessCentrality,
+  isPlanar,
+  maxFlow,
+  maximumBipartiteMatching,
+} from '@graph-toolkit/algorithms';
 
 maxFlow(network, source, sink); // 23
-pageRank(graph, { damping: 0.85 }); // Map<VertexId, number>, sums to 1
+isPlanar(graph); // true / false
+betweennessCentrality(graph); // Map<VertexId, number>
+maximumBipartiteMatching(bipartiteGraph).size;
 ```
 
 ## API
 
-| Function                   | Notes                                                             | Complexity |
-| -------------------------- | ----------------------------------------------------------------- | ---------- |
-| `maxFlow(g, source, sink)` | Edmonds–Karp; directed graph, weights = capacities (≥ 0).         | O(V·E²)    |
-| `pageRank(g, options?)`    | Power iteration; dangling mass spread uniformly; weights ignored. | O(k·(V+E)) |
+| Function                                | Notes                                                                     | Complexity      |
+| --------------------------------------- | ------------------------------------------------------------------------- | --------------- |
+| `maxFlow(g, s, t)`                      | Edmonds–Karp. Directed graph, weights are capacities ≥ 0.                 | O(V·E²)         |
+| `maxFlowDinic(g, s, t)`                 | Dinic, same contract.                                                     | O(V²·E)         |
+| `maximumBipartiteMatching(g)`           | Hopcroft–Karp; throws on non-bipartite graphs. Returns `{ pairs, size }`. | O(E·√V)         |
+| `pageRank(g, options?)`                 | Power iteration; ranks sum to 1; weights ignored.                         | O(k·(V+E))      |
+| `degreeCentrality(g)`                   | Out-degree / (V − 1).                                                     | O(V)            |
+| `closenessCentrality(g)`                | Wasserman–Faust on hop distances; safe on disconnected graphs.            | O(V·(V+E))      |
+| `betweennessCentrality(g)`              | Brandes, unnormalized, hop distances.                                     | O(V·E)          |
+| `communities(g, maxRounds?)`            | Greedy modularity local moving (Louvain phase 1), deterministic.          | O(rounds·E)     |
+| `maximalCliques(g)`, `maximumClique(g)` | Bron–Kerbosch with pivoting; output can be exponential.                   | exponential     |
+| `isPlanar(g)`                           | Biconnected blocks + Demoucron–Malgrange–Pertuiset; self-loops ignored.   | O(V²) per block |
 
-Planned: Dinic, matching (Hopcroft–Karp), centralities, communities, planarity, cliques.
+Planarity is verified exhaustively against all 1024 graphs on five vertices and against K₅, K₃,₃, Petersen and subdivisions. Communities use one Louvain phase only (no aggregation), so very hierarchical structure may be merged coarsely.

@@ -123,6 +123,9 @@ importers:
 
   packages/algorithms:
     dependencies:
+      '@graph-toolkit/coloring':
+        specifier: workspace:*
+        version: link:../coloring
       '@graph-toolkit/core':
         specifier: workspace:*
         version: link:../core

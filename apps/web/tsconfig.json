@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["ES2023", "ESNext.Iterator", "DOM", "DOM.Iterable"],
+    "lib": ["ES2023", "ESNext.Iterator", "ESNext.Collection", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
     "isolatedDeclarations": false,
     "types": ["vite/client"]

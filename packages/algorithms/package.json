@@ -32,6 +32,7 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
+    "@graph-toolkit/coloring": "workspace:*",
     "@graph-toolkit/core": "workspace:*"
   },
   "devDependencies": {

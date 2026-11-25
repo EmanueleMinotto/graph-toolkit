@@ -1,13 +1,13 @@
 import type { Csr } from '@graph-toolkit/core';
 
-interface Residual {
+export interface Residual {
   readonly to: Uint32Array;
   readonly capacity: Float64Array;
   /** Edge ids leaving each vertex; edge `id ^ 1` is the reverse of `id`. */
   readonly adjacency: readonly number[][];
 }
 
-function buildResidual(csr: Csr, vertexCount: number): Residual {
+export function buildResidual(csr: Csr, vertexCount: number): Residual {
   const arcCount = csr.targets.length;
   const to = new Uint32Array(2 * arcCount);
   const capacity = new Float64Array(2 * arcCount);
