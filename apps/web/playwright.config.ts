@@ -12,7 +12,16 @@ export default defineConfig({
   use: { baseURL: 'http://127.0.0.1:4173' },
   projects: [
     { name: 'chromium', use: devices['Desktop Chrome'] },
-    { name: 'firefox', use: devices['Desktop Firefox'] },
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox'],
+        // Headless Firefox on CI has no GPU: let it fall back to software WebGL.
+        launchOptions: {
+          firefoxUserPrefs: { 'webgl.force-enabled': true, 'webgl.disabled': false },
+        },
+      },
+    },
     { name: 'webkit', use: devices['Desktop Safari'] },
   ],
   webServer: {

@@ -17,3 +17,29 @@ export function isInView(
 /** SVG path data drawing every segment as its own `M … L …` subpath. */
 export const segmentsPath = (segments: readonly (readonly [Pt, Pt])[]): string =>
   segments.map(([from, to]) => `M${from.x} ${from.y}L${to.x} ${to.y}`).join('');
+
+export interface Heading {
+  readonly dx: number;
+  readonly dy: number;
+}
+
+/**
+ * The vertex closest to `from` in the direction `heading` (a unit axis step): it must lie ahead,
+ * and sideways drift counts against it. `undefined` when nothing lies that way.
+ */
+export function nextInDirection<T extends string>(
+  from: Pt,
+  heading: Heading,
+  candidates: readonly (readonly [T, Pt])[],
+): T | undefined {
+  const scored = candidates
+    .map(([id, point]) => {
+      const [along, side] = [
+        (point.x - from.x) * heading.dx + (point.y - from.y) * heading.dy,
+        Math.abs((point.x - from.x) * heading.dy - (point.y - from.y) * heading.dx),
+      ];
+      return { id, along, score: along + side };
+    })
+    .filter((entry) => entry.along > 0);
+  return scored.toSorted((left, right) => left.score - right.score)[0]?.id;
+}

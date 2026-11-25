@@ -147,3 +147,9 @@
   position: relative;
   background: transparent;
 }
+
+.node.cursor {
+  stroke: var(--mantine-color-dark-9);
+  stroke-width: 4;
+  stroke-dasharray: 2 2;
+}

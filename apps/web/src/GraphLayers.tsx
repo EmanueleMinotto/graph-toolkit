@@ -91,6 +91,8 @@ export function Edges({ graph, mode, view, position, highlight }: Common) {
 interface VertexProps extends Common {
   readonly selected: readonly (VertexId | undefined)[];
   readonly group: ReadonlySet<VertexId>;
+  /** The vertex the keyboard cursor is on (WebGL mode). */
+  readonly cursor?: VertexId | undefined;
   readonly onPick: (id: VertexId) => void;
   readonly startDrag: (event: PointerEvent, target: VertexId) => void;
 }
@@ -109,13 +111,14 @@ const DOM_LIMIT = 150;
  * come back).
  */
 function shown(props: VertexProps): readonly Placed[] {
-  const { graph, mode, view, position, selected, group } = props;
+  const { graph, mode, view, position, selected, group, cursor } = props;
   const placed = graph
     .vertices()
     .map((id) => ({ id, point: position(id) }))
     .filter((vertex): vertex is Placed => vertex.point !== undefined);
   const near = placed.filter(({ point }) => isInView(point, view, BOX));
-  const isKept = ({ id }: Placed): boolean => group.has(id) || selected.includes(id);
+  const isKept = ({ id }: Placed): boolean =>
+    id === cursor || group.has(id) || selected.includes(id);
   if (mode === 'webgl') {
     const pool = near.length <= DOM_LIMIT ? near : [];
     return placed.filter((vertex) => isKept(vertex) || pool.includes(vertex));
@@ -127,7 +130,7 @@ function shown(props: VertexProps): readonly Placed[] {
 
 /** Vertices, with labels once zoomed in on big graphs. */
 export function Vertices(props: VertexProps) {
-  const { mode, view, highlight, selected, group, onPick, startDrag } = props;
+  const { mode, view, highlight, selected, group, cursor, onPick, startDrag } = props;
   const isLabelShown = mode !== 'culled' || view.scale >= LABEL_ZOOM;
   return shown(props).map(({ id, point }) => (
     <VertexNode
@@ -135,7 +138,7 @@ export function Vertices(props: VertexProps) {
       id={id}
       point={point}
       radius={RADIUS * (MIN_SCALE + (1 - MIN_SCALE) * (highlight.sizes?.get(id) ?? 1))}
-      className={nodeClass(highlight.colors.get(id), selected.includes(id), group.has(id))}
+      className={`${nodeClass(highlight.colors.get(id), selected.includes(id), group.has(id))}${id === cursor ? ' cursor' : ''}`}
       isPressed={selected.includes(id)}
       isLabelShown={isLabelShown}
       onActivate={() => {

@@ -29,6 +29,7 @@ const IT: Readonly<Record<string, string>> = {
   'Edge weight': "Peso dell'arco",
   'Allow parallel edges': 'Consenti archi paralleli',
   Step: 'Passo',
+  Vertex: 'Vertice',
   Graph: 'Grafo',
   Undo: 'Annulla',
   Redo: 'Ripristina',

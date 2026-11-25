@@ -6,10 +6,10 @@ import { ArrowMarker } from './ArrowMarker.js';
 import { ExportBar } from './ExportBar.js';
 import { fitToBox } from './fit.js';
 import { useGroup } from './use-group.js';
+import { useVertexCursor } from './use-vertex-cursor.js';
 import { Edges, renderMode, Vertices, type RenderMode } from './GraphLayers.js';
 import { hasWebgl } from './webgl-renderer.js';
-import { buildScene } from './webgl-scene.js';
-import { WebglLayer } from './WebglLayer.js';
+import { CursorAnnouncer, GlOverlay, keyProps } from './GlOverlay.js';
 import { useGraphInteraction, type EditHandlers } from './use-graph-interaction.js';
 import { t } from './i18n.js';
 
@@ -65,12 +65,16 @@ export function GraphView({
   useImperativeHandle(ref, () => ({ snapshot: positions }));
   const { x, y, scale } = view;
   const mode = renderMode(graph, hasWebgl());
+  const keys = useVertexCursor({
+    isActive: mode === 'webgl',
+    vertices: graph.vertices(),
+    position,
+    onPick,
+  });
   return (
     <Paper withBorder radius="md" className="graph-wrap">
       <ExportBar svg={svg} onReset={reset} />
-      {mode === 'webgl' ? (
-        <WebglLayer scene={buildScene({ graph, position, highlight })} view={view} box={BOX} />
-      ) : null}
+      <GlOverlay mode={mode} scene={{ graph, position, highlight }} view={view} box={BOX} />
       <svg
         ref={svg}
         className={svgClass(edit !== undefined, mode)}
@@ -83,6 +87,7 @@ export function GraphView({
         onPointerMove={moveDrag}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
+        {...keyProps(mode, keys.onKeyDown)}
       >
         <ArrowMarker />
         <g data-testid="viewport" transform={`translate(${x} ${y}) scale(${scale})`}>
@@ -105,11 +110,13 @@ export function GraphView({
             highlight={highlight}
             selected={selected}
             group={group.members}
+            cursor={keys.cursor}
             onPick={onPick}
             startDrag={startDrag}
           />
         </g>
       </svg>
+      <CursorAnnouncer cursor={keys.cursor} />
     </Paper>
   );
 }

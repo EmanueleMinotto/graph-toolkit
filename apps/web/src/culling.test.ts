@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isInView, segmentsPath } from './culling.js';
+import { isInView, nextInDirection, segmentsPath } from './culling.js';
 import { IDENTITY } from './viewport.js';
 
 const box = { width: 800, height: 520 };
@@ -32,5 +32,19 @@ describe('culling', () => {
       ]),
     ).toBe('M1 2L3 4M5 6L7 8');
     expect(segmentsPath([])).toBe('');
+  });
+
+  it('finds the closest vertex in an arrow direction', () => {
+    const from = { x: 0, y: 0 };
+    const others = [
+      ['near', { x: 10, y: 0 }],
+      ['aside', { x: 10, y: 40 }],
+      ['far', { x: 90, y: 0 }],
+      ['behind', { x: -10, y: 0 }],
+    ] as const;
+    expect(nextInDirection(from, { dx: 1, dy: 0 }, others)).toBe('near');
+    expect(nextInDirection(from, { dx: -1, dy: 0 }, others)).toBe('behind');
+    expect(nextInDirection(from, { dx: 0, dy: 1 }, others)).toBe('aside');
+    expect(nextInDirection(from, { dx: 0, dy: -1 }, others)).toBeUndefined();
   });
 });
