@@ -1,0 +1,30 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "packages/algorithms/src/index.ts",
+    "packages/coloring/src/index.ts",
+    "packages/core/src/index.ts",
+    "packages/generators/src/index.ts",
+    "packages/io/src/index.ts",
+    "packages/layout/src/index.ts",
+    "packages/math/src/index.ts",
+    "packages/matrix/src/index.ts",
+    "packages/normalize/src/index.ts",
+    "packages/operations/src/index.ts",
+    "packages/paths/src/index.ts",
+    "packages/traversal/src/index.ts",
+    "packages/trees/src/index.ts"
+  ],
+  "entryPointStrategy": "resolve",
+  "tsconfig": "tsconfig.docs.json",
+  "out": "docs/api",
+  "name": "graph-toolkit",
+  "readme": "none",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "githubPages": false,
+  "skipErrorChecking": false,
+  "validation": {
+    "notExported": false
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@graph-toolkit/*": ["./packages/*/src/index.ts"]
+    },
+    "isolatedDeclarations": false
+  },
+  "include": ["packages/*/src/**/*.ts"],
+  "exclude": ["packages/*/src/**/*.test.ts", "packages/graph-toolkit/**"]
+}

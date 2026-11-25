@@ -1,0 +1,20 @@
+{
+  "name": "@graph-toolkit/benchmarks",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "bench": "vitest run --config vitest.bench.config.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "graph-toolkit": "workspace:*"
+  },
+  "devDependencies": {
+    "tinybench": "^6.2.5"
+  }
+}

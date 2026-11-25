@@ -13,7 +13,10 @@
     "test": "turbo run test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "docs": "typedoc",
+    "changeset": "changeset",
+    "version-packages": "changeset version"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
@@ -39,6 +42,7 @@
     "publint": "^0.3.25",
     "tsup": "^9.0.0",
     "turbo": "^2.11.13",
+    "typedoc": "^0.28.20",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.74.0",
     "vitest": "^5.1.1"

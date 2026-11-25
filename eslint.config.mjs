@@ -127,6 +127,16 @@ export default tseslint.config(
     },
   },
   {
+    // Benchmark fixtures: imperative generators, not library code.
+    files: ['apps/benchmarks/**/*.ts'],
+    rules: {
+      'functional/no-let': 'off',
+      'functional/immutable-data': 'off',
+      'no-magic-numbers': 'off',
+      'unicorn/consistent-function-scoping': 'off',
+    },
+  },
+  {
     files: ['**/*.config.{ts,mjs}'],
     rules: { 'import-x/no-default-export': 'off', 'import-x/no-extraneous-dependencies': 'off' },
   },

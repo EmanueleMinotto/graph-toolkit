@@ -5,3 +5,9 @@
 - Public API is immutable. Mutation is allowed only inside `src/internal/**` (and `*-builder.ts` accumulators), where hot loops use typed arrays and indexed `for`. Internals are never re-exported.
 - Every package keeps 100% test coverage, a README with examples, and TSDoc on every public export.
 - Scope: `@graph-toolkit/<name>`; dependencies between packages must follow [docs/architecture.md](docs/architecture.md) and stay acyclic (`import-x/no-cycle`, pnpm strict `node_modules`).
+
+## Docs, benchmarks and releases
+
+- `pnpm docs` builds the TypeDoc API reference into `docs/api` (git-ignored; published to GitHub Pages by `.github/workflows/pages.yml`).
+- `apps/benchmarks` holds performance budget tests (run with the normal test task) and an on-demand `bench` script.
+- Releases use Changesets: add a note with `pnpm changeset`, apply versions with `pnpm version-packages`.
