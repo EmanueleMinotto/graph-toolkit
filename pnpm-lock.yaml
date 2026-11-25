@@ -88,6 +88,12 @@ importers:
 
   packages/math: {}
 
+  packages/traversal:
+    dependencies:
+      '@graph-toolkit/core':
+        specifier: workspace:*
+        version: link:../core
+
 packages:
 
   '@andrewbranch/untar.js@1.0.4':

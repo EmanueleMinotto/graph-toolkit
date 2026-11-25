@@ -33,6 +33,8 @@ const internalKernels = {
   'functional/no-let': 'off',
   'functional/prefer-readonly-type': 'off',
   'unicorn/no-for-loop': 'off',
+  '@typescript-eslint/prefer-for-of': 'off', // queue loops append while iterating
+  'unicorn/no-loop-iterable-mutation': 'off',
   'unicorn/no-array-reduce': 'off',
   'unicorn/no-null': 'off',
   'unicorn/no-unreadable-array-destructuring': 'off',
