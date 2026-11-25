@@ -1,3 +1,4 @@
+import { Button, Paper } from '@mantine/core';
 import { type Graph, type Layout, type VertexId } from 'graph-toolkit';
 import { edgeKey, type Highlight } from './analysis.js';
 import { fitToBox } from './fit.js';
@@ -29,10 +30,10 @@ export function GraphView({ graph, layout, highlight, selected, onPick }: Props)
   );
   const { x, y, scale } = view;
   return (
-    <div className="graph-wrap">
-      <button type="button" className="reset" onClick={reset}>
+    <Paper withBorder radius="md" className="graph-wrap">
+      <Button size="xs" variant="default" className="reset" onClick={reset}>
         Reset view
-      </button>
+      </Button>
       <svg
         ref={svg}
         className="graph"
@@ -100,6 +101,6 @@ export function GraphView({ graph, layout, highlight, selected, onPick }: Props)
           })}
         </g>
       </svg>
-    </div>
+    </Paper>
   );
 }

@@ -1,73 +1,45 @@
-:root {
-  color-scheme: light dark;
-  font-family: system-ui, sans-serif;
-  --edge: #8a8f98;
-  --accent: #e4572e;
-  --node: #3b82f6;
+.graph-wrap {
+  position: relative;
+  overflow: hidden;
 }
 
-body {
-  margin: 0;
-}
-
-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 1rem;
-}
-
-aside {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-textarea {
-  width: 100%;
-  font-family: ui-monospace, monospace;
+.reset {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
 }
 
 .graph {
+  display: block;
   width: 100%;
-  border: 1px solid var(--edge);
-  border-radius: 8px;
+  touch-action: none;
+  cursor: grab;
 }
 
 .edge {
-  stroke: var(--edge);
+  stroke: var(--mantine-color-gray-5);
   stroke-width: 2;
 }
 
 .edge.on {
-  stroke: var(--accent);
+  stroke: var(--mantine-color-orange-6);
   stroke-width: 4;
 }
 
 .arrow {
-  fill: var(--edge);
+  fill: var(--mantine-color-gray-5);
 }
 
 .node {
-  fill: var(--node);
-  stroke: #1e3a8a;
+  fill: var(--mantine-color-blue-6);
+  stroke: var(--mantine-color-blue-9);
   stroke-width: 2;
   cursor: pointer;
 }
 
 .node.selected {
-  stroke: var(--accent);
+  stroke: var(--mantine-color-orange-6);
   stroke-width: 4;
 }
 
@@ -78,46 +50,26 @@ textarea {
 }
 
 .c0 {
-  fill: #3b82f6;
+  fill: var(--mantine-color-blue-6);
 }
 .c1 {
-  fill: #e4572e;
+  fill: var(--mantine-color-orange-6);
 }
 .c2 {
-  fill: #2fa84f;
+  fill: var(--mantine-color-green-6);
 }
 .c3 {
-  fill: #a855f7;
+  fill: var(--mantine-color-grape-6);
 }
 .c4 {
-  fill: #eab308;
+  fill: var(--mantine-color-yellow-6);
 }
 .c5 {
-  fill: #06b6d4;
+  fill: var(--mantine-color-cyan-6);
 }
 .c6 {
-  fill: #ec4899;
+  fill: var(--mantine-color-pink-6);
 }
 .c7 {
-  fill: #78716c;
-}
-
-label:has(input[type='checkbox']) {
-  flex-direction: row;
-  align-items: center;
-}
-
-.graph-wrap {
-  position: relative;
-}
-
-.graph {
-  touch-action: none;
-  cursor: grab;
-}
-
-.reset {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+  fill: var(--mantine-color-gray-6);
 }

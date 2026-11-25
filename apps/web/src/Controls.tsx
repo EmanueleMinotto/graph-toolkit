@@ -1,28 +1,48 @@
+import {
+  Button,
+  Checkbox,
+  Group,
+  NativeSelect,
+  NumberInput,
+  Paper,
+  Stack,
+  Text,
+  Textarea,
+  Title,
+} from '@mantine/core';
 import { type VertexId } from 'graph-toolkit';
+import { type ReactNode } from 'react';
 import { ANALYSES, type AnalysisKind } from './analysis.js';
 import { FORMATS, SAMPLES, type Format, type SampleKind } from './formats.js';
 
 const DEFAULT_SIZE = 6;
 
-type Option<T extends string> = readonly T[];
-
 interface SelectProps<T extends string> {
   readonly label: string;
   readonly value: T;
-  readonly options: Option<T>;
+  readonly options: readonly T[];
   readonly onChange: (value: T) => void;
 }
 
 export function Select<T extends string>({ label, value, options, onChange }: SelectProps<T>) {
   return (
-    <label>
-      {label}
-      <select value={value} onChange={(event) => onChange(event.target.value as T)}>
-        {options.map((option) => (
-          <option key={option}>{option}</option>
-        ))}
-      </select>
-    </label>
+    <NativeSelect
+      label={label}
+      value={value}
+      data={[...options]}
+      onChange={(event) => onChange(event.currentTarget.value as T)}
+    />
+  );
+}
+
+function Panel({ title, children }: { readonly title: string; readonly children: ReactNode }) {
+  return (
+    <Paper withBorder p="md" radius="md">
+      <Stack gap="sm">
+        <Title order={4}>{title}</Title>
+        {children}
+      </Stack>
+    </Paper>
   );
 }
 
@@ -39,20 +59,13 @@ export function GeneratePanel({ onGenerate }: GenerateProps) {
         onGenerate(data.get('kind') as SampleKind, Number(data.get('size')));
       }}
     >
-      <h2>Generate</h2>
-      <label>
-        Kind
-        <select name="kind" defaultValue="cycle">
-          {SAMPLES.map((option) => (
-            <option key={option}>{option}</option>
-          ))}
-        </select>
-      </label>
-      <label>
-        Size
-        <input name="size" type="number" min={1} max={30} defaultValue={DEFAULT_SIZE} />
-      </label>
-      <button type="submit">Generate</button>
+      <Panel title="Generate">
+        <Group grow align="flex-end">
+          <NativeSelect label="Kind" name="kind" data={[...SAMPLES]} defaultValue="cycle" />
+          <NumberInput label="Size" name="size" min={1} max={30} defaultValue={DEFAULT_SIZE} />
+        </Group>
+        <Button type="submit">Generate</Button>
+      </Panel>
     </form>
   );
 }
@@ -70,30 +83,27 @@ interface ImportProps {
 
 export function ImportPanel(props: ImportProps) {
   return (
-    <section>
-      <h2>Import / export</h2>
+    <Panel title="Import / export">
       <Select label="Format" value={props.format} options={FORMATS} onChange={props.onFormat} />
-      <label>
-        <input
-          type="checkbox"
-          checked={props.isDirected}
-          onChange={(event) => props.onDirected(event.target.checked)}
-        />
-        Directed (edge list / CSV)
-      </label>
-      <textarea
+      <Checkbox
+        label="Directed (edge list / CSV)"
+        checked={props.isDirected}
+        onChange={(event) => props.onDirected(event.currentTarget.checked)}
+      />
+      <Textarea
         aria-label="Graph text"
         value={props.text}
-        onChange={(event) => props.onText(event.target.value)}
-        rows={10}
+        onChange={(event) => props.onText(event.currentTarget.value)}
+        rows={8}
+        styles={{ input: { fontFamily: 'var(--mantine-font-family-monospace)' } }}
       />
-      <button type="button" onClick={props.onImport}>
-        Import
-      </button>
-      <button type="button" onClick={props.onExport}>
-        Export current
-      </button>
-    </section>
+      <Group grow>
+        <Button onClick={props.onImport}>Import</Button>
+        <Button variant="default" onClick={props.onExport}>
+          Export current
+        </Button>
+      </Group>
+    </Panel>
   );
 }
 
@@ -108,13 +118,14 @@ interface AnalysisProps {
 
 export function AnalysisPanel(props: AnalysisProps) {
   return (
-    <section>
-      <h2>Analysis</h2>
+    <Panel title="Analysis">
       <Select label="Algorithm" value={props.kind} options={ANALYSES} onChange={props.onKind} />
-      <p>
+      <Text size="sm" c="dimmed">
         Click vertices to choose start ({props.from ?? '–'}) and target ({props.to ?? '–'}).
-      </p>
-      <output aria-live="polite">{props.summary}</output>
-    </section>
+      </Text>
+      <Text component="output" aria-live="polite" size="sm" fw={500}>
+        {props.summary}
+      </Text>
+    </Panel>
   );
 }

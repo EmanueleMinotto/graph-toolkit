@@ -1,3 +1,15 @@
+import {
+  ActionIcon,
+  Alert,
+  AppShell,
+  Group,
+  Paper,
+  ScrollArea,
+  Stack,
+  Title,
+  useComputedColorScheme,
+  useMantineColorScheme,
+} from '@mantine/core';
 import { circularLayout, forceLayout, gridLayout, type Graph, type VertexId } from 'graph-toolkit';
 import { useMemo, useState } from 'react';
 import { AnalysisPanel, GeneratePanel, ImportPanel, Select } from './Controls.js';
@@ -48,32 +60,54 @@ export function App() {
   };
 
   return (
-    <main>
-      <h1>graph-toolkit</h1>
-      <div className="layout">
-        <aside>
-          <GeneratePanel onGenerate={(sample, size) => replaceGraph(makeSample(sample, size))} />
-          <ImportPanel
-            format={format}
-            text={text}
-            isDirected={isDirected}
-            onFormat={setFormat}
-            onText={setText}
-            onDirected={setDirected}
-            onImport={() => guarded(() => replaceGraph(parseGraph(format, text, isDirected)))}
-            onExport={() => guarded(() => setText(serializeGraph(format, graph)))}
-          />
-          <Select label="Layout" value={layoutKind} options={LAYOUTS} onChange={setLayoutKind} />
-          <AnalysisPanel
-            kind={kind}
-            vertices={graph.vertices()}
-            from={from}
-            to={to}
-            summary={highlight.summary}
-            onKind={setKind}
-          />
-          {error === '' ? null : <p role="alert">{error}</p>}
-        </aside>
+    <AppShell header={{ height: 56 }} navbar={{ width: 360, breakpoint: 'sm' }} padding="md">
+      <AppShell.Header>
+        <Group h="100%" px="md" justify="space-between">
+          <Title order={1} size="h3">
+            graph-toolkit
+          </Title>
+          <SchemeToggle />
+        </Group>
+      </AppShell.Header>
+      <AppShell.Navbar p="md">
+        <AppShell.Section grow component={ScrollArea}>
+          <Stack gap="md">
+            <GeneratePanel onGenerate={(sample, size) => replaceGraph(makeSample(sample, size))} />
+            <ImportPanel
+              format={format}
+              text={text}
+              isDirected={isDirected}
+              onFormat={setFormat}
+              onText={setText}
+              onDirected={setDirected}
+              onImport={() => guarded(() => replaceGraph(parseGraph(format, text, isDirected)))}
+              onExport={() => guarded(() => setText(serializeGraph(format, graph)))}
+            />
+            <Paper withBorder p="md" radius="md">
+              <Select
+                label="Layout"
+                value={layoutKind}
+                options={LAYOUTS}
+                onChange={setLayoutKind}
+              />
+            </Paper>
+            <AnalysisPanel
+              kind={kind}
+              vertices={graph.vertices()}
+              from={from}
+              to={to}
+              summary={highlight.summary}
+              onKind={setKind}
+            />
+            {error === '' ? null : (
+              <Alert color="red" variant="light">
+                {error}
+              </Alert>
+            )}
+          </Stack>
+        </AppShell.Section>
+      </AppShell.Navbar>
+      <AppShell.Main>
         <GraphView
           key={`${layoutKind}-${generation}`}
           graph={graph}
@@ -82,7 +116,22 @@ export function App() {
           selected={picked}
           onPick={pick}
         />
-      </div>
-    </main>
+      </AppShell.Main>
+    </AppShell>
+  );
+}
+
+function SchemeToggle() {
+  const { setColorScheme } = useMantineColorScheme();
+  const scheme = useComputedColorScheme('light');
+  return (
+    <ActionIcon
+      variant="default"
+      size="lg"
+      aria-label="Toggle color scheme"
+      onClick={() => setColorScheme(scheme === 'light' ? 'dark' : 'light')}
+    >
+      {scheme === 'light' ? '☾' : '☀'}
+    </ActionIcon>
   );
 }

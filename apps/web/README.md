@@ -1,6 +1,6 @@
 # @graph-toolkit/web
 
-Browser app to explore graphs, built with React 19 + Vite and the `graph-toolkit` facade. Rendering is plain SVG; layouts come from `@graph-toolkit/layout`.
+Browser app to explore graphs, built with React 19, Mantine and Vite, using the `graph-toolkit` facade. Rendering is plain SVG; layouts come from `@graph-toolkit/layout`.
 
 ## Run
 
