@@ -12,4 +12,4 @@
 'graph-toolkit': minor
 ---
 
-New: Petersen, wheel, bipartite, binary-tree, hypercube, G(n, m), Barabási–Albert and Watts–Strogatz generators; bridges, articulation points, biconnected components, k-cores, clustering, diameter/radius/center and transitive closure; min-cut, min-cost flow, blossom matching and Hungarian assignment; Johnson and DAG shortest paths; minimum arborescence; incidence matrix and spectrum; GML and graph6 formats; radial layout; lazy BFS/DFS iterators; `AbortSignal` support for exponential searches.
+New: Petersen, wheel, bipartite, binary-tree, hypercube, G(n, m), Barabási–Albert and Watts–Strogatz generators; bridges, articulation points, biconnected components, k-cores, clustering, diameter/radius/center and transitive closure; min-cut, min-cost flow, blossom matching and Hungarian assignment; Johnson and DAG shortest paths; minimum arborescence; incidence matrix and spectrum; GML, graph6, sparse6, Pajek and DIMACS formats; radial layout; lazy BFS/DFS iterators; `AbortSignal` support for exponential searches.

@@ -1,4 +1,5 @@
 export { fromAdjacencyCsv, toAdjacencyCsv, type AdjacencyCsvOptions } from './adjacency-csv.js';
+export { fromDimacs, toDimacs } from './dimacs.js';
 export { fromDot, toDot } from './dot.js';
 export { fromEdgeList, toEdgeList, type EdgeListOptions } from './edge-list.js';
 export { ParseError } from './errors.js';
@@ -7,5 +8,7 @@ export { fromGml, toGml } from './gml.js';
 export { fromGraph6, toGraph6 } from './graph6.js';
 export { fromGraphMl, toGraphMl } from './graphml.js';
 export { fromJson, toJson } from './json.js';
+export { fromPajek, toPajek } from './pajek.js';
+export { fromSparse6, toSparse6 } from './sparse6.js';
 export { fromMermaid } from './mermaid-import.js';
 export { toMermaid } from './mermaid.js';

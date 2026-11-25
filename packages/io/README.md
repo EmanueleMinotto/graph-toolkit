@@ -23,6 +23,9 @@ toJson(graph); // { directed, vertices, edges }
 | GEXF          | `toGexf`         | `fromGexf`                               | `weight` attribute; no dynamics/viz extensions.                             |
 | GML           | `toGml`          | `fromGml`                                | Numeric ids, `label` = vertex name, `weight` attribute; other keys ignored. |
 | graph6        | `toGraph6`       | `fromGraph6`                             | Simple undirected graphs; vertices become `"0"`..`"n-1"`.                   |
+| sparse6       | `toSparse6`      | `fromSparse6`                            | Sparse simple undirected graphs (`:` prefix); no self-loops.                |
+| Pajek `.net`  | `toPajek`        | `fromPajek`                              | `*Vertices`, `*Edges` / `*Arcs`, weights; other sections ignored.           |
+| DIMACS        | `toDimacs`       | `fromDimacs`                             | `p edge` + `e` lines, or `p sp` + `a` lines; vertices numbered from 1.      |
 | Mermaid       | `toMermaid`      | `fromMermaid`                            | Flowcharts: `-->`, `---`, `\|w\|` weights, node labels; no subgraphs.       |
 | Adjacency CSV | `toAdjacencyCsv` | `fromAdjacencyCsv(text, { isDirected })` | Vertex ids become `"0"`..`"n-1"`.                                           |
 
