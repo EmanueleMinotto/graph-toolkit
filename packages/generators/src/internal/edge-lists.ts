@@ -44,7 +44,7 @@ export function mulberry32(seed: number): () => number {
 }
 
 function skipPairs(count: number, probability: number, next: () => number): Pair[] {
-  const logMiss = Math.log(1 - probability);
+  const logMiss = Math.log1p(-probability);
   const pairs: Pair[] = [];
   let to = 1;
   let from = -1;
