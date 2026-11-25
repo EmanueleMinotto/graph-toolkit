@@ -1,6 +1,6 @@
 # @graph-toolkit/normalize
 
-Standardization helpers returning new graphs. Depends on `core`.
+Standardization helpers returning new graphs. Depends on `core` and `math`.
 
 ## Usage
 

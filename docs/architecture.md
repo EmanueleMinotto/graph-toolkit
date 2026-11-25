@@ -4,12 +4,13 @@
 
 ```text
 math (no deps: heap, union-find)
-core ─┬─ matrix (core)
-      ├─ paths (core, math, traversal) ──┐
-      ├─ trees (core, math, traversal)   ├─ algorithms
-      ├─ traversal ───────────┘
-      ├─ operations · coloring · generators · normalize · layout
-      └─ io (core, matrix, normalize)
+core (no deps)
+core ─┬─ matrix · operations · coloring · generators · layout · traversal
+      ├─ io (core, matrix)
+      ├─ normalize (core, math)
+      ├─ paths (core, math, traversal)
+      ├─ trees (core, math, traversal)
+      └─ algorithms (core, coloring)
 graph-toolkit = facade re-exporting everything
 ```
 
