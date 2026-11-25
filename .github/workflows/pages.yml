@@ -36,7 +36,7 @@ jobs:
           cp -R docs/api _site/api
           cp -R apps/web/dist _site/app
           printf '<!doctype html><title>graph-toolkit</title><h1>graph-toolkit</h1><ul><li><a href="app/">Web app</a></li><li><a href="api/">API reference</a></li></ul>' > _site/index.html
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
       - id: deployment
