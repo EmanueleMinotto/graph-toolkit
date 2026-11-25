@@ -1,6 +1,7 @@
 import { GraphBuilder, GraphError, vertexId } from '@graph-sdk/core';
 import { cycleGraph, petersenGraph, pathGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
+import { encodeGraph6 } from './internal/graph6-codec.js';
 import { fromGml, fromGraph6, ParseError, toGml, toGraph6 } from './index.js';
 
 describe('GML', () => {
@@ -71,7 +72,8 @@ describe('graph6', () => {
     expect(() => fromGraph6('')).toThrow(ParseError);
     expect(() => fromGraph6('\u{1}')).toThrow(ParseError);
     expect(() => fromGraph6('~??')).toThrow(ParseError);
-    expect(() => toGraph6(pathGraph(258_048))).toThrow(GraphError);
+    // Checked on the codec itself: building a graph this large would only slow the test down.
+    expect(() => encodeGraph6(258_048, () => false)).toThrow(GraphError);
     expect(() => fromGraph6('Dh')).toThrow(ParseError);
   });
 });
