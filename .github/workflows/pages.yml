@@ -39,5 +39,7 @@ jobs:
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
+      # The artifact listing API is eventually consistent; deploying immediately can find 0 artifacts.
+      - run: sleep 20
       - id: deployment
         uses: actions/deploy-pages@v4
