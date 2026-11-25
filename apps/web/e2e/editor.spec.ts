@@ -24,13 +24,16 @@ test.describe('editor', () => {
   });
 
   test('drags between two vertices to add an edge, once only', async ({ page }) => {
-    const [a, b] = await Promise.all(
-      ['0', '3'].map(async (name) => (await vertex(page, name).locator('circle').boundingBox())!),
-    );
+    // Measured on every drag: the first edge re-renders the canvas, so earlier boxes may be stale.
+    const center = async (name: string) => {
+      const box = (await vertex(page, name).locator('circle').boundingBox())!;
+      return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+    };
     const drag = async () => {
-      await page.mouse.move(a!.x + a!.width / 2, a!.y + a!.height / 2);
+      const [from, to] = [await center('0'), await center('3')];
+      await page.mouse.move(from.x, from.y);
       await page.mouse.down();
-      await page.mouse.move(b!.x + b!.width / 2, b!.y + b!.height / 2, { steps: 5 });
+      await page.mouse.move(to.x, to.y, { steps: 5 });
       await page.mouse.up();
     };
     await drag();
