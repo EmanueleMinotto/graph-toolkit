@@ -106,3 +106,18 @@ label:has(input[type='checkbox']) {
   flex-direction: row;
   align-items: center;
 }
+
+.graph-wrap {
+  position: relative;
+}
+
+.graph {
+  touch-action: none;
+  cursor: grab;
+}
+
+.reset {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}

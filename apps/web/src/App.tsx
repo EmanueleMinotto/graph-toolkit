@@ -24,6 +24,7 @@ export function App() {
   const [kind, setKind] = useState<AnalysisKind>('none');
   const [picked, setPicked] = useState<readonly VertexId[]>([]);
   const [error, setError] = useState('');
+  const [generation, setGeneration] = useState(0);
 
   const layout = useMemo(() => layouts[layoutKind](graph), [graph, layoutKind]);
   const [from, to] = picked;
@@ -31,6 +32,7 @@ export function App() {
 
   const replaceGraph = (next: Graph): void => {
     setGraph(next);
+    setGeneration((value) => value + 1);
     setPicked([]);
     setError('');
   };
@@ -73,6 +75,7 @@ export function App() {
           {error === '' ? null : <p role="alert">{error}</p>}
         </aside>
         <GraphView
+          key={`${layoutKind}-${generation}`}
           graph={graph}
           layout={layout}
           highlight={highlight}

@@ -97,7 +97,7 @@ export default tseslint.config(
     rules: { 'functional/immutable-data': 'off', 'functional/prefer-readonly-type': 'off' },
   },
   {
-    files: ['**/*.test.ts', '**/*.bench.ts'],
+    files: ['**/*.test.ts', '**/*.bench.ts', '**/*.spec.ts'],
     plugins: { vitest },
     rules: {
       ...vitest.configs.recommended.rules,
@@ -124,6 +124,15 @@ export default tseslint.config(
       'unicorn/name-replacements': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-confusing-void-expression': 'off',
+    },
+  },
+  {
+    // React hooks hold mutable refs by design.
+    files: ['apps/web/src/use-*.ts'],
+    rules: {
+      'functional/immutable-data': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      'unicorn/no-useless-undefined': 'off',
     },
   },
   {

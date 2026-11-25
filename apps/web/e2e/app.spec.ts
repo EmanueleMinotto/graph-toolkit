@@ -33,8 +33,8 @@ test('finds a shortest path between two clicked vertices', async ({ page }) => {
   await page.getByLabel('Graph text').fill('a b 1\nb c 1\na c 5');
   await page.getByRole('button', { name: 'Import' }).click();
   await page.getByLabel('Algorithm').selectOption('shortest-path');
-  await page.locator('svg.graph g', { hasText: 'a' }).first().click();
-  await page.locator('svg.graph g', { hasText: 'c' }).first().click();
+  await page.locator('svg.graph [data-testid=viewport] > g', { hasText: 'a' }).click();
+  await page.locator('svg.graph [data-testid=viewport] > g', { hasText: 'c' }).click();
   await expect(page.getByRole('status')).toContainText('Distance 2');
 });
 
@@ -42,4 +42,35 @@ test('exports the current graph', async ({ page }) => {
   await page.getByLabel('Format').selectOption('graphml');
   await page.getByRole('button', { name: 'Export current' }).click();
   await expect(page.getByLabel('Graph text')).toHaveValue(/<graphml/);
+});
+
+test('zooms with the wheel, pans the background and resets', async ({ page }) => {
+  const viewport = page.getByTestId('viewport');
+  const before = await viewport.getAttribute('transform');
+  const box = (await page.locator('svg.graph').boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.wheel(0, -400);
+  await expect(viewport).not.toHaveAttribute('transform', before!);
+  const zoomed = await viewport.getAttribute('transform');
+  await page.mouse.move(box.x + 20, box.y + 20);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 80, box.y + 60);
+  await page.mouse.up();
+  await expect(viewport).not.toHaveAttribute('transform', zoomed!);
+  await page.getByRole('button', { name: 'Reset view' }).click();
+  await expect(viewport).toHaveAttribute('transform', before!);
+});
+
+test('drags a vertex without selecting it', async ({ page }) => {
+  const node = page.locator('svg.graph [data-testid=viewport] > g', { hasText: '0' });
+  const before = await node.getAttribute('transform');
+  const box = (await node.locator('circle').boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 120, box.y + 90, { steps: 5 });
+  await page.mouse.up();
+  await expect(node).not.toHaveAttribute('transform', before!);
+  await expect(page.locator('circle.selected')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Reset view' }).click();
+  await expect(node).toHaveAttribute('transform', before!);
 });
