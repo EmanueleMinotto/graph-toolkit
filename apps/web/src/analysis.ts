@@ -1,20 +1,12 @@
-import {
-  bfs,
-  dijkstra,
-  dsaturColoring,
-  minimumSpanningForest,
-  type Graph,
-  type VertexId,
-} from 'graph-toolkit';
-import { edgeKey, NONE, type Highlight, type Selection } from './analysis-types.js';
+import { bfs, dijkstra, dsaturColoring, minimumSpanningForest, type Graph } from 'graph-toolkit';
+import { edgeKey, NONE, pathEdges, type Highlight, type Selection } from './analysis-types.js';
+import { pathAnalyses, type PathKind } from './analysis-paths.js';
 import { structureAnalyses, type StructureKind } from './analysis-structure.js';
 
-export type AnalysisKind = 'none' | 'bfs' | 'shortest-path' | 'coloring' | 'mst' | StructureKind;
+export type AnalysisKind =
+  'none' | 'bfs' | 'shortest-path' | 'coloring' | 'mst' | StructureKind | PathKind;
 
 export { edgeKey, type Highlight, type Selection } from './analysis-types.js';
-
-const pathEdges = (path: readonly VertexId[], isDirected: boolean): ReadonlySet<string> =>
-  new Set(path.slice(1).map((target, index) => edgeKey(path[index] ?? target, target, isDirected)));
 
 function shortestPath(graph: Graph, { from, to }: Selection): Highlight {
   if (from === undefined || to === undefined) return { ...NONE, summary: 'Pick two vertices.' };
@@ -66,6 +58,7 @@ const analyses: Readonly<Record<AnalysisKind, (graph: Graph, selection: Selectio
     coloring: (graph) => coloring(graph),
     mst: (graph) => spanningTree(graph),
     ...structureAnalyses,
+    ...pathAnalyses,
   };
 
 /** Runs an analysis; library errors become the summary text. */

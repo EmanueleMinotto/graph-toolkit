@@ -1,5 +1,14 @@
 /* eslint-disable functional/prefer-readonly-type -- Mantine's `data` prop only accepts mutable arrays */
-import { Button, Group, Loader, NativeSelect, ScrollArea, Table, Text } from '@mantine/core';
+import {
+  Button,
+  Group,
+  Loader,
+  NativeSelect,
+  NumberInput,
+  ScrollArea,
+  Table,
+  Text,
+} from '@mantine/core';
 import { type Graph, type VertexId } from 'graph-toolkit';
 import { type AnalysisKind, type Highlight } from './analysis.js';
 import { Panel } from './Controls.js';
@@ -12,6 +21,8 @@ interface AnalysisProps {
   readonly to: VertexId | undefined;
   readonly result: Highlight;
   readonly isPending: boolean;
+  readonly count: number;
+  readonly onCount: (count: number) => void;
   readonly onKind: (kind: AnalysisKind) => void;
 }
 
@@ -51,7 +62,8 @@ function selectionHint(needs: Tool['needs'], from = '–', to = '–'): string {
 }
 
 export function AnalysisPanel(props: AnalysisProps) {
-  const hint = selectionHint(toolOf(props.kind).needs, props.from, props.to);
+  const active = toolOf(props.kind);
+  const hint = selectionHint(active.needs, props.from, props.to);
   return (
     <Panel title="Analysis">
       <NativeSelect
@@ -60,6 +72,16 @@ export function AnalysisPanel(props: AnalysisProps) {
         data={toolOptions(props.graph)}
         onChange={(event) => props.onKind(event.currentTarget.value as AnalysisKind)}
       />
+      {active.param === undefined ? null : (
+        <NumberInput
+          label={active.param.label}
+          value={props.count}
+          min={active.param.min}
+          max={active.param.max}
+          allowDecimal={false}
+          onChange={(value) => props.onCount(Number(value))}
+        />
+      )}
       {hint === '' ? null : (
         <Text size="sm" c="dimmed">
           {hint}

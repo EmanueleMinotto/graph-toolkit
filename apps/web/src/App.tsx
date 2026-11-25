@@ -8,10 +8,10 @@ import { GeneratePanel } from './GeneratePanel.js';
 import { GraphView, type GraphViewHandle } from './GraphView.js';
 import { ImportPanel } from './ImportPanel.js';
 import { Toolbar } from './Toolbar.js';
-import { type AnalysisKind } from './analysis.js';
 import { makeSample } from './formats.js';
 import { computeLayout, LAYOUTS, type LayoutKind } from './layouts.js';
 import { type Scene } from './scene.js';
+import { useTool } from './use-tool.js';
 import { useAnalysis } from './use-analysis.js';
 import { useEditor } from './use-editor.js';
 import { useHistory } from './use-history.js';
@@ -21,7 +21,7 @@ export function App() {
   const scene = history.present;
   const { graph } = scene;
   const [layoutKind, setLayoutKind] = useState<LayoutKind>('force');
-  const [kind, setKind] = useState<AnalysisKind>('none');
+  const { kind, count, setCount, choose } = useTool();
   const [picked, setPicked] = useState<readonly VertexId[]>([]);
   const [error, setError] = useState('');
   const [generation, setGeneration] = useState(0);
@@ -32,7 +32,7 @@ export function App() {
     [scene, layoutKind, graph],
   );
   const [from, to] = picked;
-  const selection = useMemo(() => ({ from, to }), [from, to]);
+  const selection = useMemo(() => ({ from, to, count }), [from, to, count]);
   const analysis = useAnalysis(kind, graph, selection);
 
   const travel = (move: () => void): void => {
@@ -120,7 +120,9 @@ export function App() {
               to={to}
               result={analysis.result}
               isPending={analysis.isPending}
-              onKind={setKind}
+              count={count}
+              onCount={setCount}
+              onKind={choose}
             />
             {error === '' ? null : (
               <Alert color="red" variant="light">

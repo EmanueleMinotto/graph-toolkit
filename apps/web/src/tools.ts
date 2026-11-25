@@ -3,6 +3,14 @@ import { type AnalysisKind } from './analysis.js';
 
 export type Requirement = 'directed' | 'undirected';
 
+/** A numeric input some tools need besides the clicked vertices (e.g. how many paths). */
+export interface Param {
+  readonly label: string;
+  readonly initial: number;
+  readonly min: number;
+  readonly max: number;
+}
+
 export interface Tool {
   readonly id: AnalysisKind;
   readonly label: string;
@@ -10,55 +18,64 @@ export interface Tool {
   /** How many vertices the user must click first. */
   readonly needs: 0 | 1 | 2;
   readonly requires?: Requirement;
+  readonly param?: Param;
 }
 
-/** Registry of analysis tools: new tools are added here and in `analysis.ts`. */
+type Extras = Pick<Tool, 'requires' | 'param'>;
+
+type Entry = (
+  id: AnalysisKind,
+  label: string,
+  extras?: Partial<Pick<Tool, 'needs'> & Extras>,
+) => Tool;
+
+const inGroup =
+  (group: string): Entry =>
+  (id, label, extras = {}) => ({ id, label, group, needs: 0, ...extras });
+
 const NO_TOOL: Tool = { id: 'none', label: 'none', group: undefined, needs: 0 };
+const undirected: Extras = { requires: 'undirected' };
+const directed: Extras = { requires: 'directed' };
+
+/** Registry of analysis tools: new tools are added here and in an `analysis-*.ts` module. */
+const traversal = inGroup('Traversal');
+const paths = inGroup('Paths');
+const trails = inGroup('Trails');
+const structure = inGroup('Structure');
+const coloring = inGroup('Coloring');
+const trees = inGroup('Trees');
 
 export const TOOLS: readonly Tool[] = [
   NO_TOOL,
-  { id: 'bfs', label: 'BFS order', group: 'Traversal', needs: 1 },
-  { id: 'dfs', label: 'DFS order', group: 'Traversal', needs: 1 },
-  {
-    id: 'components',
-    label: 'Connected components',
-    group: 'Structure',
-    needs: 0,
-    requires: 'undirected',
-  },
-  {
-    id: 'scc',
-    label: 'Strongly connected components',
-    group: 'Structure',
-    needs: 0,
-    requires: 'directed',
-  },
-  {
-    id: 'topological',
-    label: 'Topological order',
-    group: 'Structure',
-    needs: 0,
-    requires: 'directed',
-  },
-  { id: 'cycle', label: 'Cycle detection', group: 'Structure', needs: 0 },
-  {
-    id: 'tree',
-    label: 'Tree / forest check',
-    group: 'Structure',
-    needs: 0,
-    requires: 'undirected',
-  },
-  { id: 'bipartite', label: 'Bipartition', group: 'Structure', needs: 0, requires: 'undirected' },
-  { id: 'shortest-path', label: 'Shortest path', group: 'Paths', needs: 2 },
-  { id: 'coloring', label: 'DSATUR coloring', group: 'Coloring', needs: 0, requires: 'undirected' },
-  { id: 'mst', label: 'Minimum spanning tree', group: 'Trees', needs: 0, requires: 'undirected' },
+  traversal('bfs', 'BFS order', { needs: 1 }),
+  traversal('dfs', 'DFS order', { needs: 1 }),
+  paths('shortest-path', 'Shortest path', { needs: 2 }),
+  paths('distances', 'Distances from vertex (Dijkstra)', { needs: 1 }),
+  paths('bellman-ford', 'Distances, negative weights (Bellman-Ford)', { needs: 1 }),
+  paths('floyd-warshall', 'All pairs (Floyd-Warshall)'),
+  paths('astar', 'A* search', { needs: 2 }),
+  paths('k-shortest', 'k shortest paths', {
+    needs: 2,
+    param: { label: 'Paths (k)', initial: 3, min: 1, max: 20 },
+  }),
+  trails('eulerian', 'Eulerian trail'),
+  trails('hamiltonian-path', 'Hamiltonian path'),
+  trails('hamiltonian-cycle', 'Hamiltonian cycle'),
+  structure('components', 'Connected components', undirected),
+  structure('scc', 'Strongly connected components', directed),
+  structure('topological', 'Topological order', directed),
+  structure('cycle', 'Cycle detection'),
+  structure('tree', 'Tree / forest check', undirected),
+  structure('bipartite', 'Bipartition', undirected),
+  coloring('coloring', 'DSATUR coloring', undirected),
+  trees('mst', 'Minimum spanning tree', undirected),
 ];
 
-export const toolOf = (id: AnalysisKind): Tool => TOOLS.find((tool) => tool.id === id) ?? NO_TOOL;
+export const toolOf = (id: AnalysisKind): Tool => TOOLS.find((entry) => entry.id === id) ?? NO_TOOL;
 
 /** Why `tool` cannot run on `graph`, or `undefined` when it can. */
-export function unavailableReason(tool: Tool, graph: Graph): string | undefined {
-  if (tool.requires === 'undirected' && graph.directed) return 'needs an undirected graph';
-  if (tool.requires === 'directed' && !graph.directed) return 'needs a directed graph';
+export function unavailableReason(entry: Tool, graph: Graph): string | undefined {
+  if (entry.requires === 'undirected' && graph.directed) return 'needs an undirected graph';
+  if (entry.requires === 'directed' && !graph.directed) return 'needs a directed graph';
   return undefined;
 }

@@ -10,6 +10,6 @@ export interface WorkerRequest extends Selection {
 // Dedicated worker: the only sender is the page that created it, so there is no origin to check.
 // eslint-disable-next-line sonarjs/post-message
 globalThis.addEventListener('message', (event: MessageEvent<WorkerRequest>) => {
-  const { kind, json, from, to } = event.data;
-  globalThis.postMessage(analyze(kind, fromJson(json), { from, to }));
+  const { kind, json, from, to, count } = event.data;
+  globalThis.postMessage(analyze(kind, fromJson(json), { from, to, count }));
 });

@@ -3,6 +3,8 @@ import { type VertexId } from 'graph-toolkit';
 export interface Selection {
   readonly from: VertexId | undefined;
   readonly to: VertexId | undefined;
+  /** Value of the tool's numeric parameter (see `Tool.param`). */
+  readonly count?: number | undefined;
 }
 
 export interface Highlight {
@@ -20,3 +22,7 @@ export function edgeKey(source: VertexId, target: VertexId, isDirected: boolean)
 }
 
 export const NONE: Highlight = { colors: new Map(), edges: new Set(), summary: '' };
+
+/** Keys of the edges along `path`. */
+export const pathEdges = (path: readonly VertexId[], isDirected: boolean): ReadonlySet<string> =>
+  new Set(path.slice(1).map((target, index) => edgeKey(path[index] ?? target, target, isDirected)));

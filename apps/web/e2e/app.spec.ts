@@ -147,3 +147,17 @@ test('lists connected components and checks bipartiteness', async ({ page }) => 
   await page.getByLabel('Algorithm').selectOption('bipartite');
   await expect(page.getByRole('status')).toContainText('Bipartite');
 });
+
+test('lists k shortest paths with an adjustable count', async ({ page }) => {
+  await page.getByLabel('Algorithm').selectOption('k-shortest');
+  await page.getByLabel('Paths (k)').fill('2');
+  await page.locator('svg.graph [data-testid=viewport] > g', { hasText: '0' }).click();
+  await page.locator('svg.graph [data-testid=viewport] > g', { hasText: '3' }).click();
+  await expect(page.getByRole('status')).toContainText('2 loopless paths');
+  await expect(page.getByRole('cell', { name: '0 → 1 → 2 → 3' })).toBeVisible();
+});
+
+test('finds a Hamiltonian cycle in the default cycle graph', async ({ page }) => {
+  await page.getByLabel('Algorithm').selectOption('hamiltonian-cycle');
+  await expect(page.getByRole('status')).toContainText('Hamiltonian cycle found');
+});
