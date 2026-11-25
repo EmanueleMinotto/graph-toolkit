@@ -5,4 +5,5 @@ export { ParseError } from './errors.js';
 export { fromGexf, toGexf } from './gexf.js';
 export { fromGraphMl, toGraphMl } from './graphml.js';
 export { fromJson, toJson } from './json.js';
+export { fromMermaid } from './mermaid-import.js';
 export { toMermaid } from './mermaid.js';

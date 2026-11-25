@@ -1,5 +1,6 @@
 import type { Graph, VertexId } from '@graph-toolkit/core';
 import { coordinate, forceKernel } from './internal/force.js';
+import { layer, placementAt } from './internal/layered.js';
 
 export interface Point {
   readonly x: number;
@@ -53,5 +54,29 @@ export function forceLayout(graph: Graph, options: ForceLayoutOptions = {}): Lay
         id,
         { x: coordinate(pos, 2 * index), y: coordinate(pos, 2 * index + 1) },
       ]),
+  );
+}
+
+export interface LayeredLayoutOptions {
+  /** Vertical distance between layers, default 1. */
+  readonly layerGap?: number;
+  /** Horizontal distance between vertices of a layer, default 1. */
+  readonly nodeGap?: number;
+}
+
+/**
+ * Layered (hierarchical) layout: DAGs use longest-path layers, other graphs BFS depth; vertices
+ * within a layer are ordered by barycenter sweeps. Layers grow downward (y), each centered on x = 0.
+ */
+export function layeredLayout(graph: Graph, options: LayeredLayoutOptions = {}): Layout {
+  const { layerGap = 1, nodeGap = 1 } = options;
+  const placement = layer(graph.csr, graph.vertexCount);
+  return new Map(
+    graph.vertices().map((id, index) => {
+      const level = placementAt(placement.level, index);
+      const width = placementAt(placement.widths, level);
+      const offset = placementAt(placement.rank, index) - (width - 1) / 2;
+      return [id, { x: offset * nodeGap, y: level * layerGap }];
+    }),
   );
 }

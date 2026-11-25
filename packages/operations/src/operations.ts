@@ -1,21 +1,6 @@
-import {
-  GraphBuilder,
-  GraphError,
-  type Edge,
-  type Graph,
-  type VertexId,
-} from '@graph-toolkit/core';
-
-function assemble(directed: boolean, vertices: readonly VertexId[], edges: readonly Edge[]): Graph {
-  const builder = new GraphBuilder({ directed });
-  for (const vertex of vertices) builder.addVertex(vertex);
-  for (const edge of edges) builder.addEdge(edge.source, edge.target, edge.weight);
-  return builder.build();
-}
-
-function assertSameKind(left: Graph, right: Graph): void {
-  if (left.directed !== right.directed) throw new GraphError('Graphs must both be directed or not');
-}
+import { type Edge, type Graph, type VertexId } from '@graph-toolkit/core';
+import { assemble } from './assemble.js';
+import { assertSameKind } from './guards.js';
 
 function containsEdge(graph: Graph, edge: Edge): boolean {
   return (
