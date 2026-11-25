@@ -7,6 +7,8 @@ import { useGraphInteraction, type EditHandlers } from './use-graph-interaction.
 
 export const BOX = { width: 800, height: 520, padding: 40 } as const;
 const RADIUS = 14;
+/** Smallest vertex radius, as a fraction of `RADIUS`, when sized by score. */
+const MIN_SCALE = 0.6;
 const PALETTE_SIZE = 8;
 
 function nodeClass(color: number | undefined, isSelected: boolean): string {
@@ -128,7 +130,7 @@ export function GraphView({
                 }}
               >
                 <circle
-                  r={RADIUS}
+                  r={RADIUS * (MIN_SCALE + (1 - MIN_SCALE) * (highlight.sizes?.get(id) ?? 1))}
                   className={nodeClass(highlight.colors.get(id), selected.includes(id))}
                 />
                 <text className="label" textAnchor="middle" dy="0.35em">

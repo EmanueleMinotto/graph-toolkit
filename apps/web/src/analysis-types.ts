@@ -3,7 +3,7 @@ import { type VertexId } from 'graph-toolkit';
 export interface Selection {
   readonly from: VertexId | undefined;
   readonly to: VertexId | undefined;
-  /** Value of the tool's numeric parameter (see `Tool.param`). */
+  /** Value of the tool's numeric parameter (see `Tool.param`): a count, a damping factor, … */
   readonly count?: number | undefined;
 }
 
@@ -12,6 +12,8 @@ export interface Highlight {
   readonly colors: ReadonlyMap<VertexId, number>;
   readonly edges: ReadonlySet<string>;
   /** Edge key → palette index, for edge colorings. */
+  /** Vertex → relative size in [0, 1], for scores such as centrality. */
+  readonly sizes?: ReadonlyMap<VertexId, number> | undefined;
   readonly edgeColors?: ReadonlyMap<string, number> | undefined;
   readonly summary: string;
   /** Optional two-column detail (e.g. vertex → value). */

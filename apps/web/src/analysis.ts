@@ -1,12 +1,20 @@
 import { bfs, dijkstra, type Graph } from 'graph-toolkit';
 import { NONE, pathEdges, type Highlight, type Selection } from './analysis-types.js';
 import { coloringAnalyses, type ColoringKind } from './analysis-coloring.js';
+import { networkAnalyses, type NetworkKind } from './analysis-network.js';
 import { pathAnalyses, type PathKind } from './analysis-paths.js';
 import { treeAnalyses, type TreeKind } from './analysis-trees.js';
 import { structureAnalyses, type StructureKind } from './analysis-structure.js';
 
 export type AnalysisKind =
-  'none' | 'bfs' | 'shortest-path' | StructureKind | PathKind | TreeKind | ColoringKind;
+  | 'none'
+  | 'bfs'
+  | 'shortest-path'
+  | StructureKind
+  | PathKind
+  | TreeKind
+  | ColoringKind
+  | NetworkKind;
 
 export { edgeKey, type Highlight, type Selection } from './analysis-types.js';
 
@@ -42,6 +50,7 @@ const analyses: Readonly<Record<AnalysisKind, (graph: Graph, selection: Selectio
     ...treeAnalyses,
     ...coloringAnalyses,
     ...pathAnalyses,
+    ...networkAnalyses,
   };
 
 /** Runs an analysis; library errors become the summary text. */

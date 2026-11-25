@@ -54,3 +54,25 @@ test('colors edges and builds a tree from a Prüfer code', async ({ page }) => {
   await page.locator('svg.graph [data-testid=viewport] > g', { hasText: '3' }).click();
   await expect(page.getByRole('status')).toContainText('Rooted at 3');
 });
+
+test('ranks vertices by centrality and sizes the nodes', async ({ page }) => {
+  await page.getByLabel('Kind').selectOption('star');
+  await page.getByRole('button', { name: 'Generate' }).click();
+  await page.getByLabel('Algorithm').selectOption('betweenness');
+  await expect(page.getByRole('status')).toContainText('highest is 0');
+  const radii = await page
+    .locator('svg.graph circle')
+    .evaluateAll((circles) => circles.map((circle) => Number(circle.getAttribute('r'))));
+  expect(Math.max(...radii)).toBeGreaterThan(Math.min(...radii));
+});
+
+test('computes a max flow on a directed network', async ({ page }) => {
+  await page.getByLabel('Format').selectOption('edge-list');
+  await page.getByLabel('Directed (edge list / CSV)').check();
+  await page.getByLabel('Graph text').fill('s a 3\na t 2\ns t 1');
+  await page.getByRole('button', { name: 'Import' }).click();
+  await page.getByLabel('Algorithm').selectOption('max-flow');
+  await page.locator('svg.graph [data-testid=viewport] > g', { hasText: 's' }).first().click();
+  await page.locator('svg.graph [data-testid=viewport] > g', { hasText: 't' }).first().click();
+  await expect(page.getByRole('status')).toContainText('= 3');
+});

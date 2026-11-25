@@ -9,6 +9,8 @@ export interface Param {
   readonly initial: number;
   readonly min: number;
   readonly max: number;
+  /** Increment; fractions (below 1) allow decimal input. */
+  readonly step?: number;
 }
 
 export interface Tool {
@@ -44,6 +46,9 @@ const trails = inGroup('Trails');
 const structure = inGroup('Structure');
 const coloring = inGroup('Coloring');
 const trees = inGroup('Trees');
+const flows = inGroup('Flow and matching');
+const ranking = inGroup('Centrality and communities');
+const cliques = inGroup('Cliques and planarity');
 
 export const TOOLS: readonly Tool[] = [
   NO_TOOL,
@@ -76,6 +81,21 @@ export const TOOLS: readonly Tool[] = [
   trees('boruvka', 'Minimum spanning tree (Borůvka)', undirected),
   trees('rooted-tree', 'Rooted tree: depth and parent', { ...undirected, needs: 1 }),
   trees('lca', 'Lowest common ancestor', { ...undirected, needs: 2 }),
+  flows('max-flow', 'Max flow (Edmonds–Karp)', { ...directed, needs: 2 }),
+  flows('max-flow-dinic', 'Max flow (Dinic)', { ...directed, needs: 2 }),
+  flows('matching', 'Bipartite matching (Hopcroft–Karp)', undirected),
+  ranking('pagerank', 'PageRank', {
+    param: { label: 'Damping', initial: 0.85, min: 0.05, max: 0.99, step: 0.05 },
+  }),
+  ranking('degree', 'Degree centrality'),
+  ranking('closeness', 'Closeness centrality'),
+  ranking('betweenness', 'Betweenness centrality'),
+  ranking('communities', 'Communities (modularity)', {
+    param: { label: 'Max rounds', initial: 100, min: 1, max: 1000 },
+  }),
+  cliques('maximal-cliques', 'Maximal cliques', undirected),
+  cliques('maximum-clique', 'Maximum clique', undirected),
+  cliques('planar', 'Planarity test', undirected),
 ];
 
 export const toolOf = (id: AnalysisKind): Tool => TOOLS.find((entry) => entry.id === id) ?? NO_TOOL;

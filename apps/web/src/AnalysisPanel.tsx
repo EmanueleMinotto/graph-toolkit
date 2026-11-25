@@ -12,7 +12,7 @@ import {
 import { type Graph, type VertexId } from 'graph-toolkit';
 import { type AnalysisKind, type Highlight } from './analysis.js';
 import { Panel } from './Controls.js';
-import { toolOf, TOOLS, unavailableReason, type Tool } from './tools.js';
+import { toolOf, TOOLS, unavailableReason, type Param, type Tool } from './tools.js';
 
 interface AnalysisProps {
   readonly kind: AnalysisKind;
@@ -73,34 +73,51 @@ export function AnalysisPanel(props: AnalysisProps) {
         onChange={(event) => props.onKind(event.currentTarget.value as AnalysisKind)}
       />
       {active.param === undefined ? null : (
-        <NumberInput
-          label={active.param.label}
-          value={props.count}
-          min={active.param.min}
-          max={active.param.max}
-          allowDecimal={false}
-          onChange={(value) => props.onCount(Number(value))}
-        />
+        <ParamInput param={active.param} value={props.count} onChange={props.onCount} />
       )}
       {hint === '' ? null : (
         <Text size="sm" c="dimmed">
           {hint}
         </Text>
       )}
-      {props.isPending ? (
-        <Group gap="xs">
-          <Loader size="xs" />
-          <Text size="sm">Running…</Text>
-          <Button size="compact-xs" variant="subtle" onClick={() => props.onKind('none')}>
-            Cancel
-          </Button>
-        </Group>
-      ) : null}
+      {props.isPending ? <Running onCancel={() => props.onKind('none')} /> : null}
       <Text component="output" aria-live="polite" size="sm" fw={500}>
         {props.result.summary}
       </Text>
       {props.result.table === undefined ? null : <ResultTable rows={props.result.table} />}
     </Panel>
+  );
+}
+
+function ParamInput(props: {
+  readonly param: Param;
+  readonly value: number;
+  readonly onChange: (value: number) => void;
+}) {
+  const { param } = props;
+  return (
+    <NumberInput
+      label={param.label}
+      value={props.value}
+      min={param.min}
+      max={param.max}
+      step={param.step ?? 1}
+      allowDecimal={(param.step ?? 1) < 1}
+      decimalScale={2}
+      onChange={(value) => props.onChange(Number(value))}
+    />
+  );
+}
+
+function Running({ onCancel }: { readonly onCancel: () => void }) {
+  return (
+    <Group gap="xs">
+      <Loader size="xs" />
+      <Text size="sm">Running…</Text>
+      <Button size="compact-xs" variant="subtle" onClick={onCancel}>
+        Cancel
+      </Button>
+    </Group>
   );
 }
 
