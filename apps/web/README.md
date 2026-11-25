@@ -26,4 +26,4 @@ pnpm --filter @graph-toolkit/web build   # static site in apps/web/dist
 | `src/fit.ts`                                   | Scales a layout into the SVG viewBox.      |
 | `src/App.tsx`, `Controls.tsx`, `GraphView.tsx` | UI.                                        |
 
-Logic lives in plain modules covered by unit tests; `App.test.tsx` is a jsdom smoke test. Not yet covered: Playwright end-to-end tests.
+Logic lives in plain modules covered by unit tests; `App.test.tsx` is a jsdom smoke test. End-to-end tests live in `e2e/` (Playwright, run with `pnpm e2e` after `pnpm build`).

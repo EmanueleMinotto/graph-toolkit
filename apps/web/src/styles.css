@@ -101,3 +101,8 @@ textarea {
 .c7 {
   fill: #78716c;
 }
+
+label:has(input[type='checkbox']) {
+  flex-direction: row;
+  align-items: center;
+}
