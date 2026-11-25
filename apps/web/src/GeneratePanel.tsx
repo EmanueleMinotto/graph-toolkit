@@ -76,7 +76,7 @@ export function GeneratePanel({ onGenerate }: Props) {
           ) : null}
           {lastSeed !== undefined && SEEDED.has(kind) ? (
             <Text size="sm" c="dimmed">
-              Last seed: {lastSeed} (type it in Seed to reproduce the graph)
+              {t(`Last seed: ${String(lastSeed)} (type it in Seed to reproduce the graph)`)}
             </Text>
           ) : null}
           <Button type="submit">{t('Generate')}</Button>

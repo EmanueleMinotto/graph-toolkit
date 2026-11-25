@@ -27,10 +27,10 @@ export function ExamplesPanel({ onSelect }: Props) {
           >
             <Stack gap={0} align="flex-start">
               <Text size="sm" fw={600}>
-                {example.label}
+                {t(example.label)}
               </Text>
               <Text size="xs" c="dimmed" fw={400} ta="left" style={{ whiteSpace: 'normal' }}>
-                {example.description}
+                {t(example.description)}
               </Text>
             </Stack>
           </Button>

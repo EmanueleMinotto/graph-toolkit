@@ -49,7 +49,7 @@ export function AnalysisPanel(props: AnalysisProps) {
       )}
       {hint === '' ? null : (
         <Text size="sm" c="dimmed">
-          {hint}
+          {t(hint)}
         </Text>
       )}
       {props.playback.total > 0 ? <PlaybackBar playback={props.playback} /> : null}
@@ -67,7 +67,7 @@ function ParamInput(props: {
   const { param } = props;
   return (
     <NumberInput
-      label={param.label}
+      label={t(param.label)}
       value={props.value}
       min={param.min}
       max={param.max}
@@ -95,7 +95,7 @@ function Output({ result }: { readonly result: Highlight }) {
   return (
     <>
       <Text component="output" aria-live="polite" size="sm" fw={500}>
-        {result.summary}
+        {t(result.summary)}
       </Text>
       {result.table === undefined ? null : <ResultTable rows={result.table} />}
       {result.matrix === undefined ? null : <MatrixGrid matrix={result.matrix} />}

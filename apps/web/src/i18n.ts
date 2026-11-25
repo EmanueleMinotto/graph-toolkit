@@ -1,5 +1,8 @@
 /* eslint-disable functional/no-let, functional/immutable-data, unicorn/no-top-level-assignment-in-function -- `t` is called from anywhere, so the active language is one module-level value */
 import { useSyncExternalStore } from 'react';
+import { EXAMPLE_TEXT } from './i18n-examples.js';
+import { LABELS } from './i18n-labels.js';
+import { RULES, SENTENCES } from './i18n-results.js';
 
 export type Lang = 'en' | 'it';
 
@@ -72,8 +75,22 @@ const detect = (): Lang => {
 let current: Lang = detect();
 const listeners = new Set<() => void>();
 
-/** Translates interface text; unknown text is returned as is. */
-export const t = (text: string): string => (current === 'it' ? (IT[text] ?? text) : text);
+const exact = (text: string): string | undefined =>
+  IT[text] ?? LABELS[text] ?? SENTENCES[text] ?? EXAMPLE_TEXT[text];
+
+function inItalian(text: string): string {
+  const known = exact(text);
+  if (known !== undefined) return known;
+  const rule = RULES.map(([pattern, build]) => [pattern.exec(text), build] as const).find(
+    ([match]) => match !== null,
+  );
+  if (rule?.[0] == null) return text;
+  const match = rule[0];
+  return rule[1]((index) => match[index] ?? '', inItalian);
+}
+
+/** Translates interface text and algorithm results; unknown text is returned as is. */
+export const t = (text: string): string => (current === 'it' ? inItalian(text) : text);
 
 export function setLang(next: Lang): void {
   current = next;

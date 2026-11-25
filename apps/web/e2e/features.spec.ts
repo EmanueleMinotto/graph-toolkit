@@ -129,3 +129,10 @@ test('only draws the vertices on screen once a big graph is zoomed in', async ({
   await expect.poll(() => page.locator('svg.graph circle').count()).toBeLessThan(400);
   await expect(page.locator('svg.graph text.label').first()).toBeVisible();
 });
+
+test('translates algorithm names and results into Italian', async ({ page }) => {
+  await page.getByRole('button', { name: 'Switch language' }).click();
+  await page.getByRole('button', { name: /Farfallino con coda/ }).click();
+  await choose(page, 'Algoritmo', 'Ponti (archi di taglio)');
+  await expect(page.getByText('1 ponte', { exact: true })).toBeVisible();
+});

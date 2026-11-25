@@ -27,15 +27,17 @@ export function EditPanel(props: Props) {
         fullWidth
         value={props.mode}
         data={[
-          { value: 'select', label: 'Select' },
-          { value: 'edit', label: 'Edit' },
+          { value: 'select', label: t('Select') },
+          { value: 'edit', label: t('Edit') },
         ]}
         onChange={(value) => props.onMode(value)}
       />
       <Text size="sm" c="dimmed">
-        {props.mode === 'edit'
-          ? 'Click the canvas to add a vertex; drag from one vertex to another to add an edge.'
-          : 'Switch to edit to change the graph by hand.'}
+        {t(
+          props.mode === 'edit'
+            ? 'Click the canvas to add a vertex; drag from one vertex to another to add an edge.'
+            : 'Switch to edit to change the graph by hand.',
+        )}
       </Text>
       <NumberInput
         label={t('Edge weight')}

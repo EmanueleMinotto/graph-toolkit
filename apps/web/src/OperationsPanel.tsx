@@ -72,7 +72,7 @@ export function OperationsPanel({ graph, other, picked, onOther, onResult, guard
       />
       {field === undefined ? null : (
         <TextInput
-          label={field}
+          label={t(field)}
           value={text}
           onChange={(event) => setText(event.currentTarget.value)}
         />

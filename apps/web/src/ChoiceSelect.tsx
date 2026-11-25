@@ -1,6 +1,7 @@
 /* eslint-disable functional/prefer-readonly-type -- Mantine's `data` prop only accepts mutable arrays */
 import { Group, Select, Text, type ComboboxItem, type ComboboxItemGroup } from '@mantine/core';
 import { IconCheck, type Icon } from '@tabler/icons-react';
+import { t } from './i18n.js';
 
 export interface Choice<T extends string> {
   readonly value: T;
@@ -24,8 +25,12 @@ type Data = (ComboboxItem | ComboboxItemGroup<ComboboxItem>)[];
 
 function toData<T extends string>(choices: readonly Choice<T>[]): Data {
   return [...Map.groupBy(choices, ({ group = '' }) => group)].flatMap(([group, members]): Data => {
-    const items = members.map(({ value, label, disabled = false }) => ({ value, label, disabled }));
-    return group === '' ? items : [{ group, items }];
+    const items = members.map(({ value, label, disabled = false }) => ({
+      value,
+      label: t(label),
+      disabled,
+    }));
+    return group === '' ? items : [{ group: t(group), items }];
   });
 }
 
