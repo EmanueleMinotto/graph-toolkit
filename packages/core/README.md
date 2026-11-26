@@ -23,15 +23,18 @@ graph.neighbors(a); // [{ source: a, target: b, weight: 2 }]
 
 ## API
 
-| Export                                               | Notes                                                                                             |
-| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `GraphBuilder`                                       | Mutable accumulator; `build()` returns an immutable `Graph`.                                      |
-| `Graph`                                              | `vertices`, `edges`, `hasVertex`, `hasEdge`, `neighbors`, `degree`, `indexOf`, `vertexAt`, `csr`. |
-| `vertexId`, `VertexId`, `Weight`, `Edge`, `Csr`      | Branded ids and plain data types.                                                                 |
-| `GraphError`, `UnknownVertexError`, `DuplicateError` | Typed errors.                                                                                     |
+| Export                                               | Notes                                                                                                                                 |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `GraphBuilder`                                       | Mutable accumulator; `build()` returns an immutable `Graph`.                                                                          |
+| `Graph`                                              | `vertices`, `edges`, `hasVertex`, `hasEdge`, `neighbors`, `edgesBetween`, `vertexAttributes`, `degree`, `indexOf`, `vertexAt`, `csr`. |
+| `Attributes`, `EdgeDetails`                          | Immutable key–value data on vertices (`addVertex(id, attributes)`) and edges (`addEdge(a, b, { weight, attributes })`).               |
+| `vertexId`, `VertexId`, `Weight`, `Edge`, `Csr`      | Branded ids and plain data types.                                                                                                     |
+| `GraphError`, `UnknownVertexError`, `DuplicateError` | Typed errors.                                                                                                                         |
 
 ## Complexity
 
 Build: $O(V + E)$. `degree`, `indexOf`, `hasVertex`: $O(1)$. `neighbors`, `hasEdge`: $O(\text{out-degree})$. `edges`: $O(V + E)$.
+
+Attributes are copied and frozen when added. `Edge.attributes` is present only on edges that have some, and `edgesBetween(a, b)` returns every parallel edge between two vertices, each with its own attributes. Graphs without attributes carry no extra data. Graph transformations (`operations`, `normalize`) build new graphs and do not copy attributes.
 
 Duplicate vertices are always rejected; duplicate edges are rejected unless the builder is created with `{ allowParallelEdges: true }`, which yields a multigraph (parallel edges and loops each count in `edgeCount`, `degree` and `edges()`). `adjacencyMatrix` sums parallel edges; algorithms that assume simple graphs (isomorphism, planarity, `hasEdge` semantics) treat them as a single connection. Undirected self-loops are stored once and count once in the degree.

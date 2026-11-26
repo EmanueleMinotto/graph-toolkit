@@ -22,10 +22,18 @@ export interface AbortOptions {
   readonly signal?: AbortSignalLike;
 }
 
+/** A value storable as a vertex or edge attribute. */
+export type AttributeValue = string | number | boolean;
+
+/** Immutable key–value data attached to a vertex or an edge. */
+export type Attributes = Readonly<Record<string, AttributeValue>>;
+
 export interface Edge {
   readonly source: VertexId;
   readonly target: VertexId;
   readonly weight: Weight;
+  /** Present only on edges that were given attributes. */
+  readonly attributes?: Attributes;
 }
 
 /**
@@ -36,6 +44,8 @@ export interface Csr {
   readonly offsets: Uint32Array;
   readonly targets: Uint32Array;
   readonly weights: Float64Array;
+  /** Insertion ordinal of the edge behind each arc; only kept for graphs with edge attributes. */
+  readonly arcEdges?: Uint32Array;
 }
 
 /** Immutable graph. Undirected edges are stored as two arcs in {@link Csr}. */
@@ -52,6 +62,10 @@ export interface Graph {
   readonly hasEdge: (source: VertexId, target: VertexId) => boolean;
   /** Outgoing edges of `id`. */
   readonly neighbors: (id: VertexId) => readonly Edge[];
+  /** Every edge from `source` to `target`, parallel ones included. */
+  readonly edgesBetween: (source: VertexId, target: VertexId) => readonly Edge[];
+  /** Attributes of a vertex (an empty object when it has none). */
+  readonly vertexAttributes: (id: VertexId) => Attributes;
   /** Out-degree (loops count once). */
   readonly degree: (id: VertexId) => number;
   readonly indexOf: (id: VertexId) => number;

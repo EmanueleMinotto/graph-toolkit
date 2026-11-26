@@ -4,6 +4,8 @@ export interface EdgeList {
   readonly sources: readonly number[];
   readonly targets: readonly number[];
   readonly weights: readonly number[];
+  /** Record which edge each arc came from (needed for edge attributes). */
+  readonly trackEdges?: boolean;
 }
 
 function symmetrize(list: EdgeList): EdgeList {
@@ -27,6 +29,15 @@ function symmetrize(list: EdgeList): EdgeList {
   return { sources, targets, weights };
 }
 
+/** Edge ordinal behind each arc, in the order {@link symmetrize} lays the arcs out. */
+function originsOf(list: EdgeList, directed: boolean): number[] {
+  const own = list.sources.map((_, index) => index);
+
+  return directed
+    ? own
+    : [...own, ...own.filter((index) => list.sources[index] !== list.targets[index])];
+}
+
 function prefixSums(vertexCount: number, sources: readonly number[]): Uint32Array {
   const offsets = new Uint32Array(vertexCount + 1);
 
@@ -41,22 +52,53 @@ function prefixSums(vertexCount: number, sources: readonly number[]): Uint32Arra
   return offsets;
 }
 
-/** Counting-sort build, $O(V + E)$. Arcs keep insertion order per vertex. */
-export function buildCsr(vertexCount: number, list: EdgeList, directed: boolean): Csr {
-  const arcs = directed ? list : symmetrize(list);
-  const offsets = prefixSums(vertexCount, arcs.sources);
-  const cursor = offsets.slice(0, vertexCount);
-  const targets = new Uint32Array(arcs.sources.length);
-  const weights = new Float64Array(arcs.sources.length);
+interface Placed {
+  readonly targets: Uint32Array;
+  readonly weights: Float64Array;
+  /** CSR slot taken by each arc of the input list. */
+  readonly slots: Uint32Array;
+}
+
+/** Counting sort of the arcs by source. */
+function place(arcs: EdgeList, offsets: Uint32Array): Placed {
+  const cursor = offsets.slice(0, -1);
+  const placed: Placed = {
+    targets: new Uint32Array(arcs.sources.length),
+    weights: new Float64Array(arcs.sources.length),
+    slots: new Uint32Array(arcs.sources.length),
+  };
 
   for (let arc = 0; arc < arcs.sources.length; arc++) {
     const slot = cursor[arcs.sources[arc]!]!++;
 
-    targets[slot] = arcs.targets[arc]!;
-    weights[slot] = arcs.weights[arc]!;
+    placed.targets[slot] = arcs.targets[arc]!;
+    placed.weights[slot] = arcs.weights[arc]!;
+    placed.slots[arc] = slot;
   }
 
-  return { offsets, targets, weights };
+  return placed;
+}
+
+/** Edge ordinal per CSR slot. */
+function edgesBySlot(origins: readonly number[], slots: Uint32Array): Uint32Array {
+  const arcEdges = new Uint32Array(slots.length);
+
+  for (let arc = 0; arc < slots.length; arc++) {
+    arcEdges[slots[arc]!] = origins[arc]!;
+  }
+
+  return arcEdges;
+}
+
+/** Counting-sort build, $O(V + E)$. Arcs keep insertion order per vertex. */
+export function buildCsr(vertexCount: number, list: EdgeList, directed: boolean): Csr {
+  const arcs = directed ? list : symmetrize(list);
+  const offsets = prefixSums(vertexCount, arcs.sources);
+  const { targets, weights, slots } = place(arcs, offsets);
+
+  return list.trackEdges === true
+    ? { offsets, targets, weights, arcEdges: edgesBySlot(originsOf(list, directed), slots) }
+    : { offsets, targets, weights };
 }
 
 /** Out-degree of `vertex`, counting each stored arc once. */
@@ -67,6 +109,8 @@ export function outDegree(csr: Csr, vertex: number): number {
 export interface Arc {
   readonly target: number;
   readonly weight: number;
+  /** Insertion ordinal of the edge behind the arc, when the CSR tracks it. */
+  readonly edge: number | undefined;
 }
 
 /** Arcs of `vertex` whose target satisfies `keep`. */
@@ -77,7 +121,7 @@ export function arcsOf(csr: Csr, vertex: number, keep: (target: number) => boole
     const target = csr.targets[slot]!;
 
     if (keep(target)) {
-      arcs.push({ target, weight: csr.weights[slot]! });
+      arcs.push({ target, weight: csr.weights[slot]!, edge: csr.arcEdges?.[slot] });
     }
   }
 

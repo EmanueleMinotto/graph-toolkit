@@ -1,9 +1,10 @@
-import { GraphBuilder, vertexId, type Graph } from '@graph-sdk/core';
+import { GraphBuilder, vertexId, type Attributes, type Graph } from '@graph-sdk/core';
 
 export interface ParsedEdge {
   readonly source: string;
   readonly target: string;
   readonly weight: number;
+  readonly attributes?: Attributes;
 }
 
 export interface ParsedGraph {
@@ -11,6 +12,8 @@ export interface ParsedGraph {
   /** Declared vertices; endpoints of edges are added implicitly, in first-seen order. */
   readonly vertices: readonly string[];
   readonly edges: readonly ParsedEdge[];
+  /** Attributes by vertex name; names not declared as vertices are ignored. */
+  readonly vertexAttributes?: Readonly<Record<string, Attributes>>;
 }
 
 export function assembleGraph(parsed: ParsedGraph): Graph {
@@ -22,7 +25,7 @@ export function assembleGraph(parsed: ParsedGraph): Graph {
     }
 
     seen.add(name);
-    builder.addVertex(vertexId(name));
+    builder.addVertex(vertexId(name), parsed.vertexAttributes?.[name]);
   };
 
   for (const name of parsed.vertices) {
@@ -32,7 +35,11 @@ export function assembleGraph(parsed: ParsedGraph): Graph {
   for (const edge of parsed.edges) {
     declare(edge.source);
     declare(edge.target);
-    builder.addEdge(vertexId(edge.source), vertexId(edge.target), edge.weight);
+
+    builder.addEdge(vertexId(edge.source), vertexId(edge.target), {
+      weight: edge.weight,
+      ...(edge.attributes && { attributes: edge.attributes }),
+    });
   }
 
   return builder.build();

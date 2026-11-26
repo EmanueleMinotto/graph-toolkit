@@ -16,7 +16,7 @@ toJson(graph); // { directed, vertices, edges }
 
 | Format        | Export           | Import                                   | Notes                                                                       |
 | ------------- | ---------------- | ---------------------------------------- | --------------------------------------------------------------------------- |
-| JSON          | `toJson`         | `fromJson`                               | Validated; keeps isolated vertices and order.                               |
+| JSON          | `toJson`         | `fromJson`                               | Validated; keeps isolated vertices, order and vertex/edge attributes.       |
 | Edge list/CSV | `toEdgeList`     | `fromEdgeList(text, { isDirected })`     | `source target [weight]`, `#` comments. No isolated vertices.               |
 | DOT           | `toDot`          | `fromDot`                                | Nodes, edges, chains, `weight`; no subgraphs/ports.                         |
 | GraphML       | `toGraphMl`      | `fromGraphMl`                            | `weight` as `<data>` on edges; flat structure only.                         |
