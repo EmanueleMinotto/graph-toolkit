@@ -18,7 +18,7 @@ import {
 } from '@dnd-kit/sortable';
 import { Accordion } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
-import { type ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 
 const OPEN_KEY = 'graph-toolkit.open-panels';
 const ORDER_KEY = 'graph-toolkit.panel-order';
@@ -124,7 +124,9 @@ export function PanelStack({ panels }: Props) {
           onChange={setOpen}
           styles={{ label: { fontWeight: 600 } }}
         >
-          {order.map((id) => panels[id])}
+          {order.map((id) => (
+            <Fragment key={id}>{panels[id]}</Fragment>
+          ))}
         </Accordion>
       </SortableContext>
     </DndContext>
