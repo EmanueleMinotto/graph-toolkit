@@ -7,6 +7,10 @@ export {
   type PageRankOptions,
 } from './algorithms.js';
 export {
+  approximateBetweenness,
+  type ApproximateBetweennessOptions,
+} from './approximate-betweenness.js';
+export {
   betweennessCentrality,
   closenessCentrality,
   degreeCentrality,

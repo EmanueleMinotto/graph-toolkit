@@ -73,13 +73,34 @@ function accumulate(search: Bfs, source: number, scores: Float64Array): void {
   }
 }
 
-/** Brandes betweenness on hop distances, $O(V \cdot E)$. Undirected pairs are counted once. */
-export function betweenness(csr: Csr, vertexCount: number, isDirected: boolean): Float64Array {
+export interface Network {
+  readonly csr: Csr;
+  readonly vertexCount: number;
+  readonly isDirected: boolean;
+}
+
+/**
+ * Brandes betweenness from the given `sources` only, scaled by `V / sources` so that sampling a
+ * subset estimates the full score. Undirected pairs are counted once.
+ */
+export function betweennessFrom(
+  { csr, vertexCount, isDirected }: Network,
+  sources: readonly number[],
+): Float64Array {
   const scores = new Float64Array(vertexCount);
 
-  for (let source = 0; source < vertexCount; source++) {
+  for (const source of sources) {
     accumulate(bfsPaths(csr, vertexCount, source), source, scores);
   }
 
-  return isDirected ? scores : scores.map((score) => score / 2);
+  const scale = vertexCount / sources.length / (isDirected ? 1 : 2);
+
+  return scores.map((score) => score * scale);
+}
+
+/** Brandes betweenness on hop distances, $O(V \cdot E)$. Undirected pairs are counted once. */
+export function betweenness(csr: Csr, vertexCount: number, isDirected: boolean): Float64Array {
+  const everyVertex = Array.from({ length: vertexCount }, (_, index) => index);
+
+  return betweennessFrom({ csr, vertexCount, isDirected }, everyVertex);
 }
