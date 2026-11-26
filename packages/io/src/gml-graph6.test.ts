@@ -54,7 +54,7 @@ describe('graph6', () => {
 
   it('round-trips the Petersen graph and trims the header', () => {
     const graph = petersenGraph();
-    expect(toGraph6(fromGraph6('>>graph6<<' + toGraph6(graph) + '\n'))).toBe(toGraph6(graph));
+    expect(toGraph6(fromGraph6(`>>graph6<<${toGraph6(graph)}\n`))).toBe(toGraph6(graph));
   });
 
   it('uses the extended order encoding above 62 vertices', () => {

@@ -18,9 +18,12 @@ export function nextVertexId(graph: Graph): VertexId {
 /** Two endpoints; `connects` also matches the reverse orientation in undirected graphs. */
 export type Ends = Pick<Edge, 'source' | 'target'>;
 
+const matches = (edge: Edge, source: string, target: string): boolean =>
+  edge.source === source && edge.target === target;
+
 const connects = (graph: Graph, edge: Edge, ends: Ends): boolean =>
-  (edge.source === ends.source && edge.target === ends.target) ||
-  (!graph.directed && edge.source === ends.target && edge.target === ends.source);
+  matches(edge, ends.source, ends.target) ||
+  (!graph.directed && matches(edge, ends.target, ends.source));
 
 export const addVertex = (graph: Graph, id: VertexId): Graph =>
   rebuild(graph, [...graph.vertices(), id], graph.edges());

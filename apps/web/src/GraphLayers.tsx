@@ -43,7 +43,7 @@ const isOffScreen = (point: Pt, view: View, isCulled: boolean): boolean =>
   isCulled && !isInView(point, view, BOX);
 
 const isPlain = (highlight: Highlight, key: string): boolean =>
-  !highlight.edges.has(key) && !highlight.edgeColors?.has(key);
+  !highlight.edges.has(key) && highlight.edgeColors?.has(key) !== true;
 
 interface Drawn {
   readonly key: string;

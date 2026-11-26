@@ -1,10 +1,10 @@
 import type { ParsedEdge } from './assemble.js';
 
-const ID = /"(?:[^"\\]|\\.)*"|[A-Za-z_]\w*|-?\d+(?:\.\d+)?/g;
-const WEIGHT = /\bweight\s*=\s*"?(-?\d+(?:\.\d+)?)/;
+const ID = /"(?:[^"\\]|\\.)*"|[A-Za-z_]\w*|-?\d+(?:\.\d+)?/gu;
+const WEIGHT = /\bweight\s*=\s*"?(-?\d+(?:\.\d+)?)/u;
 
 const unquote = (token: string): string =>
-  token.startsWith('"') ? token.slice(1, -1).replaceAll(/\\(.)/g, '$1') : token;
+  token.startsWith('"') ? token.slice(1, -1).replaceAll(/\\(.)/gu, '$1') : token;
 
 /** Identifiers (quoted, bare or numeric) in order of appearance. */
 export function idsOf(text: string): readonly string[] {

@@ -1,5 +1,5 @@
-import { uniqueEdges } from './internal/dedupe.js';
 import { GraphBuilder, type Edge, type Graph, type VertexId } from '@graph-sdk/core';
+import { uniqueEdges } from './internal/dedupe.js';
 
 export function assemble(
   directed: boolean,

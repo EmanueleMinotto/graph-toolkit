@@ -19,12 +19,12 @@ export function toDot(graph: Graph): string {
 }
 
 const stripComments = (text: string): string =>
-  text.replaceAll(/\/\*[\s\S]*?\*\//g, '').replaceAll(/(?:\/\/|#).*/g, '');
+  text.replaceAll(/\/\*[\s\S]*?\*\//gu, '').replaceAll(/(?:\/\/|#).*/gu, '');
 
 function splitHeader(text: string): { readonly directed: boolean; readonly body: string } {
   const open = text.indexOf('{');
   const close = text.lastIndexOf('}');
-  const words = text.slice(0, open).trim().split(/\s+/);
+  const words = text.slice(0, open).trim().split(/\s+/u);
   const kind = words.find((word) => word === 'graph' || word === 'digraph');
   if (kind === undefined || open === -1 || close < open) throw new ParseError('Invalid DOT header');
   return { directed: kind === 'digraph', body: text.slice(open + 1, close) };
@@ -45,10 +45,10 @@ function parseNodes(statements: readonly string[], operator: string): readonly s
 /** Parses simple DOT (nodes, edges, `weight` attribute). Subgraphs are not supported. */
 export function fromDot(text: string): Graph {
   const { directed, body } = splitHeader(stripComments(text));
-  if (/\bsubgraph\b|\{/.test(body)) throw new ParseError('DOT subgraphs are not supported');
+  if (/\bsubgraph\b|\{/u.test(body)) throw new ParseError('DOT subgraphs are not supported');
   const operator = directed ? '->' : '--';
   const statements = body
-    .split(/[;\n]/)
+    .split(/[;\n]/u)
     .map((part) => part.trim())
     .filter(Boolean);
   const edges = statements.flatMap((statement) => parseStatement(statement, operator));

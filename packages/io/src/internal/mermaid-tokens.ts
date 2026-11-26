@@ -3,7 +3,7 @@ export interface NodeToken {
   readonly label: string | undefined;
 }
 
-const BRACKET = /[[(]/;
+const BRACKET = /[[(]/u;
 
 /** `n0["x y"]`, `n0(label)`, `n0` → key and optional label. */
 export function parseNode(text: string): NodeToken {
@@ -13,7 +13,7 @@ export function parseNode(text: string): NodeToken {
   const body = trimmed.slice(open);
   const quote = body.indexOf('"');
   const raw =
-    quote === -1 ? body.replaceAll(/[()[\]]/g, '') : body.slice(quote + 1, body.lastIndexOf('"'));
+    quote === -1 ? body.replaceAll(/[()[\]]/gu, '') : body.slice(quote + 1, body.lastIndexOf('"'));
   return { key: trimmed.slice(0, open), label: raw.replaceAll('#quot;', '"') };
 }
 

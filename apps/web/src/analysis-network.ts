@@ -68,7 +68,7 @@ function matching(graph: Graph): Highlight {
 function scored(name: string, compute: (graph: Graph, parameter: number | undefined) => Scores) {
   return (graph: Graph, { count }: Selection): Highlight => {
     const entries = [...compute(graph, count)].toSorted(([, left], [, right]) => right - left);
-    const best = entries[0];
+    const [best] = entries;
     const top = best?.[1] ?? 0;
     return {
       ...NONE,

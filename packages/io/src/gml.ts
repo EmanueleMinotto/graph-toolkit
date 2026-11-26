@@ -15,7 +15,7 @@ export function toGml(graph: Graph): string {
         `  edge [ source ${graph.indexOf(edge.source)} target ${graph.indexOf(edge.target)} weight ${edge.weight} ]`,
     );
   const header = ['graph [', `  directed ${graph.directed ? 1 : 0}`];
-  return [...header, ...nodes, ...edges, ']'].join('\n') + '\n';
+  return `${[...header, ...nodes, ...edges, ']'].join('\n')}\n`;
 }
 
 function nameOf(node: GmlList): readonly [number, string] {

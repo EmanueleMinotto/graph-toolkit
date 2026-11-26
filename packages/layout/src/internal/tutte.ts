@@ -40,7 +40,8 @@ function parentsAvoiding(lists: Lists, [from, to]: Point): Map<number, number> {
 function cycleThrough(lists: Lists, edge: Point): number[] {
   const parent = parentsAvoiding(lists, edge);
   const path: number[] = [];
-  for (let vertex = edge[1]; vertex !== -1 && parent.has(vertex); vertex = parent.get(vertex)!) {
+  const [, start] = edge;
+  for (let vertex = start; vertex !== -1 && parent.has(vertex); vertex = parent.get(vertex)!) {
     path.push(vertex);
   }
   return parent.has(edge[1]) ? path : [];

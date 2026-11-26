@@ -85,9 +85,9 @@ function inItalian(text: string): string {
   const rule = RULES.map(([pattern, build]) => [pattern.exec(text), build] as const).find(
     ([match]) => match !== null,
   );
-  if (rule?.[0] == null) return text;
-  const match = rule[0];
-  return rule[1]((index) => match[index] ?? '', inItalian);
+  if (rule === undefined) return text;
+  const [match, build] = rule;
+  return match === null ? text : build((index) => match[index] ?? '', inItalian);
 }
 
 /** Translates interface text and algorithm results; unknown text is returned as is. */

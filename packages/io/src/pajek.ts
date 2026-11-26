@@ -15,7 +15,7 @@ export function toPajek(graph: Graph): string {
     .edges()
     .map((edge) => `${index(edge.source)} ${index(edge.target)} ${edge.weight}`);
   const section = graph.directed ? '*Arcs' : '*Edges';
-  return [`*Vertices ${graph.vertexCount}`, ...vertices, section, ...edges].join('\n') + '\n';
+  return [`*Vertices ${graph.vertexCount}`, ...vertices, section, ...edges, ''].join('\n');
 }
 
 const VERTEX = /^(\d+)\s*(?:"([^"]*)"|(\S+))?/u;

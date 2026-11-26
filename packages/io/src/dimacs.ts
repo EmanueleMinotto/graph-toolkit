@@ -17,7 +17,7 @@ export function toDimacs(graph: Graph): string {
       (edge) =>
         `${letter} ${graph.indexOf(edge.source) + 1} ${graph.indexOf(edge.target) + 1} ${edge.weight}`,
     );
-  return [`p ${kind} ${graph.vertexCount} ${graph.edgeCount}`, ...rows].join('\n') + '\n';
+  return [`p ${kind} ${graph.vertexCount} ${graph.edgeCount}`, ...rows, ''].join('\n');
 }
 
 function parseRow(line: string, count: number): ParsedEdge {

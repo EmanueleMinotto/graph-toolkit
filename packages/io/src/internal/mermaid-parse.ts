@@ -2,12 +2,12 @@ import { ParseError } from '../errors.js';
 import type { ParsedGraph } from './assemble.js';
 import { parseEdge, parseNode, type EdgeToken, type NodeToken } from './mermaid-tokens.js';
 
-const HEADER = /^(?:flowchart|graph)\b/;
+const HEADER = /^(?:flowchart|graph)\b/u;
 
 function bodyLines(text: string): string[] {
   const lines = text
     .split('\n')
-    .map((line) => line.replace(/%%.*/, '').trim().replace(/;$/, ''))
+    .map((line) => line.replace(/%%.*/u, '').trim().replace(/;$/u, ''))
     .filter(Boolean);
   const [header = '', ...body] = lines;
   if (!HEADER.test(header)) throw new ParseError('Mermaid text must start with flowchart/graph');

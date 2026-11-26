@@ -111,7 +111,7 @@ describe('sparse6', () => {
 
   it('round-trips larger sparse graphs and accepts the header', () => {
     const graph = pathGraph(70);
-    expect(keys(fromSparse6('>>sparse6<<' + toSparse6(graph) + '\n'))).toEqual(keys(graph));
+    expect(keys(fromSparse6(`>>sparse6<<${toSparse6(graph)}\n`))).toEqual(keys(graph));
     expect(toSparse6(pathGraph(0))).toBe(':?');
   });
 

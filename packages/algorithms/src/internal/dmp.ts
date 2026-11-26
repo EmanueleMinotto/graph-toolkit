@@ -109,7 +109,7 @@ function step(state: Embedding): boolean {
     fragment,
     faces: state.faces.filter((face) => containsAll(face, fragment.attachments)),
   }));
-  const pick = options.toSorted((left, right) => left.faces.length - right.faces.length)[0];
+  const [pick] = options.toSorted((left, right) => left.faces.length - right.faces.length);
   const face = pick?.faces[0];
   if (pick === undefined || face === undefined) return false;
   embedPath(state, pick.fragment.path);

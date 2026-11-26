@@ -8,7 +8,7 @@ const ENTITIES: Readonly<Record<string, string>> = {
 };
 
 export function escapeXml(text: string): string {
-  return text.replaceAll(/[&<>"]/g, (char) => ENTITIES[char]!);
+  return text.replaceAll(/[&<>"]/gu, (char) => ENTITIES[char]!);
 }
 
 export function unescapeXml(text: string): string {
@@ -30,14 +30,14 @@ function parseAttributes(text: string): Map<string, string> {
   const parts = text.split('"');
   const attributes = new Map<string, string>();
   for (let index = 0; index + 1 < parts.length; index += 2) {
-    const name = parts[index]!.trimEnd().slice(0, -1).trimEnd().split(/\s+/).pop()!;
+    const name = parts[index]!.trimEnd().slice(0, -1).trimEnd().split(/\s+/u).pop()!;
     attributes.set(name, unescapeXml(parts[index + 1]!));
   }
   return attributes;
 }
 
 const isTagBoundary = (char: string | undefined): boolean =>
-  char !== undefined && /[\s/>]/.test(char);
+  char !== undefined && /[\s/>]/u.test(char);
 
 function readElement(xml: string, tag: string, start: number): XmlElement | undefined {
   const end = xml.indexOf('>', start);

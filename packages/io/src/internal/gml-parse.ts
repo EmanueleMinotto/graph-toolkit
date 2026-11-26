@@ -3,7 +3,7 @@ import { ParseError } from '../errors.js';
 export type GmlValue = string | number | GmlList;
 export type GmlList = readonly (readonly [string, GmlValue])[];
 
-const TOKEN = /"[^"]*"|\[|\]|[^\s[\]"]+/g;
+const TOKEN = /"[^"]*"|\[|\]|[^\s[\]"]+/gu;
 
 const unescape = (text: string): string => text.replaceAll('&quot;', '"').replaceAll('&amp;', '&');
 

@@ -32,7 +32,7 @@ export function toGraphMl(graph: Graph): string {
 }
 
 function weightOf(body: string): number {
-  const text = /<data\b[^>]*>([^<]*)<\/data>/.exec(body)?.[1];
+  const text = /<data\b[^>]*>([^<]*)<\/data>/u.exec(body)?.[1];
   return text === undefined ? 1 : Number(text);
 }
 

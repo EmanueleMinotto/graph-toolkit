@@ -55,7 +55,7 @@ export function decodeOrder(text: string): readonly [count: number, rest: string
 
 /** Vertex count and edges (index pairs) encoded in one graph6 line. */
 export function decodeGraph6(line: string): { count: number; edges: [number, number][] } {
-  const [count, body] = decodeOrder(line.trim().replace(/^>>graph6<</, ''));
+  const [count, body] = decodeOrder(line.trim().replace(/^>>graph6<</u, ''));
   if (body.length !== Math.ceil((count * (count - 1)) / 2 / BITS)) {
     throw new ParseError('graph6 body has the wrong length');
   }

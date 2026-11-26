@@ -40,11 +40,13 @@ export interface Operation {
   readonly field?: string;
 }
 
+const TWO_GRAPHS = 'Two graphs';
+
 export const OPERATIONS: readonly Operation[] = [
-  { id: 'union', label: 'Union', group: 'Two graphs' },
-  { id: 'intersection', label: 'Intersection', group: 'Two graphs' },
-  { id: 'cartesian', label: 'Cartesian product', group: 'Two graphs' },
-  { id: 'tensor', label: 'Tensor product', group: 'Two graphs' },
+  { id: 'union', label: 'Union', group: TWO_GRAPHS },
+  { id: 'intersection', label: 'Intersection', group: TWO_GRAPHS },
+  { id: 'cartesian', label: 'Cartesian product', group: TWO_GRAPHS },
+  { id: 'tensor', label: 'Tensor product', group: TWO_GRAPHS },
   { id: 'complement', label: 'Complement', group: 'One graph' },
   { id: 'transpose', label: 'Transpose (reverse arcs)', group: 'One graph' },
   { id: 'line-graph', label: 'Line graph', group: 'One graph' },

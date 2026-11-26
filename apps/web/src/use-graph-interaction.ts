@@ -104,7 +104,7 @@ export function useGraphInteraction({
   };
 
   const moveDrag = (event: PointerEvent): void => {
-    const current = drag.current;
+    const { current } = drag;
     if (current === undefined) return;
     const point = toSvg(event);
     const [dx, dy] = [point.x - current.last.x, point.y - current.last.y];
@@ -151,7 +151,7 @@ export function useGraphInteraction({
   };
 
   const endDrag = (): void => {
-    const current = drag.current;
+    const { current } = drag;
     drag.current = undefined;
     setLink(undefined);
     if (current !== undefined) release(current);

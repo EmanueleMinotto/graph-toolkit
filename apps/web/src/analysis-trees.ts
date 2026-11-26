@@ -40,7 +40,7 @@ function rooted(graph: Graph, { from }: Selection): Highlight {
 
 function ancestor(graph: Graph, { from, to }: Selection): Highlight {
   if (from === undefined || to === undefined) return { ...NONE, summary: 'Pick two vertices.' };
-  const root = graph.vertices()[0];
+  const [root] = graph.vertices();
   if (root === undefined) return { ...NONE, summary: 'The graph is empty.' };
   const common = new RootedTree(graph, root).lowestCommonAncestor(from, to);
   return {
