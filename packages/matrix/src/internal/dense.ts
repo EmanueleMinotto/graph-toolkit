@@ -27,7 +27,7 @@ export function laplacianData(adjacency: Float64Array, size: number): Float64Arr
   return data;
 }
 
-/** (rows×inner)·(inner×columns), O(rows·inner·columns). */
+/** (rows×inner)·(inner×columns), $O(\text{rows} \cdot \text{inner} \cdot \text{columns})$. */
 export function multiplyData(
   left: Float64Array,
   right: Float64Array,
@@ -52,7 +52,7 @@ export function identityData(size: number): Float64Array {
   return data;
 }
 
-/** Exponentiation by squaring, O(n³ log k). */
+/** Exponentiation by squaring, $O(n^3 \log k)$. */
 export function powerData(base: Float64Array, size: number, exponent: number): Float64Array {
   let result = identityData(size);
   let square = base;

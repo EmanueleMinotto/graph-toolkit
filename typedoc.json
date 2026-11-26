@@ -26,5 +26,6 @@
   "skipErrorChecking": false,
   "validation": {
     "notExported": false
-  }
+  },
+  "customJs": "docs/theme/mathjax.js"
 }

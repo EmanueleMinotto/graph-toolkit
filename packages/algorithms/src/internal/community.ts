@@ -48,7 +48,7 @@ function moveVertex(moving: Moving, vertex: number): boolean {
   return best !== own;
 }
 
-/** Greedy modularity local moving (Louvain phase 1), deterministic, O(rounds · E). */
+/** Greedy modularity local moving (Louvain phase 1), deterministic, $O(\text{rounds} \cdot E)$. */
 export function localMoving(csr: Csr, vertexCount: number, maxRounds: number): Int32Array {
   const community = Int32Array.from({ length: vertexCount }, (_, vertex) => vertex);
   const total = Float64Array.from(community, (_, vertex) => degreeOf(csr, vertex));

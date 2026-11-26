@@ -34,7 +34,7 @@ function reweighted(csr: Csr, height: Float64Array): Csr {
   return { offsets: csr.offsets, targets: csr.targets, weights };
 }
 
-/** Johnson all-pairs, O(V·E log V). Row-major V×V, or `undefined` on a negative cycle. */
+/** Johnson all-pairs, $O(V \cdot E \log V)$. Row-major V×V, or `undefined` on a negative cycle. */
 export function johnsonKernel(csr: Csr, count: number): Float64Array | undefined {
   const height = potentials(csr, count);
   if (height === undefined) return undefined;
@@ -49,7 +49,7 @@ export function johnsonKernel(csr: Csr, count: number): Float64Array | undefined
   return cells;
 }
 
-/** Relaxes arcs in topological order; handles negative weights, O(V + E). */
+/** Relaxes arcs in topological order; handles negative weights, $O(V + E)$. */
 export function dagKernel(csr: Csr, order: readonly number[], source: number): Distances {
   const distances = new Float64Array(order.length).fill(Infinity);
   const predecessors = new Int32Array(order.length).fill(-1);

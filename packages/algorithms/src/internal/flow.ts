@@ -94,7 +94,7 @@ export function saturate(residual: Residual, terminals: Terminals): number {
   return total;
 }
 
-/** Edmonds–Karp, O(V·E²). Arc weights are capacities. */
+/** Edmonds–Karp, $O(V \cdot E^2)$. Arc weights are capacities. */
 export function edmondsKarp(csr: Csr, vertexCount: number, terminals: Terminals): number {
   return saturate(buildResidual(csr, vertexCount), terminals);
 }

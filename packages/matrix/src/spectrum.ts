@@ -10,7 +10,7 @@ function assertSymmetric(matrix: Matrix): void {
   }
 }
 
-/** Eigenvalues in ascending order of a symmetric matrix (Jacobi method, O(n³) per sweep). */
+/** Eigenvalues in ascending order of a symmetric matrix (Jacobi method, $O(n^3)$ per sweep). */
 export function eigenvalues(matrix: Matrix): readonly number[] {
   assertSymmetric(matrix);
   return jacobiEigenvalues(matrix.toArray(), matrix.rows);

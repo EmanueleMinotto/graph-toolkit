@@ -32,6 +32,6 @@ graph.neighbors(a); // [{ source: a, target: b, weight: 2 }]
 
 ## Complexity
 
-Build: O(V + E). `degree`, `indexOf`, `hasVertex`: O(1). `neighbors`, `hasEdge`: O(out-degree). `edges`: O(V + E).
+Build: $O(V + E)$. `degree`, `indexOf`, `hasVertex`: $O(1)$. `neighbors`, `hasEdge`: $O(\text{out-degree})$. `edges`: $O(V + E)$.
 
 Duplicate vertices are always rejected; duplicate edges are rejected unless the builder is created with `{ allowParallelEdges: true }`, which yields a multigraph (parallel edges and loops each count in `edgeCount`, `degree` and `edges()`). `adjacencyMatrix` sums parallel edges; algorithms that assume simple graphs (isomorphism, planarity, `hasEdge` semantics) treat them as a single connection. Undirected self-loops are stored once and count once in the degree.

@@ -35,7 +35,7 @@ export function greedyColoring(graph: Graph, order?: readonly VertexId[]): Color
   return toColoring(graph, greedyKernel(graph.csr, graph.vertexCount, indices));
 }
 
-/** DSATUR heuristic, O(V·E); exact on bipartite and cycle graphs. */
+/** DSATUR heuristic, $O(V \cdot E)$; exact on bipartite and cycle graphs. */
 export function dsaturColoring(graph: Graph): Coloring {
   assertColorable(graph);
   return toColoring(graph, dsaturKernel(graph.csr, graph.vertexCount));
@@ -72,7 +72,7 @@ export interface EdgeColoring {
   readonly colorCount: number;
 }
 
-/** Greedy proper edge coloring, at most 2Δ − 1 colors, O(E · Δ). */
+/** Greedy proper edge coloring, at most 2Δ − 1 colors, $O(E \cdot \Delta)$. */
 export function edgeColoring(graph: Graph): EdgeColoring {
   assertColorable(graph);
   const edges = graph.edges();

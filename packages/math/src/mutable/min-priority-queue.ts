@@ -8,14 +8,14 @@ export class MinPriorityQueue {
   readonly #items: number[] = [];
   readonly #priorities: number[] = [];
 
-  /** O(log n). */
+  /** $O(\log n)$. */
   public push(item: number, priority: number): void {
     this.#items.push(item);
     this.#priorities.push(priority);
     this.#siftUp(this.#items.length - 1);
   }
 
-  /** Removes and returns the entry with the lowest priority, O(log n). */
+  /** Removes and returns the entry with the lowest priority, $O(\log n)$. */
   public pop(): QueueEntry | undefined {
     const last = this.#items.length - 1;
     if (last < 0) return undefined;

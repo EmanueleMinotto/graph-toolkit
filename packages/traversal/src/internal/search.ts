@@ -1,6 +1,6 @@
 import type { Csr } from '@graph-sdk/core';
 
-/** Breadth-first order of vertex indices reachable from `start`, O(V + E). */
+/** Breadth-first order of vertex indices reachable from `start`, $O(V + E)$. */
 export function bfsOrder(csr: Csr, start: number, visited: Uint8Array): number[] {
   const order = [start];
   visited[start] = 1;
@@ -16,7 +16,7 @@ export function bfsOrder(csr: Csr, start: number, visited: Uint8Array): number[]
   return order;
 }
 
-/** Iterative depth-first preorder from `start`, O(V + E). */
+/** Iterative depth-first preorder from `start`, $O(V + E)$. */
 export function dfsOrder(csr: Csr, start: number, visited: Uint8Array): number[] {
   const order: number[] = [];
   const stack = [start];
@@ -55,7 +55,7 @@ export function kahnOrder(csr: Csr, vertexCount: number): number[] {
   return order;
 }
 
-/** Groups of mutually reachable indices for a symmetric CSR, O(V + E). */
+/** Groups of mutually reachable indices for a symmetric CSR, $O(V + E)$. */
 export function componentIndices(csr: Csr, vertexCount: number): number[][] {
   const visited = new Uint8Array(vertexCount);
   const components: number[][] = [];

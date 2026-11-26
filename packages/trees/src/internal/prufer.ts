@@ -21,7 +21,7 @@ function leavesOf(degree: Int32Array): MinPriorityQueue {
   return leaves;
 }
 
-/** Prüfer sequence of a tree on `edges` (n ≥ 2 vertices), O(n log n). */
+/** Prüfer sequence of a tree on `edges` (n ≥ 2 vertices), $O(n \log n)$. */
 export function encodePrufer(vertexCount: number, edges: readonly IndexEdge[]): number[] {
   const { degree, neighborXor } = degreesOf(vertexCount, edges);
   const leaves = leavesOf(degree);

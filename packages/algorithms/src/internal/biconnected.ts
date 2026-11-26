@@ -58,7 +58,7 @@ function advance(walk: Walk, calls: number[]): void {
   if (next !== walk.parent[vertex]) descend(walk, calls, [vertex, next]);
 }
 
-/** Biconnected components as edge lists, iterative Tarjan, O(V + E). */
+/** Biconnected components as edge lists, iterative Tarjan, $O(V + E)$. */
 export function biconnectedBlocks(adjacency: readonly (readonly number[])[]): Pair[][] {
   const count = adjacency.length;
   const walk: Walk = {

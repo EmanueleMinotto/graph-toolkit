@@ -17,13 +17,13 @@ function toForest(graph: Graph, edges: readonly IndexEdge[]): SpanningForest {
   };
 }
 
-/** Prim's minimum spanning forest, O(E log V). */
+/** Prim's minimum spanning forest, $O(E \log V)$. */
 export function primMinimumSpanningForest(graph: Graph): SpanningForest {
   assertUndirected(graph, 'primMinimumSpanningForest');
   return toForest(graph, primKernel(graph.csr, graph.vertexCount));
 }
 
-/** Borůvka's minimum spanning forest, O(E log V). */
+/** Borůvka's minimum spanning forest, $O(E \log V)$. */
 export function boruvkaMinimumSpanningForest(graph: Graph): SpanningForest {
   assertUndirected(graph, 'boruvkaMinimumSpanningForest');
   const edges = graph.edges().map((edge) => ({

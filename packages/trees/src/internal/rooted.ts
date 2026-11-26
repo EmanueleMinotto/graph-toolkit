@@ -54,7 +54,7 @@ function lift(table: readonly Int32Array[], vertex: number, steps: number): numb
   return current;
 }
 
-/** Lowest common ancestor in O(log V). */
+/** Lowest common ancestor in $O(\log V)$. */
 export function lowestCommonAncestor(
   table: readonly Int32Array[],
   depth: Int32Array,

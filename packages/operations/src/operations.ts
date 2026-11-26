@@ -27,7 +27,7 @@ export function transpose(graph: Graph): Graph {
   return assemble(true, graph.vertices(), reversed);
 }
 
-/** Loop-free complement; new edges get weight 1. O(V² · deg). */
+/** Loop-free complement; new edges get weight 1. $O(V^2 \cdot \text{deg})$. */
 export function complement(graph: Graph): Graph {
   const vertices = graph.vertices();
   const edges = vertices.flatMap((source, row) =>

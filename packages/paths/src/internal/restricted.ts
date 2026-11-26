@@ -66,7 +66,7 @@ function newSearch(csr: Csr, source: number, restrictions: Restrictions): Search
   return search;
 }
 
-/** Dijkstra (or A*) from `source` to `target` ignoring blocked vertices/arcs. O((V + E) log V). */
+/** Dijkstra (or A*) from `source` to `target` ignoring blocked vertices/arcs. $O((V + E) \log V)$. */
 export function restrictedDijkstra(
   csr: Csr,
   endpoints: Endpoints,

@@ -40,7 +40,7 @@ function growTree({ csr, visited, sources }: Growth, start: number): IndexEdge[]
   return edges;
 }
 
-/** Prim over every component, O(E log V). */
+/** Prim over every component, $O(E \log V)$. */
 export function primKernel(csr: Csr, vertexCount: number): IndexEdge[] {
   const visited = new Uint8Array(vertexCount);
   const sources = sourcesOfSlots(csr);
@@ -64,7 +64,7 @@ function cheapestPerComponent(edges: readonly IndexEdge[], sets: DisjointSet): M
   return cheapest;
 }
 
-/** Borůvka, O(E log V). Ties go to the lower edge index, so no round can close a cycle. */
+/** Borůvka, $O(E \log V)$. Ties go to the lower edge index, so no round can close a cycle. */
 export function boruvkaKernel(vertexCount: number, edges: readonly IndexEdge[]): IndexEdge[] {
   const sets = new DisjointSet(vertexCount);
   const chosen: IndexEdge[] = [];

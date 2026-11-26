@@ -8,7 +8,7 @@ import {
 } from './internal/rooted.js';
 import { isTree } from './trees.js';
 
-/** A tree viewed from a chosen root. LCA queries take O(log V) after O(V log V) setup. */
+/** A tree viewed from a chosen root. LCA queries take $O(\log V)$ after $O(V \log V)$ setup. */
 export class RootedTree {
   public readonly root: VertexId;
   readonly #graph: Graph;

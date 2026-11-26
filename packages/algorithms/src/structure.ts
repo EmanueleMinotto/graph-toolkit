@@ -25,19 +25,19 @@ function undirectedBlocks(graph: Graph, name: string): readonly (readonly Pair[]
 const named = (graph: Graph, indices: readonly number[]): readonly VertexId[] =>
   indices.map((index) => graph.vertexAt(index));
 
-/** Biconnected components (vertex sets; they overlap only at articulation points). O(V + E). */
+/** Biconnected components (vertex sets; they overlap only at articulation points). $O(V + E)$. */
 export function biconnectedComponents(graph: Graph): readonly (readonly VertexId[])[] {
   return blockVertices(undirectedBlocks(graph, 'biconnectedComponents')).map((block) =>
     named(graph, block),
   );
 }
 
-/** Cut vertices of an undirected graph: removing one disconnects its component. O(V + E). */
+/** Cut vertices of an undirected graph: removing one disconnects its component. $O(V + E)$. */
 export function articulationPoints(graph: Graph): readonly VertexId[] {
   return named(graph, articulationIndices(undirectedBlocks(graph, 'articulationPoints')));
 }
 
-/** Cut edges of an undirected graph (blocks made of a single edge). O(V + E). */
+/** Cut edges of an undirected graph (blocks made of a single edge). $O(V + E)$. */
 export function bridges(graph: Graph): readonly (readonly [VertexId, VertexId])[] {
   return bridgePairs(undirectedBlocks(graph, 'bridges')).map(
     ([from, to]) => [graph.vertexAt(from), graph.vertexAt(to)] as const,
@@ -64,7 +64,7 @@ export function averageClustering(graph: Graph): number {
   return values.length === 0 ? 0 : values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
-/** Largest hop distance from each vertex; `Infinity` if some vertex is unreachable. O(V·(V + E)). */
+/** Largest hop distance from each vertex; `Infinity` if some vertex is unreachable. $O(V \cdot (V + E))$. */
 export function eccentricities(graph: Graph): Scores {
   return new Map(
     graph.vertices().map((id) => [id, Math.max(...hopDistances(graph.csr, graph.indexOf(id)))]),
@@ -88,7 +88,7 @@ export function center(graph: Graph): readonly VertexId[] {
   return graph.vertices().filter((id) => eccentricity.get(id) === least);
 }
 
-/** Directed graph with an arc u→v whenever v ≠ u is reachable from u. O(V·(V + E)). */
+/** Directed graph with an arc u→v whenever v ≠ u is reachable from u. $O(V \cdot (V + E))$. */
 export function transitiveClosure(graph: Graph): Graph {
   const builder = new GraphBuilder({ directed: true });
   for (const id of graph.vertices()) builder.addVertex(id);

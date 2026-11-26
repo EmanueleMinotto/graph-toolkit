@@ -1,4 +1,4 @@
-/** Union-find over `0..size-1` with union by rank and path compression, ~O(α(n)) per op. */
+/** Union-find over `0..size-1` with union by rank and path compression, ~$O(\alpha(n))$ per op. */
 export class DisjointSet {
   readonly #parent: Uint32Array;
   readonly #rank: Uint8Array;

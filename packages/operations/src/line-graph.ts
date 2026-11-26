@@ -4,7 +4,7 @@ import { edgeId, lineEdges } from './internal/links.js';
 
 /**
  * Line graph L(G): one vertex per edge (`a--b` / `a->b`). Undirected edges are adjacent when they
- * share an endpoint; directed edge `u→v` points to every edge leaving `v`. O(E²).
+ * share an endpoint; directed edge `u→v` points to every edge leaving `v`. $O(E^2)$.
  */
 export function lineGraph(graph: Graph): Graph {
   const edges = graph.edges();

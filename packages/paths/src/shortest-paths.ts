@@ -40,14 +40,14 @@ export class ShortestPathTree {
   }
 }
 
-/** Dijkstra, O((V + E) log V). Throws {@link GraphError} on negative weights. */
+/** Dijkstra, $O((V + E) \log V)$. Throws {@link GraphError} on negative weights. */
 export function dijkstra(graph: Graph, source: VertexId): ShortestPathTree {
   if (hasNegativeWeight(graph.csr)) throw new GraphError('dijkstra requires non-negative weights');
   const result = dijkstraKernel(graph.csr, graph.vertexCount, graph.indexOf(source));
   return new ShortestPathTree(graph, result);
 }
 
-/** Bellman-Ford, O(V·E). Throws {@link NegativeCycleError} when a negative cycle is reachable. */
+/** Bellman-Ford, $O(V \cdot E)$. Throws {@link NegativeCycleError} when a negative cycle is reachable. */
 export function bellmanFord(graph: Graph, source: VertexId): ShortestPathTree {
   const result = bellmanFordKernel(graph.csr, graph.vertexCount, graph.indexOf(source));
   if (result === undefined) throw new NegativeCycleError('Negative cycle reachable from source');
@@ -71,7 +71,7 @@ export class DistanceMatrix {
   }
 }
 
-/** Floyd-Warshall, O(V³) time, O(V²) space. Throws {@link NegativeCycleError}. */
+/** Floyd-Warshall, $O(V^3)$ time, $O(V^2)$ space. Throws {@link NegativeCycleError}. */
 export function floydWarshall(graph: Graph): DistanceMatrix {
   const cells = floydWarshallKernel(graph.csr, graph.vertexCount);
   if (hasNegativeDiagonal(cells, graph.vertexCount)) {
@@ -81,7 +81,7 @@ export function floydWarshall(graph: Graph): DistanceMatrix {
 }
 
 /**
- * Johnson all-pairs shortest paths, O(V·E log V): better than {@link floydWarshall} on sparse
+ * Johnson all-pairs shortest paths, $O(V \cdot E \log V)$: better than {@link floydWarshall} on sparse
  * graphs, and supports negative weights. Throws {@link NegativeCycleError}.
  */
 export function johnson(graph: Graph): DistanceMatrix {
@@ -90,7 +90,7 @@ export function johnson(graph: Graph): DistanceMatrix {
   return new DistanceMatrix(graph, cells);
 }
 
-/** Single-source shortest paths on a DAG in O(V + E); negative weights allowed. */
+/** Single-source shortest paths on a DAG in $O(V + E)$; negative weights allowed. */
 export function dagShortestPaths(graph: Graph, source: VertexId): ShortestPathTree {
   const order = topologicalSort(graph);
   if (order === undefined || !graph.directed) {

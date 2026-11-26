@@ -63,7 +63,7 @@ function move({ pos, disp }: Field, temperature: number): void {
   }
 }
 
-/** Fruchterman–Reingold in the unit square, O(iterations · (V² + E)). Returns x,y pairs. */
+/** Fruchterman–Reingold in the unit square, $O(\text{iterations} \cdot (V^2 + E))$. Returns x,y pairs. */
 export function forceKernel(csr: Csr, vertexCount: number, options: ForceOptions): Float64Array {
   const next = random(options.seed);
   const pos = Float64Array.from({ length: vertexCount * 2 }, () => next());

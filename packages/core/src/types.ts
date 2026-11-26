@@ -48,7 +48,7 @@ export interface Graph {
   readonly vertices: () => readonly VertexId[];
   readonly edges: () => readonly Edge[];
   readonly hasVertex: (id: VertexId) => boolean;
-  /** O(out-degree). */
+  /** $O(\text{out-degree})$. */
   readonly hasEdge: (source: VertexId, target: VertexId) => boolean;
   /** Outgoing edges of `id`. */
   readonly neighbors: (id: VertexId) => readonly Edge[];

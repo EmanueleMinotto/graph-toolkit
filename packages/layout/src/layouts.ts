@@ -112,7 +112,7 @@ export function radialLayout(graph: Graph, options: RadialLayoutOptions = {}): L
 
 /**
  * Spectral layout: x and y are the eigenvectors of the 2nd and 3rd smallest Laplacian eigenvalues
- * (edge directions ignored), which places strongly connected vertices close together. O(V³):
+ * (edge directions ignored), which places strongly connected vertices close together. $O(V^3)$:
  * meant for graphs up to a few hundred vertices.
  */
 export function spectralLayout(graph: Graph): Layout {
