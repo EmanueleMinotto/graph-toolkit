@@ -70,6 +70,7 @@ const fromPrufer = (text: string): Graph => {
           .split(/\s+/u)
           .map((id) => vertexId(id));
   const vertices = Array.from({ length: code.length + 2 }, (_, index) => vertexId(String(index)));
+
   return treeFromPruferCode(vertices, code);
 };
 

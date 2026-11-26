@@ -42,11 +42,14 @@ export interface Renderer {
 
 function compile(gl: WebGLRenderingContext, kind: number, source: string): WebGLShader | null {
   const shader = gl.createShader(kind);
+
   if (shader === null) {
     return null;
   }
+
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
+
   return shader;
 }
 
@@ -56,13 +59,16 @@ function link(gl: WebGLRenderingContext): WebGLProgram | undefined {
     compile(gl, gl.VERTEX_SHADER, VERTEX_SHADER),
     compile(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER),
   ];
+
   for (const shader of shaders) {
     if (shader !== null) {
       gl.attachShader(program, shader);
     }
   }
+
   gl.linkProgram(program);
   const isLinked = gl.getProgramParameter(program, gl.LINK_STATUS) === true;
+
   return isLinked && !shaders.includes(null) ? program : undefined;
 }
 
@@ -75,9 +81,12 @@ function bind(gl: WebGLRenderingContext, program: WebGLProgram, data: Float32Arr
     ['a_color', 4, 2],
     ['a_diameter', 1, 6],
   ] as const;
+
   for (const [name, size, offset] of fields) {
     const location = gl.getAttribLocation(program, name);
+
     gl.enableVertexAttribArray(location);
+
     gl.vertexAttribPointer(
       location,
       size,
@@ -98,6 +107,7 @@ function drawGroup({ gl, program }: Context, data: Float32Array, mode: number): 
   if (data.length === 0) {
     return;
   }
+
   gl.uniform1f(gl.getUniformLocation(program, 'u_round'), mode === gl.POINTS ? 1 : 0);
   bind(gl, program, data);
   gl.drawArrays(mode, 0, data.length / STRIDE);
@@ -107,21 +117,27 @@ function drawGroup({ gl, program }: Context, data: Float32Array, mode: number): 
 export function createRenderer(canvas: HTMLCanvasElement): Renderer | undefined {
   const gl = canvas.getContext('webgl', { premultipliedAlpha: false, antialias: true });
   const program = gl === null ? undefined : link(gl);
+
   if (gl === null || program === undefined) {
     return undefined;
   }
+
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
   return {
     draw: (scene, view, surface) => {
       const pixels = surface.width * surface.pixelRatio;
       const height = (pixels * surface.box.height) / surface.box.width;
+
       if (canvas.width !== Math.round(pixels)) {
         canvas.width = Math.round(pixels);
       }
+
       if (canvas.height !== Math.round(height)) {
         canvas.height = Math.round(height);
       }
+
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -145,8 +161,10 @@ const probed: { readonly supported?: boolean } = {};
 export function hasWebgl(): boolean {
   if (probed.supported === undefined) {
     const probe = createRenderer(document.createElement('canvas'));
+
     Object.assign(probed, { supported: probe !== undefined });
     probe?.dispose();
   }
+
   return probed.supported === true;
 }

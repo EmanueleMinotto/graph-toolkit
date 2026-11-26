@@ -44,6 +44,7 @@ export function Toolbar({ canUndo, canRedo, onUndo, onRedo, shareLink }: Props) 
 function SchemeToggle() {
   const { setColorScheme } = useMantineColorScheme();
   const scheme = useComputedColorScheme('light');
+
   return (
     <ActionIcon
       variant="default"
@@ -60,6 +61,7 @@ const FEEDBACK_MS = 2000;
 
 function ShareButton({ link }: { readonly link: () => string }) {
   const [isCopied, setCopied] = useState(false);
+
   return (
     <ActionIcon
       variant="default"
@@ -68,6 +70,7 @@ function ShareButton({ link }: { readonly link: () => string }) {
       onClick={() => {
         void navigator.clipboard.writeText(link()).then(() => {
           setCopied(true);
+
           setTimeout(() => {
             setCopied(false);
           }, FEEDBACK_MS);
@@ -81,6 +84,7 @@ function ShareButton({ link }: { readonly link: () => string }) {
 
 function LanguageToggle() {
   const lang = useLang();
+
   return (
     <ActionIcon
       variant="default"

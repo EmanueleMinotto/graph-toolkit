@@ -40,9 +40,11 @@ const paletteAt = (index: number): Rgb => PALETTE[index % PALETTE.length] ?? FAL
 
 function edgeColor(highlight: Highlight, key: string): readonly [number, number, number, number] {
   const colored = highlight.edgeColors?.get(key);
+
   if (colored !== undefined) {
     return [...paletteAt(colored), ON_ALPHA];
   }
+
   return highlight.edges.has(key) ? [...paletteAt(1), ON_ALPHA] : PLAIN_EDGE;
 }
 
@@ -61,14 +63,17 @@ const TIP_GAP = 14;
 /** Triangle rows for an arrowhead whose tip touches the edge's target vertex. */
 function arrowRows(from: Pt, to: Pt, color: readonly number[]): readonly number[] {
   const length = Math.hypot(to.x - from.x, to.y - from.y);
+
   if (length === 0) {
     return [];
   }
+
   const [dx, dy] = [(to.x - from.x) / length, (to.y - from.y) / length];
   const tip = { x: to.x - dx * TIP_GAP, y: to.y - dy * TIP_GAP };
   const base = { x: tip.x - dx * ARROW_LENGTH, y: tip.y - dy * ARROW_LENGTH };
   const [red = 0, green = 0, blue = 0, alpha = 1] = color;
   const row = (point: Pt): readonly number[] => [point.x, point.y, red, green, blue, alpha, 0];
+
   return [
     ...row(tip),
     ...row({ x: base.x - dy * ARROW_HALF_WIDTH, y: base.y + dx * ARROW_HALF_WIDTH }),
@@ -83,10 +88,13 @@ function arrowData(
 ): readonly number[] {
   return graph.edges().flatMap((edge) => {
     const [from, to] = [position(edge.source), position(edge.target)];
+
     if (from === undefined || to === undefined) {
       return [];
     }
+
     const key = edgeKey(edge.source, edge.target, true);
+
     return arrowRows(from, to, edgeColor(highlight, key));
   });
 }
@@ -95,26 +103,33 @@ function arrowData(
 export function buildScene({ graph, position, highlight }: SceneInput): Scene {
   const edges = graph.edges().flatMap((edge) => {
     const [from, to] = [position(edge.source), position(edge.target)];
+
     if (from === undefined || to === undefined) {
       return [];
     }
+
     const [red, green, blue, alpha] = edgeColor(
       highlight,
       edgeKey(edge.source, edge.target, graph.directed),
     );
     const color: Rgb = [red, green, blue];
+
     return [...vertexRow(from, color, 0).with(5, alpha), ...vertexRow(to, color, 0).with(5, alpha)];
   });
   const vertices = graph.vertices().flatMap((id) => {
     const point = position(id);
+
     if (point === undefined) {
       return [];
     }
+
     const size = MIN_SCALE + (1 - MIN_SCALE) * (highlight.sizes?.get(id) ?? 1);
     const color = paletteAt(highlight.colors.get(id) ?? 0);
+
     return vertexRow(point, color, VERTEX_DIAMETER * size);
   });
   const arrows = graph.directed ? arrowData(graph, position, highlight) : [];
+
   return {
     edges: Float32Array.from(edges),
     vertices: Float32Array.from(vertices),

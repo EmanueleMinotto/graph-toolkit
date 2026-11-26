@@ -26,6 +26,7 @@ export function cartesianProduct(left: Graph, right: Graph): Graph {
     ...left.edges().flatMap((edge) => along(edge)),
     ...right.edges().flatMap((edge) => across(edge)),
   ];
+
   return assembleUnique(left.directed, pairs(left, right), edges);
 }
 
@@ -37,6 +38,7 @@ export function tensorProduct(left: Graph, right: Graph): Graph {
     .flatMap((first) =>
       right.edges().flatMap((second) => tensorEdges(first, second, left.directed)),
     );
+
   return assembleUnique(left.directed, pairs(left, right), edges);
 }
 
@@ -47,13 +49,16 @@ function tensorEdges(first: Edge, second: Edge, isDirected: boolean): readonly E
     target: pairId(first.target, second.target),
     weight,
   };
+
   if (isDirected) {
     return [forward];
   }
+
   const crossed = {
     source: pairId(first.source, second.target),
     target: pairId(first.target, second.source),
     weight,
   };
+
   return [forward, crossed];
 }

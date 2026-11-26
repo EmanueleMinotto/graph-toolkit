@@ -28,6 +28,7 @@ describe('validation form', () => {
       isInteger: true,
     });
     const codes = new Set(issues.map((issue) => issue.code));
+
     for (const code of [
       'direction',
       'disconnected',
@@ -51,6 +52,7 @@ describe('validation form', () => {
         maxVertices: 3,
       }),
     ).toEqual([]);
+
     expect(() => validate(pathGraph(3), { ...DEFAULT_FORM, pattern: '(' })).toThrow();
   });
 });

@@ -25,7 +25,9 @@ const BUDGET_MS = {
 
 function timed(action: () => unknown): number {
   const start = performance.now();
+
   action();
+
   return performance.now() - start;
 }
 

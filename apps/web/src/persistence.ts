@@ -9,11 +9,13 @@ function toBase64Url(text: string): string {
   const binary = Array.from(new TextEncoder().encode(text), (byte) =>
     String.fromCodePoint(byte),
   ).join('');
+
   return btoa(binary).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
 }
 
 function fromBase64Url(encoded: string): string {
   const binary = atob(encoded.replaceAll('-', '+').replaceAll('_', '/'));
+
   return new TextDecoder().decode(Uint8Array.from(binary, (char) => char.codePointAt(0) ?? 0));
 }
 
@@ -34,6 +36,7 @@ function fromHash(hash: string): Graph | undefined {
 export function loadGraph(hash: string, storage: Pick<Storage, 'getItem'>): Graph | undefined {
   try {
     const stored = storage.getItem(STORAGE_KEY);
+
     return fromHash(hash) ?? (stored === null ? undefined : fromJson(stored));
   } catch {
     return undefined;
@@ -50,7 +53,9 @@ export function saveGraph(
   address: Pick<History, 'replaceState'>,
 ): void {
   const json = toJson(graph);
+
   address.replaceState(null, '', json.length <= MAX_JSON_FOR_HASH ? shareHash(graph) : '#');
+
   try {
     storage.setItem(STORAGE_KEY, json);
   } catch {

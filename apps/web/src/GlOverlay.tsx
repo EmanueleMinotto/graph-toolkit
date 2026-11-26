@@ -21,12 +21,14 @@ export function GlOverlay({ mode, scene, view, box }: OverlayProps) {
   if (mode !== 'webgl') {
     return null;
   }
+
   const labels = visibleLabels({
     vertices: scene.graph.vertices(),
     position: scene.position,
     view,
     box,
   });
+
   return (
     <>
       <WebglLayer scene={buildScene(scene)} view={view} box={box} />

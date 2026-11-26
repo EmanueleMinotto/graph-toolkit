@@ -23,6 +23,7 @@ describe('App', () => {
   it('imports text and reports errors', () => {
     renderApp();
     const text = screen.getByLabelText('Graph text');
+
     fireEvent.change(text, { target: { value: '{"nope":1}' } });
     fireEvent.click(screen.getByText('Import'));
     expect(screen.getByRole('alert').textContent).toContain('Invalid');

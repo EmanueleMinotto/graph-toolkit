@@ -27,6 +27,7 @@ export function App() {
   const history = useHistory<Scene>(initialScene);
   const scene = history.present;
   const { graph } = scene;
+
   useShell(graph);
   const { kind, count, setCount, choose } = useTool();
   const [picked, setPicked] = useState<readonly VertexId[]>([]);

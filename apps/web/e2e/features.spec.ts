@@ -18,18 +18,23 @@ test('puts the graph in the address bar and restores it from a link', async ({ p
   await expect(page.locator('svg.graph circle')).toHaveCount(8);
   await expect.poll(() => new URL(page.url()).hash).toMatch(/^#g=/u);
   const fresh = await context.newPage();
+
   await fresh.goto(page.url());
   await expect(fresh.locator('svg.graph circle')).toHaveCount(8);
 });
 
 test('exports the graph as SVG and PNG', async ({ page }) => {
   const svg = page.waitForEvent('download');
+
   await page.getByRole('button', { name: 'Export SVG' }).click();
   const svgFile = await svg;
+
   expect(svgFile.suggestedFilename()).toBe('graph.svg');
   const png = page.waitForEvent('download');
+
   await page.getByRole('button', { name: 'Export PNG' }).click();
   const pngFile = await png;
+
   expect(pngFile.suggestedFilename()).toBe('graph.png');
 });
 
@@ -72,6 +77,7 @@ test('selects several vertices with Shift, drags them together and deletes them'
   page,
 }) => {
   const vertex = (id: string) => page.locator(`svg.graph g[aria-label="Vertex ${id}"]`);
+
   await vertex('0').click({ modifiers: ['Shift'] });
   await vertex('1').click({ modifiers: ['Shift'] });
   await expect(page.locator('svg.graph circle.grouped')).toHaveCount(2);
@@ -80,6 +86,7 @@ test('selects several vertices with Shift, drags them together and deletes them'
     await vertex('1').getAttribute('transform'),
   ];
   const box = (await vertex('0').boundingBox())!;
+
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
   await page.mouse.move(box.x + 100, box.y + 80, { steps: 5 });

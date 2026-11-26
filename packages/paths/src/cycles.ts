@@ -4,6 +4,7 @@ import { topologicalSort } from '@graph-sdk/traversal';
 
 function hasUndirectedCycle(graph: Graph): boolean {
   const sets = new DisjointSet(graph.vertexCount);
+
   return graph
     .edges()
     .some((edge) => !sets.union(graph.indexOf(edge.source), graph.indexOf(edge.target)));

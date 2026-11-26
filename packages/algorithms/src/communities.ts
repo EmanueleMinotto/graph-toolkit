@@ -10,5 +10,6 @@ export function communities(
   maxIterations: number = DEFAULT_ITERATIONS,
 ): ReadonlyMap<VertexId, number> {
   const groups = renumber(localMoving(graph.csr, graph.vertexCount, maxIterations));
+
   return new Map(graph.vertices().map((id, index) => [id, valueAt(groups, index)]));
 }

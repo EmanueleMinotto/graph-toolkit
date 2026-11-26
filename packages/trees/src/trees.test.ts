@@ -6,12 +6,15 @@ const name = (index: number) => vertexId(String(index));
 
 const build = (count: number, arcs: readonly (readonly [number, number, number])[]): Graph => {
   const builder = new GraphBuilder();
+
   for (let index = 0; index < count; index++) {
     builder.addVertex(name(index));
   }
+
   for (const [from, to, weight] of arcs) {
     builder.addEdge(name(from), name(to), weight);
   }
+
   return builder.build();
 };
 
@@ -25,6 +28,7 @@ describe('minimumSpanningForest', () => {
       [1, 3, 10],
     ]);
     const forest = minimumSpanningForest(graph);
+
     expect(forest.totalWeight).toBe(7);
     expect(forest.edges).toHaveLength(3);
   });
@@ -36,6 +40,7 @@ describe('minimumSpanningForest', () => {
         [2, 3, 6],
       ]),
     );
+
     expect(forest.totalWeight).toBe(11);
   });
 
@@ -59,6 +64,7 @@ describe('isForest / isTree', () => {
       [0, 1, 1],
       [2, 3, 1],
     ]);
+
     expect([isTree(path), isForest(path)]).toEqual([true, true]);
     expect([isTree(triangle), isForest(triangle)]).toEqual([false, false]);
     expect([isTree(split), isForest(split)]).toEqual([false, true]);

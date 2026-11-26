@@ -20,6 +20,7 @@ export function ExportBar({ svg, onReset }: Props) {
           if (svg.current === null) {
             return;
           }
+
           downloadBlob('graph.svg', new Blob([svgMarkup(svg.current)], { type: 'image/svg+xml' }));
         }}
       >
@@ -32,6 +33,7 @@ export function ExportBar({ svg, onReset }: Props) {
           if (svg.current === null) {
             return;
           }
+
           void pngBlob(svg.current).then((blob) => {
             downloadBlob('graph.png', blob);
           });

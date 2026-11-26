@@ -13,5 +13,6 @@ export interface WorkerRequest extends Omit<Selection, 'other'> {
 globalThis.addEventListener('message', (event: MessageEvent<WorkerRequest>) => {
   const { kind, json, otherJson, from, to, count } = event.data;
   const other = otherJson === undefined ? undefined : fromJson(otherJson);
+
   globalThis.postMessage(analyze(kind, fromJson(json), { from, to, count, other }));
 });

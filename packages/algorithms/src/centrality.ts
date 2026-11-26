@@ -10,6 +10,7 @@ const toScores = (graph: Graph, values: Float64Array): Scores =>
 /** Out-degree divided by V − 1 (0 for a single vertex). */
 export function degreeCentrality(graph: Graph): Scores {
   const scale = Math.max(graph.vertexCount - 1, 1);
+
   return new Map(graph.vertices().map((id) => [id, graph.degree(id) / scale]));
 }
 

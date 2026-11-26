@@ -10,12 +10,15 @@ const NETWORK_SIZE = 6;
 
 const network = (arcs: readonly (readonly [number, number, number])[]): Graph => {
   const builder = new GraphBuilder({ directed: true });
+
   for (let index = 0; index < NETWORK_SIZE; index++) {
     builder.addVertex(name(index));
   }
+
   for (const [from, to, capacity] of arcs) {
     builder.addEdge(name(from), name(to), capacity);
   }
+
   return builder.build();
 };
 
@@ -24,9 +27,11 @@ describe('maxFlowDinic', () => {
     const arcs = fc.uniqueArray(fc.tuple(fc.nat(5), fc.nat(5), fc.integer({ min: 0, max: 9 })), {
       selector: ([from, to]) => `${from}:${to}`,
     });
+
     fc.assert(
       fc.property(arcs, (list) => {
         const graph = network(list.filter(([from, to]) => from !== to));
+
         expect(maxFlowDinic(graph, name(0), name(5))).toBe(maxFlow(graph, name(0), name(5)));
       }),
     );
@@ -45,6 +50,7 @@ describe('maxFlowDinic', () => {
       [3, 5, 20],
       [4, 5, 4],
     ]);
+
     expect(maxFlowDinic(graph, name(0), name(5))).toBe(23);
     expect(() => maxFlowDinic(graph, name(0), name(0))).toThrow(GraphError);
   });
@@ -53,15 +59,18 @@ describe('maxFlowDinic', () => {
 describe('matching', () => {
   it('matches a perfect bipartite graph', () => {
     const matching = maximumBipartiteMatching(gridGraph(2, 3));
+
     expect(matching.size).toBe(3);
     expect(matching.pairs).toHaveLength(3);
   });
 
   it('re-routes earlier matches along alternating paths', () => {
     const builder = new GraphBuilder();
+
     for (let index = 0; index < 4; index++) {
       builder.addVertex(name(index));
     }
+
     for (const [from, to] of [
       [0, 2],
       [0, 3],
@@ -69,6 +78,7 @@ describe('matching', () => {
     ] as const) {
       builder.addEdge(name(from), name(to));
     }
+
     expect(maximumBipartiteMatching(builder.build()).size).toBe(2);
   });
 
@@ -87,6 +97,7 @@ describe('matching', () => {
       .addEdge(name(1), name(2))
       .addEdge(name(1), name(3))
       .build();
+
     expect(maximumBipartiteMatching(zigzag).size).toBe(2);
     expect(() => maximumBipartiteMatching(cycleGraph(5))).toThrow(GraphError);
   });

@@ -5,6 +5,7 @@ describe('viewport', () => {
   it('round trips between content and screen', () => {
     const view = { x: 30, y: -10, scale: 2.5 };
     const back = toContent(view, toScreen(view, { x: 7, y: 9 }));
+
     expect(back.x).toBeCloseTo(7, 9);
     expect(back.y).toBeCloseTo(9, 9);
   });
@@ -12,11 +13,13 @@ describe('viewport', () => {
   it('keeps the anchor fixed while zooming', () => {
     const anchor = { x: 200, y: 100 };
     const zoomed = zoomAt({ x: 10, y: 20, scale: 1 }, 2, anchor);
+
     expect(zoomed.scale).toBe(2);
     const [after, before] = [
       toContent(zoomed, anchor),
       toContent({ x: 10, y: 20, scale: 1 }, anchor),
     ];
+
     expect(after.x).toBeCloseTo(before.x, 9);
     expect(after.y).toBeCloseTo(before.y, 9);
   });
@@ -38,6 +41,7 @@ describe('shifted', () => {
   it('moves only the listed entries and keeps the others', () => {
     const moved = new Map([['keep', { x: 1, y: 1 }]]);
     const result = shifted(moved, [['a', { x: 10, y: 20 }]], [2, -3]);
+
     expect(result.get('a')).toEqual({ x: 12, y: 17 });
     expect(result.get('keep')).toEqual({ x: 1, y: 1 });
     expect(moved.size).toBe(1);

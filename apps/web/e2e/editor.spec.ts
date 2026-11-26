@@ -16,6 +16,7 @@ test.describe('editor', () => {
   test('adds a vertex on click without moving the others', async ({ page }) => {
     const before = await vertex(page, '0').getAttribute('transform');
     const box = (await page.locator('svg.graph').boundingBox())!;
+
     await page.mouse.click(box.x + 40, box.y + 40);
     await expect(page.locator('svg.graph circle')).toHaveCount(7);
     await expect(vertex(page, '0')).toHaveAttribute('transform', before!);
@@ -27,22 +28,27 @@ test.describe('editor', () => {
     // Measured on every drag: the first edge re-renders the canvas, so earlier boxes may be stale.
     const center = async (name: string) => {
       const box = (await vertex(page, name).locator('circle').boundingBox())!;
+
       return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
     };
     const drag = async () => {
       const [from, to] = [await center('0'), await center('3')];
+
       await page.mouse.move(from.x, from.y);
       await page.mouse.down();
       await page.mouse.move(to.x, to.y, { steps: 5 });
       await page.mouse.up();
     };
+
     await drag();
     await expect(page.locator('svg.graph line')).toHaveCount(7);
+
     // WebKit on Linux sometimes drops a synthetic drag that follows a re-render, so retry it.
     await expect(async () => {
       await drag();
       await expect(page.getByRole('alert')).toContainText('already exists', { timeout: 1500 });
     }).toPass({ timeout: 10_000 });
+
     await expect(page.locator('svg.graph line')).toHaveCount(7);
     await page.getByLabel('Allow parallel edges').check();
     await drag();

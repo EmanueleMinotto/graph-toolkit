@@ -134,8 +134,10 @@ export function unavailableReason(entry: Tool, graph: Graph): string | undefined
   if (entry.requires === 'undirected' && graph.directed) {
     return 'needs an undirected graph';
   }
+
   if (entry.requires === 'directed' && !graph.directed) {
     return 'needs a directed graph';
   }
+
   return undefined;
 }

@@ -14,5 +14,6 @@ export function toMermaid(graph: Graph): string {
       (edge) =>
         `  ${safeId(graph.indexOf(edge.source))} ${arrow}|${edge.weight}| ${safeId(graph.indexOf(edge.target))}`,
     );
+
   return ['flowchart LR', ...nodes, ...edges, ''].join('\n');
 }

@@ -24,18 +24,22 @@ describe('spectralLayout', () => {
     const ordered =
       xs.every((x, index) => index === 0 || x > xs[index - 1]!) ||
       xs.every((x, index) => index === 0 || x < xs[index - 1]!);
+
     expect(ordered).toBe(true);
   });
 
   it('ignores self-loops', () => {
     const builder = new GraphBuilder({ directed: false });
+
     for (const name of ['a', 'b', 'c']) {
       builder.addVertex(vertexId(name));
     }
+
     builder
       .addEdge(vertexId('a'), vertexId('a'))
       .addEdge(vertexId('a'), vertexId('b'))
       .addEdge(vertexId('b'), vertexId('c'));
+
     expect(spectralLayout(builder.build()).size).toBe(3);
   });
 
@@ -51,6 +55,7 @@ describe('tutteLayout', () => {
     const wheel = completeGraph(4);
     const layout = tutteLayout(wheel);
     const radii = wheel.vertices().map((id) => Math.hypot(layout.get(id)!.x, layout.get(id)!.y));
+
     expect(Math.max(...radii)).toBeCloseTo(1);
     expect(Math.min(...radii)).toBeLessThan(0.99);
   });
@@ -66,35 +71,43 @@ describe('tutteLayout', () => {
       segments.slice(index + 1).map((second) => [first, second] as const),
     );
     const independent = pairs.filter(([a, b]) => new Set([...a.ends, ...b.ends]).size === 4);
+
     expect(independent.some(([a, b]) => cross(a.line, b.line))).toBe(false);
   });
 
   it('scans only a bounded number of edges and ignores self-loops', () => {
     expect(tutteLayout(completeGraph(25)).size).toBe(25);
     const loop = new GraphBuilder({ directed: false });
+
     for (const name of ['a', 'b', 'c']) {
       loop.addVertex(vertexId(name));
     }
+
     loop
       .addEdge(vertexId('a'), vertexId('a'))
       .addEdge(vertexId('a'), vertexId('b'))
       .addEdge(vertexId('b'), vertexId('c'))
       .addEdge(vertexId('c'), vertexId('a'));
+
     expect(tutteLayout(loop.build()).size).toBe(3);
   });
 
   it('falls back to a radial layout for forests and parks cut-off components outside', () => {
     expect(tutteLayout(pathGraph(4)).size).toBe(4);
     const builder = new GraphBuilder({ directed: false });
+
     for (const name of ['a', 'b', 'c', 'x', 'y']) {
       builder.addVertex(vertexId(name));
     }
+
     builder
       .addEdge(vertexId('a'), vertexId('b'))
       .addEdge(vertexId('b'), vertexId('c'))
       .addEdge(vertexId('c'), vertexId('a'));
+
     builder.addEdge(vertexId('x'), vertexId('y'));
     const layout = tutteLayout(builder.build());
+
     expect(layout.size).toBe(5);
     expect(Math.hypot(layout.get(vertexId('x'))!.x, layout.get(vertexId('x'))!.y)).toBeCloseTo(1.5);
     expect(tutteLayout(pathGraph(0)).size).toBe(0);

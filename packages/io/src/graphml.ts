@@ -18,6 +18,7 @@ const edgeLines = (graph: Graph): readonly string[] =>
 /** GraphML with a `weight` key (`d0`) on edges. */
 export function toGraphMl(graph: Graph): string {
   const edgeDefault = graph.directed ? 'directed' : 'undirected';
+
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<graphml xmlns="http://graphml.graphdrawing.org/xmlns">',
@@ -33,14 +34,17 @@ export function toGraphMl(graph: Graph): string {
 
 function weightOf(body: string): number {
   const text = /<data\b[^>]*>([^<]*)<\/data>/u.exec(body)?.[1];
+
   return text === undefined ? 1 : Number(text);
 }
 
 export function fromGraphMl(text: string): Graph {
   const [graph] = findElements(text, 'graph');
+
   if (graph === undefined) {
     throw new ParseError('Missing <graph> element');
   }
+
   const edges = findElements(text, 'edge').map((edge): ParsedEdge => ({
     source: requireAttribute(edge, 'source', 'edge'),
     target: requireAttribute(edge, 'target', 'edge'),
@@ -48,5 +52,6 @@ export function fromGraphMl(text: string): Graph {
   }));
   const vertices = findElements(text, 'node').map((node) => requireAttribute(node, 'id', 'node'));
   const directed = graph.attributes.get('edgedefault') === 'directed';
+
   return assembleGraph({ directed, vertices, edges });
 }

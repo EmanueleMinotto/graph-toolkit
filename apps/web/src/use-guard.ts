@@ -9,6 +9,7 @@ export interface Guard {
 
 export function useGuard(): Guard {
   const [error, setError] = useState('');
+
   return {
     error,
     setError,

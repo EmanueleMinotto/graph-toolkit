@@ -14,12 +14,15 @@ const v = (index: number) => vertexId(String(index));
 
 function directed(count: number, arcs: readonly (readonly [number, number, number])[]): Graph {
   const builder = new GraphBuilder({ directed: true });
+
   for (let index = 0; index < count; index++) {
     builder.addVertex(v(index));
   }
+
   for (const [from, to, weight] of arcs) {
     builder.addEdge(v(from), v(to), weight);
   }
+
   return builder.build();
 }
 
@@ -36,11 +39,13 @@ describe('johnson', () => {
   it('matches Floyd-Warshall, including negative weights and unreachable pairs', () => {
     const fast = johnson(negative);
     const slow = floydWarshall(negative);
+
     for (const from of negative.vertices()) {
       for (const to of negative.vertices()) {
         expect(fast.distance(from, to)).toBeCloseTo(slow.distance(from, to));
       }
     }
+
     expect(fast.distance(v(4), v(0))).toBe(Infinity);
   });
 
@@ -49,6 +54,7 @@ describe('johnson', () => {
       [0, 1, -1],
       [1, 0, -1],
     ]);
+
     expect(() => johnson(bad)).toThrow(NegativeCycleError);
     expect(() => johnson(directed(0, []))).not.toThrow();
   });
@@ -65,6 +71,7 @@ describe('dagShortestPaths', () => {
 
   it('handles negative weights and returns paths', () => {
     const tree = dagShortestPaths(dag, v(0));
+
     expect(tree.distanceTo(v(3))).toBe(0);
     expect(tree.pathTo(v(3))).toEqual([v(0), v(3)]);
   });
@@ -83,6 +90,7 @@ describe('dagShortestPaths', () => {
         v(0),
       ),
     ).toThrow(GraphError);
+
     expect(() => dagShortestPaths(cycleGraph(3), v(0))).toThrow(GraphError);
   });
 });
@@ -103,6 +111,7 @@ const live = {
 describe('cancellation', () => {
   it('aborts the Hamiltonian search', () => {
     const signal = aborted();
+
     expect(() => hamiltonianPath(cycleGraph(5), { signal })).toThrow('stop');
     expect(() => hamiltonianCycle(cycleGraph(5), { signal })).toThrow('stop');
     expect(hamiltonianCycle(cycleGraph(5), { signal: live })).toHaveLength(5);

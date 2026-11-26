@@ -13,10 +13,12 @@ export function kShortestPaths(graph: Graph, request: KShortestRequest): readonl
   if (graph.csr.weights.some((weight) => weight < 0)) {
     throw new GraphError('kShortestPaths requires non-negative weights');
   }
+
   const endpoints = {
     source: graph.indexOf(request.source),
     target: graph.indexOf(request.target),
   };
+
   return yenKernel(graph.csr, endpoints, request.count).map((found) => ({
     distance: found.cost,
     path: found.path.map((index) => graph.vertexAt(index)),

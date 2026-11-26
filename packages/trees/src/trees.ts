@@ -12,11 +12,13 @@ export function minimumSpanningForest(graph: Graph): SpanningForest {
   if (graph.directed) {
     throw new GraphError('minimumSpanningForest requires an undirected graph');
   }
+
   const sets = new DisjointSet(graph.vertexCount);
   const edges = graph
     .edges()
     .toSorted((left, right) => left.weight - right.weight)
     .filter((edge) => sets.union(graph.indexOf(edge.source), graph.indexOf(edge.target)));
+
   return { edges, totalWeight: edges.reduce((total, edge) => total + edge.weight, 0) };
 }
 

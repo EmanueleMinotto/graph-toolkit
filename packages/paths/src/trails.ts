@@ -21,6 +21,7 @@ export function eulerianTrail(graph: Graph): readonly VertexId[] | undefined {
   const start = trailStart(input);
   const trail = start === -1 ? [] : hierholzer(input, start);
   const isComplete = start !== -1 && trail.length === input.edges.length + 1;
+
   return isComplete ? trail.map((index) => graph.vertexAt(index)) : undefined;
 }
 
@@ -35,6 +36,7 @@ export function hamiltonianPath(
   options: AbortOptions = {},
 ): readonly VertexId[] | undefined {
   const mode = { mustClose: false, signal: options.signal };
+
   return named(graph, hamiltonian(graph.csr, graph.vertexCount, mode));
 }
 
@@ -45,6 +47,7 @@ export function hamiltonianCycle(
 ): readonly VertexId[] | undefined {
   const minimumSize = 3;
   const mode = { mustClose: true, signal: options.signal };
+
   return graph.vertexCount < minimumSize
     ? undefined
     : named(graph, hamiltonian(graph.csr, graph.vertexCount, mode));

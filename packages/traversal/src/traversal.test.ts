@@ -22,12 +22,15 @@ const [a, b, c, d, isolated] = ids as [
 
 const build = (directed: boolean, edges: readonly (readonly [number, number])[]): Graph => {
   const builder = new GraphBuilder({ directed });
+
   for (const id of ids) {
     builder.addVertex(id);
   }
+
   for (const [from, to] of edges) {
     builder.addEdge(ids[from]!, ids[to]!);
   }
+
   return builder.build();
 };
 
@@ -54,6 +57,7 @@ describe('traversal', () => {
       [1, 2],
       [2, 0],
     ]);
+
     expect(dfs(cycle, a)).toEqual([a, b, c]);
   });
 
@@ -72,6 +76,7 @@ describe('traversal', () => {
       [0, 3],
     ]);
     const order = topologicalSort(dag)!;
+
     expect(order.indexOf(a)).toBeLessThan(order.indexOf(b));
     expect(order.indexOf(b)).toBeLessThan(order.indexOf(c));
     const diamond = build(true, [
@@ -80,11 +85,13 @@ describe('traversal', () => {
       [1, 3],
       [2, 3],
     ]);
+
     expect(topologicalSort(diamond)).toHaveLength(5);
     const cyclic = build(true, [
       [0, 1],
       [1, 0],
     ]);
+
     expect(topologicalSort(cyclic)).toBeUndefined();
   });
 });
@@ -100,6 +107,7 @@ describe('stronglyConnectedComponents', () => {
       [4, 3],
     ]);
     const sets = stronglyConnectedComponents(graph).map((part) => part.toSorted(byName).join(''));
+
     expect(sets.toSorted(byName)).toEqual(['abc', 'de']);
   });
 
@@ -108,6 +116,7 @@ describe('stronglyConnectedComponents', () => {
       [0, 1],
       [1, 2],
     ]);
+
     expect(stronglyConnectedComponents(dag)).toEqual([[c], [b], [a], [d], [isolated]]);
     expect(stronglyConnectedComponents(new GraphBuilder({ directed: true }).build())).toEqual([]);
   });
@@ -117,6 +126,7 @@ describe('stronglyConnectedComponents', () => {
       [0, 1],
       [2, 1],
     ]);
+
     expect(stronglyConnectedComponents(graph)).toHaveLength(5);
   });
 
@@ -129,15 +139,19 @@ describe('lazy iterators', () => {
   it('match bfs/dfs and can stop early', () => {
     const graph = gridGraph(3, 3);
     const start = graph.vertices()[0]!;
+
     expect([...bfsIterator(graph, start)]).toEqual(bfs(graph, start));
     expect([...dfsIterator(graph, start)]).toEqual(dfs(graph, start));
     const firstTwo = [];
+
     for (const vertex of bfsIterator(graph, start)) {
       firstTwo.push(vertex);
+
       if (firstTwo.length === 2) {
         break;
       }
     }
+
     expect(firstTwo).toHaveLength(2);
   });
 });

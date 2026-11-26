@@ -42,6 +42,7 @@ const PANEL_IDS: PanelId[] = [
 /** Keeps the saved order, drops unknown ids and appends panels added since it was saved. */
 const normalized = (saved: readonly string[]): PanelId[] => {
   const known = saved.filter((id): id is PanelId => PANEL_IDS.some((panel) => panel === id));
+
   return [...new Set([...known, ...PANEL_IDS])];
 };
 
@@ -101,10 +102,13 @@ export function PanelStack({ panels }: Props) {
     if (over === null || active.id === over.id) {
       return;
     }
+
     const ids: readonly string[] = order;
     const [from, to] = [String(active.id), String(over.id)];
+
     setSaved(arrayMove(order, ids.indexOf(from), ids.indexOf(to)));
   };
+
   return (
     <DndContext
       sensors={sensors}

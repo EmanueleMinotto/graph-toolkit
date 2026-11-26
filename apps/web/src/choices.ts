@@ -89,6 +89,7 @@ export const OPERATION_CHOICES: readonly Choice<OperationKind>[] = OPERATIONS.ma
 export function toolChoices(graph: Graph): readonly Choice<AnalysisKind>[] {
   return TOOLS.map((tool) => {
     const reason = unavailableReason(tool, graph);
+
     return {
       value: tool.id,
       label: reason === undefined ? tool.label : `${tool.label} (${reason})`,

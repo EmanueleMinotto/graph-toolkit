@@ -37,17 +37,21 @@ export class CsrGraph implements Graph {
 
   public indexOf(id: VertexId): number {
     const index = this.#indices.get(id);
+
     if (index === undefined) {
       throw new UnknownVertexError(`Unknown vertex: ${id}`);
     }
+
     return index;
   }
 
   public vertexAt(index: number): VertexId {
     const id = this.#ids[index];
+
     if (id === undefined) {
       throw new UnknownVertexError(`Unknown vertex index: ${String(index)}`);
     }
+
     return id;
   }
 
@@ -57,11 +61,13 @@ export class CsrGraph implements Graph {
 
   public neighbors(id: VertexId): readonly Edge[] {
     const vertex = this.indexOf(id);
+
     return this.#arcs(vertex, (target) => target >= 0);
   }
 
   public hasEdge(source: VertexId, target: VertexId): boolean {
     const targetIndex = this.indexOf(target);
+
     return this.#arcs(this.indexOf(source), (arcTarget) => arcTarget === targetIndex).length > 0;
   }
 
@@ -73,6 +79,7 @@ export class CsrGraph implements Graph {
 
   #arcs(vertex: number, keep: (target: number) => boolean): readonly Edge[] {
     const source = this.vertexAt(vertex);
+
     return arcsOf(this.csr, vertex, keep).map((arc) => ({
       source,
       target: this.vertexAt(arc.target),

@@ -30,12 +30,16 @@ export function ImportPanel({ graph, onReplace, guarded }: Props) {
     if (file === null) {
       return;
     }
+
     const detected = formatFromFileName(file.name);
+
     if (detected !== undefined) {
       setFormat(detected);
     }
+
     setText(await file.text());
   };
+
   return (
     <Panel id="import" title={t('Import / export')} icon={IconFileImport}>
       <ChoiceSelect

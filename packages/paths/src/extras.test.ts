@@ -11,12 +11,15 @@ const build = (
   directed = false,
 ): Graph => {
   const builder = new GraphBuilder({ directed });
+
   for (let index = 0; index < count; index++) {
     builder.addVertex(name(index));
   }
+
   for (const [from, to, weight] of arcs) {
     builder.addEdge(name(from), name(to), weight);
   }
+
   return builder.build();
 };
 
@@ -31,6 +34,7 @@ describe('aStar', () => {
   it('matches dijkstra with a zero or exact heuristic', () => {
     const exact = dijkstra(grid, name(0));
     const zero = aStar(grid, { source: name(0), target: name(3), heuristic: () => 0 })!;
+
     expect(zero.distance).toBe(exact.distanceTo(name(3)));
     expect(zero.path).toEqual(exact.pathTo(name(3)));
     const guided = aStar(grid, {
@@ -38,6 +42,7 @@ describe('aStar', () => {
       target: name(3),
       heuristic: (vertex) => (vertex === name(3) ? 0 : 1),
     })!;
+
     expect(guided.distance).toBe(2);
   });
 
@@ -49,6 +54,7 @@ describe('aStar', () => {
       [1, 3, 10],
     ]);
     const result = aStar(detour, { source: name(0), target: name(3), heuristic: () => 0 });
+
     expect(result?.distance).toBe(12);
   });
 
@@ -56,6 +62,7 @@ describe('aStar', () => {
     expect(
       aStar(build(2, []), { source: name(0), target: name(1), heuristic: () => 0 }),
     ).toBeUndefined();
+
     expect(() =>
       aStar(build(2, [[0, 1, -1]]), { source: name(0), target: name(1), heuristic: () => 0 }),
     ).toThrow(GraphError);
@@ -79,6 +86,7 @@ describe('kShortestPaths', () => {
 
   it('lists paths by increasing cost', () => {
     const paths = kShortestPaths(graph, { source: name(0), target: name(4), count: 4 });
+
     expect(paths.map((path) => path.distance)).toEqual([2, 3, 4, 4]);
     expect(new Set(paths.map((path) => path.path.join(','))).size).toBe(paths.length);
   });
@@ -87,12 +95,15 @@ describe('kShortestPaths', () => {
     expect(
       kShortestPaths(pathGraph(3), { source: name(0), target: name(2), count: 5 }),
     ).toHaveLength(1);
+
     expect(kShortestPaths(build(2, []), { source: name(0), target: name(1), count: 3 })).toEqual(
       [],
     );
+
     expect(kShortestPaths(pathGraph(3), { source: name(0), target: name(2), count: 0 })).toEqual(
       [],
     );
+
     expect(() =>
       kShortestPaths(build(2, [[0, 1, -1]]), { source: name(0), target: name(1), count: 1 }),
     ).toThrow(GraphError);

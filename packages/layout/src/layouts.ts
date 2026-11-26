@@ -19,9 +19,11 @@ const DEFAULT_SEED = 1;
 /** Vertices evenly spaced on a circle of `radius` centered at the origin. */
 export function circularLayout(graph: Graph, radius = 1): Layout {
   const count = graph.vertexCount;
+
   return new Map(
     graph.vertices().map((id, index) => {
       const angle = (2 * Math.PI * index) / count;
+
       return [id, { x: radius * Math.cos(angle), y: radius * Math.sin(angle) }];
     }),
   );
@@ -30,6 +32,7 @@ export function circularLayout(graph: Graph, radius = 1): Layout {
 /** Row-major square-ish grid with the given `spacing`. */
 export function gridLayout(graph: Graph, spacing = 1): Layout {
   const columns = Math.max(1, Math.ceil(Math.sqrt(graph.vertexCount)));
+
   return new Map(
     graph
       .vertices()
@@ -51,6 +54,7 @@ export interface ForceLayoutOptions {
 export function forceLayout(graph: Graph, options: ForceLayoutOptions = {}): Layout {
   const { iterations = DEFAULT_ITERATIONS, seed = DEFAULT_SEED } = options;
   const pos = forceKernel(graph.csr, graph.vertexCount, { iterations, seed });
+
   return new Map(
     graph
       .vertices()
@@ -75,11 +79,13 @@ export interface LayeredLayoutOptions {
 export function layeredLayout(graph: Graph, options: LayeredLayoutOptions = {}): Layout {
   const { layerGap = 1, nodeGap = 1 } = options;
   const placement = layer(graph.csr, graph.vertexCount);
+
   return new Map(
     graph.vertices().map((id, index) => {
       const level = placementAt(placement.level, index);
       const width = placementAt(placement.widths, level);
       const offset = placementAt(placement.rank, index) - (width - 1) / 2;
+
       return [id, { x: offset * nodeGap, y: level * layerGap }];
     }),
   );
@@ -98,15 +104,19 @@ export interface RadialLayoutOptions {
  */
 export function radialLayout(graph: Graph, options: RadialLayoutOptions = {}): Layout {
   const { root = graph.vertices()[0], ringGap = 1 } = options;
+
   if (root === undefined) {
     return new Map();
   }
+
   const { ring, rank, sizes } = ringsAround(graph.csr, graph.vertexCount, graph.indexOf(root));
+
   return new Map(
     graph.vertices().map((id, index) => {
       const level = placementAt(ring, index);
       const angle = (2 * Math.PI * placementAt(rank, index)) / placementAt(sizes, level);
       const radius = level * ringGap;
+
       return [id, { x: radius * Math.cos(angle), y: radius * Math.sin(angle) }];
     }),
   );
@@ -121,6 +131,7 @@ export function spectralLayout(graph: Graph): Layout {
   const count = graph.vertexCount;
   const laplacian = new Matrix(count, count, symmetricLaplacian(graph.csr, count));
   const { vectors } = eigenDecomposition(laplacian);
+
   return new Map(
     graph
       .vertices()
@@ -138,10 +149,13 @@ export function spectralLayout(graph: Graph): Layout {
 export function tutteLayout(graph: Graph): Layout {
   const count = graph.vertexCount;
   const cycle = outerCycle(graph.csr, count);
+
   if (cycle.length === 0) {
     return radialLayout(graph);
   }
+
   const position = tutteEmbedding(graph.csr, count, cycle);
+
   return new Map(
     graph
       .vertices()

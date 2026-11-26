@@ -9,6 +9,7 @@ export function maximalCliques(
   if (graph.directed) {
     throw new GraphError('maximalCliques requires an undirected graph');
   }
+
   return maximalCliqueKernel(graph.csr, graph.vertexCount, options.signal).map((clique) =>
     clique.map((index) => graph.vertexAt(index)),
   );
@@ -19,5 +20,6 @@ export function maximumClique(graph: Graph, options: AbortOptions = {}): readonl
   const bySize = maximalCliques(graph, options).toSorted(
     (left, right) => right.length - left.length,
   );
+
   return bySize[0] ?? [];
 }

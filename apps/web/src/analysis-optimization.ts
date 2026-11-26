@@ -24,7 +24,9 @@ function minimumCut(graph: Graph, { from, to }: Selection): Highlight {
   if (from === undefined || to === undefined) {
     return pick('Pick source and sink.');
   }
+
   const cut = minCut(graph, from, to);
+
   return {
     ...NONE,
     colors: new Map([
@@ -39,6 +41,7 @@ function minimumCut(graph: Graph, { from, to }: Selection): Highlight {
 
 function generalMatching(graph: Graph): Highlight {
   const { pairs, size } = maximumMatching(graph);
+
   return {
     ...NONE,
     edges: new Set(pairs.map(([a, b]) => edgeKey(a, b, graph.directed))),
@@ -56,8 +59,10 @@ function allPairsJohnson(graph: Graph): Highlight {
       `${graph.vertexCount} × ${graph.vertexCount} is too large to display (limit ${MAX_DISPLAY})`,
     );
   }
+
   const distances = johnson(graph);
   const ids = graph.vertices();
+
   return {
     ...NONE,
     summary: 'All-pairs distances (Johnson)',
@@ -69,11 +74,13 @@ function dagDistances(graph: Graph, { from }: Selection): Highlight {
   if (from === undefined) {
     return pick('Pick a start vertex.');
   }
+
   const tree = dagShortestPaths(graph, from);
   const rows = graph
     .vertices()
     .slice(0, MAX_ROWS)
     .map((id): readonly [string, string] => [id, show(tree.distanceTo(id))]);
+
   return { ...NONE, summary: `Distances from ${from} on the DAG`, table: rows };
 }
 
@@ -81,10 +88,13 @@ function arborescence(graph: Graph, { from }: Selection): Highlight {
   if (from === undefined) {
     return pick('Pick a root vertex.');
   }
+
   const tree = minimumSpanningArborescence(graph, from);
+
   if (tree === undefined) {
     return pick(`Some vertices are unreachable from ${from}.`);
   }
+
   return {
     ...NONE,
     colors: new Map([[from, FIRST_COLOR]]),
@@ -100,9 +110,11 @@ const MIN_TERMINALS = 2;
 function steiner(graph: Graph, { count = MIN_TERMINALS }: Selection): Highlight {
   const terminals = graph.vertices().slice(0, count);
   const tree = steinerTree(graph, terminals);
+
   if (tree === undefined) {
     return pick('The terminals are not all connected.');
   }
+
   return {
     ...NONE,
     colors: new Map(terminals.map((id) => [id, FIRST_COLOR])),

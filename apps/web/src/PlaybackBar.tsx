@@ -6,6 +6,7 @@ import { t } from './i18n.js';
 /** Play, pause and scrub through the steps an algorithm took. */
 export function PlaybackBar({ playback }: { readonly playback: Playback }) {
   const Glyph = playback.isPlaying ? IconPlayerPause : IconPlayerPlay;
+
   return (
     <Group gap="xs" wrap="nowrap">
       <ActionIcon

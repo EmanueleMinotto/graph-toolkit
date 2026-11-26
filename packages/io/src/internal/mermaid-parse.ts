@@ -10,9 +10,11 @@ function bodyLines(text: string): string[] {
     .map((line) => line.replace(/%%.*/u, '').trim().replace(/;$/u, ''))
     .filter(Boolean);
   const [header = '', ...body] = lines;
+
   if (!HEADER.test(header)) {
     throw new ParseError('Mermaid text must start with flowchart/graph');
   }
+
   return body;
 }
 
@@ -20,14 +22,17 @@ function bodyLines(text: string): string[] {
 function tokenize(text: string): { edges: EdgeToken[]; nodes: NodeToken[] } {
   const edges: EdgeToken[] = [];
   const nodes: NodeToken[] = [];
+
   for (const line of bodyLines(text)) {
     const edge = parseEdge(line);
+
     if (edge === undefined) {
       nodes.push(parseNode(line));
     } else {
       edges.push(edge);
     }
   }
+
   return { edges, nodes };
 }
 
@@ -35,13 +40,16 @@ export function parseMermaid(text: string): ParsedGraph {
   const { edges, nodes } = tokenize(text);
   const endpoints = edges.flatMap((edge) => [edge.left, edge.right]);
   const labels = new Map<string, string>();
+
   for (const node of [...endpoints, ...nodes]) {
     if (node.label !== undefined) {
       labels.set(node.key, node.label);
     }
   }
+
   const name = (key: string): string => labels.get(key) ?? key;
   const keys = new Set([...endpoints, ...nodes].map((node) => node.key));
+
   return {
     directed: edges.some((edge) => edge.isDirected),
     vertices: [...keys].map((key) => name(key)),

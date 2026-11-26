@@ -19,6 +19,7 @@ describe('spectrum', () => {
         [1, 2],
       ]),
     );
+
     expect(values[0]).toBeCloseTo(1);
     expect(values[1]).toBeCloseTo(3);
     expect(adjacencySpectrum(completeGraph(4))[3]).toBeCloseTo(3);
@@ -34,6 +35,7 @@ describe('spectrum', () => {
         ]),
       ),
     ).toEqual([1, 3]);
+
     expect(eigenvalues(new Matrix(0, 0, []))).toEqual([]);
   });
 
@@ -42,6 +44,7 @@ describe('spectrum', () => {
     expect(algebraicConnectivity(cycleGraph(4))).toBeCloseTo(2);
     expect(algebraicConnectivity(pathGraph(1))).toBe(0);
     const builder = new GraphBuilder({ directed: false });
+
     builder.addVertex(vertexId('a')).addVertex(vertexId('b'));
     expect(algebraicConnectivity(builder.build())).toBeCloseTo(0);
   });
@@ -55,6 +58,7 @@ describe('spectrum', () => {
         ]),
       ),
     ).toThrow(GraphError);
+
     expect(() => eigenvalues(Matrix.fromRows([[0, 1, 0]]))).toThrow(GraphError);
     expect(() => adjacencySpectrum(completeGraph(3, { directed: true }))).toThrow(GraphError);
   });
@@ -82,15 +86,18 @@ describe('eigenDecomposition', () => {
       [0, 1, 2],
     ]);
     const { values, vectors } = eigenDecomposition(matrix);
+
     for (const [index, value] of values.entries()) {
       const vector = vectors[index]!;
       const product = matrix
         .toRows()
         .map((row) => row.reduce((sum, cell, k) => sum + cell * vector[k]!, 0));
+
       for (const [k, entry] of product.entries()) {
         expect(entry).toBeCloseTo(value * vector[k]!);
       }
     }
+
     expect(Math.hypot(...vectors[0]!)).toBeCloseTo(1);
   });
 

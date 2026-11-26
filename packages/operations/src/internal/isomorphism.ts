@@ -11,14 +11,17 @@ function sideOf(csr: Csr, size: number): Side {
   const matrix = new Uint8Array(size * size);
   const outDegree = new Int32Array(size);
   const inDegree = new Int32Array(size);
+
   for (let vertex = 0; vertex < size; vertex++) {
     for (let slot = csr.offsets[vertex]!; slot < csr.offsets[vertex + 1]!; slot++) {
       const target = csr.targets[slot]!;
+
       matrix[vertex * size + target] = 1;
       outDegree[vertex]!++;
       inDegree[target]!++;
     }
   }
+
   return { size, matrix, outDegree, inDegree };
 }
 
@@ -33,6 +36,7 @@ interface Search {
 
 function degreesMatch(search: Search, vertex: number, candidate: number): boolean {
   const { left, right } = search;
+
   return (
     left.outDegree[vertex] === right.outDegree[candidate] &&
     left.inDegree[vertex] === right.inDegree[candidate] &&
@@ -43,16 +47,19 @@ function degreesMatch(search: Search, vertex: number, candidate: number): boolea
 function agreesWithEarlier(search: Search, depth: number, candidate: number): boolean {
   const { left, right, order, image } = search;
   const vertex = order[depth]!;
+
   for (let earlier = 0; earlier < depth; earlier++) {
     const [other, mapped] = [order[earlier]!, image[order[earlier]!]!];
     const forward =
       left.matrix[vertex * left.size + other] === right.matrix[candidate * right.size + mapped];
     const backward =
       left.matrix[other * left.size + vertex] === right.matrix[mapped * right.size + candidate];
+
     if (!forward || !backward) {
       return false;
     }
   }
+
   return true;
 }
 
@@ -67,22 +74,28 @@ function step(search: Search, depth: number): boolean {
   if (depth === search.order.length) {
     return true;
   }
+
   for (let candidate = 0; candidate < search.right.size; candidate++) {
     if (search.isUsed[candidate] === 1 || !isConsistent(search, depth, candidate)) {
       continue;
     }
+
     search.image[search.order[depth]!] = candidate;
     search.isUsed[candidate] = 1;
+
     if (extend(search, depth + 1)) {
       return true;
     }
+
     search.isUsed[candidate] = 0;
   }
+
   return false;
 }
 
 function extend(search: Search, depth: number): boolean {
   search.signal?.throwIfAborted();
+
   return step(search, depth);
 }
 
@@ -107,6 +120,7 @@ export function findIsomorphism(
     isUsed: new Uint8Array(size),
     signal,
   };
+
   return extend(search, 0) ? search.image : undefined;
 }
 

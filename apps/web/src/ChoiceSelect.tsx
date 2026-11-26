@@ -30,6 +30,7 @@ function toData<T extends string>(choices: readonly Choice<T>[]): Data {
       label: t(label),
       disabled,
     }));
+
     return group === '' ? items : [{ group: t(group), items }];
   });
 }
@@ -38,6 +39,7 @@ function toData<T extends string>(choices: readonly Choice<T>[]): Data {
 export function ChoiceSelect<T extends string>(props: Props<T>) {
   const byValue = new Map(props.choices.map((choice) => [choice.value, choice]));
   const Current = byValue.get(props.value)?.icon;
+
   return (
     <Select
       label={props.label}
@@ -48,6 +50,7 @@ export function ChoiceSelect<T extends string>(props: Props<T>) {
       leftSection={Current === undefined ? undefined : <Current size={16} stroke={1.5} />}
       renderOption={({ option, checked }) => {
         const Option = byValue.get(option.value as T)?.icon;
+
         return (
           <Group gap="xs" wrap="nowrap" w="100%">
             {Option === undefined ? null : <Option size={16} stroke={1.5} />}

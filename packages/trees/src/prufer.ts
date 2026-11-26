@@ -7,11 +7,13 @@ export function pruferCode(tree: Graph): readonly VertexId[] {
   if (tree.directed || tree.vertexCount < 2 || !isTree(tree)) {
     throw new GraphError('pruferCode requires an undirected tree with at least 2 vertices');
   }
+
   const edges = tree.edges().map((edge) => ({
     source: tree.indexOf(edge.source),
     target: tree.indexOf(edge.target),
     weight: edge.weight,
   }));
+
   return encodePrufer(tree.vertexCount, edges).map((index) => tree.vertexAt(index));
 }
 
@@ -21,15 +23,20 @@ export function treeFromPruferCode(
   code: readonly VertexId[],
 ): Graph {
   const indices = code.map((id) => vertices.indexOf(id));
+
   if (vertices.length !== code.length + 2 || indices.includes(-1)) {
     throw new GraphError('code must have vertices.length - 2 entries, all from vertices');
   }
+
   const builder = new GraphBuilder();
+
   for (const vertex of vertices) {
     builder.addVertex(vertex);
   }
+
   for (const [from, to] of decodePrufer(indices)) {
     builder.addEdge(itemAt(vertices, from), itemAt(vertices, to));
   }
+
   return builder.build();
 }

@@ -17,6 +17,7 @@ interface Round {
 
 function slotsToBlock(round: Round, root: readonly number[]): Set<number> {
   const spurIndex = root.length - 1;
+
   return new Set(
     round.accepted
       .filter((found) => found.path.length > root.length && sameRoot(found.path, root))
@@ -35,15 +36,19 @@ function spurCandidate(
     blockedSlots: slotsToBlock(round, root),
     blockedVertices: new Set(root.slice(0, -1)),
   });
+
   if (tail === undefined) {
     return undefined;
   }
+
   const path = [...root.slice(0, -1), ...tail.path];
+
   return { path, cost: pathCost(round.csr, path) };
 }
 
 function candidatesAfter(round: Round): IndexPath[] {
   const previous = round.accepted.at(-1)!;
+
   return previous.path
     .slice(0, -1)
     .map((_, spurIndex) => spurCandidate(round, previous, spurIndex))
@@ -59,21 +64,28 @@ export function yenKernel(csr: Csr, endpoints: Endpoints, count: number): IndexP
     blockedSlots: new Set(),
     blockedVertices: new Set(),
   });
+
   if (first === undefined || count < 1) {
     return [];
   }
+
   const accepted = [first];
   let pool: IndexPath[] = [];
+
   while (accepted.length < count) {
     const fresh = candidatesAfter({ csr, accepted }).filter(
       (path) => !isKnown(pool, path) && !isKnown(accepted, path),
     );
+
     pool = [...pool, ...fresh].toSorted((left, right) => left.cost - right.cost);
     const best = pool.shift();
+
     if (best === undefined) {
       break;
     }
+
     accepted.push(best);
   }
+
   return accepted;
 }

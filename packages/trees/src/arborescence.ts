@@ -18,6 +18,7 @@ export function minimumSpanningArborescence(
   if (!graph.directed) {
     throw new GraphError('minimumSpanningArborescence requires a directed graph');
   }
+
   const edges = graph.edges();
   const arcs = edges.map((edge): Arc => ({
     from: graph.indexOf(edge.source),
@@ -25,9 +26,12 @@ export function minimumSpanningArborescence(
     weight: edge.weight,
   }));
   const indices = minimumArborescence(graph.vertexCount, arcs, graph.indexOf(root));
+
   if (indices === undefined) {
     return undefined;
   }
+
   const chosen = pick(edges, indices);
+
   return { edges: chosen, totalWeight: chosen.reduce((sum, edge) => sum + edge.weight, 0) };
 }

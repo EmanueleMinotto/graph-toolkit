@@ -36,23 +36,30 @@ export function useVertexCursor(options: CursorOptions): VertexCursor {
   const [hovered, setHovered] = useState<VertexId | undefined>();
   const move = (heading: Heading): void => {
     const from = cursor === undefined ? undefined : position(cursor);
+
     if (from === undefined) {
       setCursor(vertices[0]);
+
       return;
     }
+
     const others = vertices
       .filter((id) => id !== cursor)
       .flatMap((id) => {
         const point = position(id);
+
         return point === undefined ? [] : [[id, point] as const];
       });
+
     setCursor(nextInDirection(from, heading, others) ?? cursor);
   };
   const onKeyDown = (event: KeyboardEvent): void => {
     if (!isActive) {
       return;
     }
+
     const heading = HEADINGS[event.key];
+
     if (heading !== undefined) {
       move(heading);
     } else if (event.key === 'Escape') {
@@ -62,6 +69,7 @@ export function useVertexCursor(options: CursorOptions): VertexCursor {
     } else {
       return;
     }
+
     event.preventDefault();
   };
   const onPointerMove = (event: PointerEvent): void => {
@@ -69,5 +77,6 @@ export function useVertexCursor(options: CursorOptions): VertexCursor {
       setHovered(hit(event));
     }
   };
+
   return { cursor: isActive ? (hovered ?? cursor) : undefined, onPointerMove, onKeyDown };
 }

@@ -20,6 +20,7 @@ describe('coloring', () => {
   it('honours a custom greedy order', () => {
     const graph = cycleGraph(4);
     const order = graph.vertices().toReversed();
+
     expect(isProperColoring(graph, greedyColoring(graph, order))).toBe(true);
   });
 
@@ -32,6 +33,7 @@ describe('coloring', () => {
   it('bipartition succeeds on grids and fails on odd cycles', () => {
     const grid = gridGraph(3, 3);
     const parts = bipartition(grid)!;
+
     expect(parts.colorCount).toBe(2);
     expect(isProperColoring(grid, parts)).toBe(true);
     expect(bipartition(cycleGraph(5))).toBeUndefined();
@@ -40,6 +42,7 @@ describe('coloring', () => {
   it('rejects directed graphs and self-loops', () => {
     expect(() => greedyColoring(completeGraph(3, { directed: true }))).toThrow(GraphError);
     const loop = new GraphBuilder().addVertex(vertexId('a')).addEdge(vertexId('a'), vertexId('a'));
+
     expect(() => dsaturColoring(loop.build())).toThrow(GraphError);
   });
 
@@ -48,6 +51,7 @@ describe('coloring', () => {
       fc.property(fc.nat(1000), fc.double({ min: 0, max: 1, noNaN: true }), (seed, probability) => {
         const graph = randomGraph(12, { probability, seed });
         const maxDegree = Math.max(0, ...graph.vertices().map((id) => graph.degree(id)));
+
         for (const coloring of [greedyColoring(graph), dsaturColoring(graph)]) {
           expect(isProperColoring(graph, coloring)).toBe(true);
           expect(coloring.colorCount).toBeLessThanOrEqual(maxDegree + 1);
@@ -70,6 +74,7 @@ describe('exactColoring', () => {
       fc.property(fc.nat(500), (seed) => {
         const graph = randomGraph(8, { probability: 0.5, seed });
         const exact = exactColoring(graph);
+
         expect(isProperColoring(graph, exact)).toBe(true);
         expect(exact.colorCount).toBeLessThanOrEqual(dsaturColoring(graph).colorCount);
       }),
@@ -85,6 +90,7 @@ describe('edgeColoring', () => {
       `${edge.source}:${edge.color}`,
       `${edge.target}:${edge.color}`,
     ]);
+
     expect(new Set(seen).size).toBe(seen.length);
     expect(result.colorCount).toBeLessThanOrEqual(2 * 4 - 1);
     expect(edgeColoring(new GraphBuilder().build())).toEqual({ edges: [], colorCount: 0 });

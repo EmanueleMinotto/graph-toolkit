@@ -29,6 +29,7 @@ interface Network {
 function build(problem: Problem): Network {
   const adjacency = Array.from({ length: problem.count }, (): number[] => []);
   const network: Network = { to: [], capacity: [], cost: [], adjacency };
+
   for (const arc of problem.arcs) {
     adjacency[arc.from]!.push(network.to.length);
     adjacency[arc.to]!.push(network.to.length + 1);
@@ -36,6 +37,7 @@ function build(problem: Problem): Network {
     network.capacity.push(arc.capacity, 0);
     network.cost.push(arc.cost, -arc.cost);
   }
+
   return network;
 }
 
@@ -48,17 +50,22 @@ interface Search {
 
 function relaxFrom(network: Network, search: Search, vertex: number): void {
   const outgoing = network.adjacency[vertex]!;
+
   for (const edge of outgoing) {
     const target = network.to[edge]!;
     const candidate = search.distance[vertex]! + network.cost[edge]!;
+
     if (network.capacity[edge]! <= 0 || candidate >= search.distance[target]!) {
       continue;
     }
+
     search.distance[target] = candidate;
     search.parentEdge[target] = edge;
+
     if (search.queued.has(target)) {
       continue;
     }
+
     search.queued.add(target);
     search.queue.push(target);
   }
@@ -74,23 +81,30 @@ function cheapestPath(network: Network, source: number): Search {
     queue: [source],
     queued: new Set([source]),
   };
+
   distance[source] = 0;
+
   for (let head = 0; head < search.queue.length; head++) {
     const vertex = search.queue[head]!;
+
     search.queued.delete(vertex);
     relaxFrom(network, search, vertex);
   }
+
   return search;
 }
 
 /** Edges of the cheapest path, sink first. */
 function pathTo(network: Network, search: Search, problem: Problem): number[] {
   const edges: number[] = [];
+
   for (let vertex = problem.sink; vertex !== problem.source;) {
     const edge = search.parentEdge[vertex]!;
+
     edges.push(edge);
     vertex = network.to[edge ^ 1]!;
   }
+
   return edges;
 }
 
@@ -105,17 +119,22 @@ function push(network: Network, edges: readonly number[], amount: number): void 
 export function minCostFlowKernel(problem: Problem): FlowResult {
   const network = build(problem);
   let [flow, cost] = [0, 0];
+
   while (flow < problem.limit) {
     const search = cheapestPath(network, problem.source);
     const unitCost = search.distance[problem.sink]!;
+
     if (unitCost === Infinity) {
       break;
     }
+
     const edges = pathTo(network, search, problem);
     const amount = Math.min(problem.limit - flow, ...edges.map((edge) => network.capacity[edge]!));
+
     push(network, edges, amount);
     flow += amount;
     cost += amount * unitCost;
   }
+
   return { flow, cost };
 }

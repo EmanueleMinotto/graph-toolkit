@@ -18,6 +18,7 @@ export function minCut(graph: Graph, source: VertexId, sink: VertexId): MinCut {
   const reached = sourceSide(graph.csr, graph.vertexCount, terminals);
   const onSource = (id: VertexId): boolean => reached[graph.indexOf(id)] === 1;
   const edges = graph.edges().filter((edge) => onSource(edge.source) && !onSource(edge.target));
+
   return {
     value: edges.reduce((sum, edge) => sum + edge.weight, 0),
     sourceSide: graph.vertices().filter((id) => onSource(id)),
@@ -34,12 +35,15 @@ function terminalsOf(graph: Graph, source: VertexId, sink: VertexId): Terminals 
   if (!graph.directed) {
     throw new GraphError('maxFlow requires a directed graph');
   }
+
   if (source === sink) {
     throw new GraphError('source and sink must differ');
   }
+
   if (graph.csr.weights.some((capacity) => capacity < 0)) {
     throw new GraphError('capacities must be non-negative');
   }
+
   return { source: graph.indexOf(source), sink: graph.indexOf(sink) };
 }
 
@@ -70,11 +74,13 @@ export function pageRank(
   if (graph.vertexCount === 0) {
     return new Map();
   }
+
   const {
     damping = DEFAULT_DAMPING,
     maxIterations = DEFAULT_ITERATIONS,
     tolerance = DEFAULT_TOLERANCE,
   } = options;
   const ranks = pageRankKernel(graph.csr, graph.vertexCount, { damping, maxIterations, tolerance });
+
   return new Map(graph.vertices().map((id) => [id, rankAt(ranks, graph.indexOf(id))]));
 }

@@ -22,6 +22,7 @@ function toForest(graph: Graph, edges: readonly IndexEdge[]): SpanningForest {
 /** Prim's minimum spanning forest, O(E log V). */
 export function primMinimumSpanningForest(graph: Graph): SpanningForest {
   assertUndirected(graph, 'primMinimumSpanningForest');
+
   return toForest(graph, primKernel(graph.csr, graph.vertexCount));
 }
 
@@ -33,5 +34,6 @@ export function boruvkaMinimumSpanningForest(graph: Graph): SpanningForest {
     target: graph.indexOf(edge.target),
     weight: edge.weight,
   }));
+
   return toForest(graph, boruvkaKernel(graph.vertexCount, edges));
 }

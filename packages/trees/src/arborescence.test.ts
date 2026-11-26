@@ -7,12 +7,15 @@ const v = (index: number) => vertexId(String(index));
 
 function digraph(count: number, arcs: readonly (readonly [number, number, number])[]): Graph {
   const builder = new GraphBuilder({ directed: true });
+
   for (let index = 0; index < count; index++) {
     builder.addVertex(v(index));
   }
+
   for (const [from, to, weight] of arcs) {
     builder.addEdge(v(from), v(to), weight);
   }
+
   return builder.build();
 }
 
@@ -26,6 +29,7 @@ describe('minimumSpanningArborescence', () => {
       ]),
       v(0),
     );
+
     expect(result?.totalWeight).toBe(3);
     expect(result?.edges).toHaveLength(2);
   });
@@ -41,7 +45,9 @@ describe('minimumSpanningArborescence', () => {
       [3, 0, 1],
     ]);
     const result = minimumSpanningArborescence(graph, v(0));
+
     expect(result?.totalWeight).toBe(12);
+
     expect(
       result?.edges
         .map((edge) => `${edge.source}>${edge.target}`)
@@ -60,6 +66,7 @@ describe('minimumSpanningArborescence', () => {
       [1, 3, 9],
       [0, 4, 20],
     ]);
+
     expect(minimumSpanningArborescence(graph, v(0))?.totalWeight).toBe(5 + 1 + 2 + 1);
   });
 
@@ -73,6 +80,7 @@ describe('minimumSpanningArborescence', () => {
         v(0),
       ),
     ).toBeUndefined();
+
     expect(
       minimumSpanningArborescence(
         digraph(2, [

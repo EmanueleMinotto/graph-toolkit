@@ -14,14 +14,17 @@ const BOX = { width: 800, height: 520 } as const;
 
 function nodeClass(color: number | undefined, isSelected: boolean, isGrouped: boolean): string {
   const palette = color === undefined ? '' : ` c${color % PALETTE_SIZE}`;
+
   return `node${palette}${isSelected ? ' selected' : ''}${isGrouped ? ' grouped' : ''}`;
 }
 
 function edgeClass(highlight: Highlight, key: string): string {
   const color = highlight.edgeColors?.get(key);
+
   if (color !== undefined) {
     return `edge e${color % PALETTE_SIZE}`;
   }
+
   return highlight.edges.has(key) ? 'edge on' : 'edge';
 }
 
@@ -32,6 +35,7 @@ export function renderMode(graph: Graph, canUseWebgl: boolean): RenderMode {
   if (graph.vertexCount <= CULL_ABOVE) {
     return 'full';
   }
+
   return canUseWebgl ? 'webgl' : 'culled';
 }
 
@@ -60,6 +64,7 @@ export function Edges({ graph, mode, view, position, highlight }: Common) {
   if (mode === 'webgl') {
     return null;
   }
+
   const drawn = graph
     .edges()
     .map((edge) => ({
@@ -74,6 +79,7 @@ export function Edges({ graph, mode, view, position, highlight }: Common) {
     : drawn;
   const bulk = culling ? near.filter((edge) => isPlain(highlight, edge.key)) : [];
   const lines = culling ? near.filter((edge) => !isPlain(highlight, edge.key)) : near;
+
   return (
     <>
       {bulk.length === 0 ? null : (
@@ -125,10 +131,13 @@ function shown(props: VertexProps): readonly Placed[] {
   const near = placed.filter(({ point }) => isInView(point, view, BOX));
   const isKept = ({ id }: Placed): boolean =>
     id === cursor || group.has(id) || selected.includes(id);
+
   if (mode === 'webgl') {
     const pool = near.length <= DOM_LIMIT ? near : [];
+
     return placed.filter((vertex) => isKept(vertex) || pool.includes(vertex));
   }
+
   return placed.filter(
     (vertex) => !isOffScreen(vertex.point, view, mode === 'culled' && !isKept(vertex)),
   );
@@ -138,6 +147,7 @@ function shown(props: VertexProps): readonly Placed[] {
 export function Vertices(props: VertexProps) {
   const { mode, view, highlight, selected, group, cursor, onPick, startDrag } = props;
   const isLabelShown = mode !== 'culled' || view.scale >= LABEL_ZOOM;
+
   return shown(props).map(({ id, point }) => (
     <VertexNode
       key={id}

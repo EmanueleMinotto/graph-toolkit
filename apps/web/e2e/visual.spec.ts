@@ -15,7 +15,9 @@ test('the default graph looks the same', async ({ page }) => {
   await page.evaluate(() => {
     globalThis.localStorage.clear();
   });
+
   await page.reload();
+
   await expect(page.locator('svg.graph')).toHaveScreenshot('default-cycle.png', {
     maxDiffPixelRatio: 0.02,
   });
@@ -26,6 +28,7 @@ test('an example in dark mode looks the same', async ({ page }) => {
   await page.getByRole('button', { name: 'Toggle color scheme' }).click();
   await page.getByRole('combobox', { name: 'Layout', exact: true }).click();
   await page.getByRole('option', { name: 'Circular', exact: true }).click();
+
   await expect(page.locator('svg.graph')).toHaveScreenshot('petersen-dark.png', {
     maxDiffPixelRatio: 0.02,
   });

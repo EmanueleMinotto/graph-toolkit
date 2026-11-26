@@ -9,6 +9,7 @@ const position = (id: string) => ({ x: Number(id) * 10, y: 5 });
 describe('buildScene', () => {
   it('emits one row per vertex and two per edge', () => {
     const scene = buildScene({ graph, position, highlight: NONE });
+
     expect(scene.vertices).toHaveLength(3 * STRIDE);
     expect(scene.edges).toHaveLength(2 * 2 * STRIDE);
     expect([scene.vertices[0], scene.vertices[1]]).toEqual([0, 5]);
@@ -22,6 +23,7 @@ describe('buildScene', () => {
     };
     const { vertices } = buildScene({ graph, position, highlight });
     const row = vertices.slice(STRIDE, 2 * STRIDE);
+
     expect(row[2]).toBeCloseTo(PALETTE[2]![0]);
     expect(row[6]).toBeLessThan(vertices[6]!);
   });
@@ -30,6 +32,7 @@ describe('buildScene', () => {
     const key = edgeKey(vertexId('0'), vertexId('1'), false);
     const highlight: Highlight = { ...NONE, edges: new Set([key]) };
     const scene = buildScene({ graph, position, highlight });
+
     expect(scene.edges[5]).toBeGreaterThan(0.9);
     expect(scene.edges[2 * STRIDE + 5]).toBeLessThan(0.9);
     const hidden = buildScene({
@@ -37,6 +40,7 @@ describe('buildScene', () => {
       position: (id) => (id === '1' ? undefined : position(id)),
       highlight: NONE,
     });
+
     expect(hidden.vertices).toHaveLength(2 * STRIDE);
     expect(hidden.edges).toHaveLength(0);
   });
@@ -44,12 +48,14 @@ describe('buildScene', () => {
   it('uses palette colors for colored edges', () => {
     const key = edgeKey(vertexId('0'), vertexId('1'), false);
     const highlight: Highlight = { ...NONE, edgeColors: new Map([[key, 3]]) };
+
     expect(buildScene({ graph, position, highlight }).edges[2]).toBeCloseTo(PALETTE[3]![0]);
   });
 
   it('adds an arrowhead per edge of a directed graph, pointing at the target', () => {
     const directed = pathGraph(2, { directed: true });
     const { arrows } = buildScene({ graph: directed, position, highlight: NONE });
+
     expect(arrows).toHaveLength(3 * STRIDE);
     expect(arrows[0]).toBeLessThan(10);
     expect(arrows[0]).toBeGreaterThan(arrows[STRIDE]!);
@@ -59,12 +65,14 @@ describe('buildScene', () => {
   it('skips arrowheads for zero-length or unplaced edges', () => {
     const directed = pathGraph(2, { directed: true });
     const same = buildScene({ graph: directed, position: () => ({ x: 1, y: 1 }), highlight: NONE });
+
     expect(same.arrows).toHaveLength(0);
     const missing = buildScene({
       graph: directed,
       position: (id) => (id === '1' ? undefined : position(id)),
       highlight: NONE,
     });
+
     expect(missing.arrows).toHaveLength(0);
   });
 });

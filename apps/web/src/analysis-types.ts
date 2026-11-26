@@ -39,6 +39,7 @@ export interface Highlight {
 
 export function edgeKey(source: VertexId, target: VertexId, isDirected: boolean): string {
   const ordered = isDirected || source <= target ? [source, target] : [target, source];
+
   return JSON.stringify(ordered);
 }
 

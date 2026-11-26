@@ -20,6 +20,7 @@ export function splitSections(text: string): Sections {
     lines.filter(
       (line, index) => line !== '' && headers[index] === '' && names.includes(sectionOf(index)),
     );
+
   return {
     directed: headers.includes('*arcs'),
     vertices: inSection(['*vertices']),

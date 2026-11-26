@@ -9,11 +9,13 @@ export function contractEdge(graph: Graph, keep: VertexId, merge: VertexId): Gra
   if (!graph.hasEdge(keep, merge)) {
     throw new GraphError(`No edge ${keep} — ${merge} to contract`);
   }
+
   const rename = (id: VertexId): VertexId => (id === merge ? keep : id);
   const edges = graph
     .edges()
     .map((edge): Edge => ({ ...edge, source: rename(edge.source), target: rename(edge.target) }))
     .filter((edge) => edge.source !== edge.target);
   const vertices = graph.vertices().filter((id) => id !== merge);
+
   return assembleUnique(graph.directed, vertices, edges);
 }

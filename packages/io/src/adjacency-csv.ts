@@ -21,8 +21,10 @@ export function fromAdjacencyCsv(text: string, options: AdjacencyCsvOptions = {}
     .map((line) => line.trim())
     .filter((line) => line !== '')
     .map((line) => line.split(',').map(Number));
+
   if (rows.some((row) => row.some((cell) => !Number.isFinite(cell)))) {
     throw new ParseError('Adjacency CSV contains a non-numeric cell');
   }
+
   return graphFromAdjacency(Matrix.fromRows(rows), options);
 }

@@ -13,12 +13,14 @@ function assertSymmetric(matrix: Matrix): void {
 /** Eigenvalues in ascending order of a symmetric matrix (Jacobi method, O(n³) per sweep). */
 export function eigenvalues(matrix: Matrix): readonly number[] {
   assertSymmetric(matrix);
+
   return jacobiEigenvalues(matrix.toArray(), matrix.rows);
 }
 
 /** Eigenvalues (ascending) with their unit eigenvectors, for a symmetric matrix. */
 export function eigenDecomposition(matrix: Matrix): Eigen {
   assertSymmetric(matrix);
+
   return jacobiEigen(matrix.toArray(), matrix.rows);
 }
 
@@ -27,6 +29,7 @@ export function adjacencySpectrum(graph: Graph, options: MatrixOptions = {}): re
   if (graph.directed) {
     throw new GraphError('adjacencySpectrum requires an undirected graph');
   }
+
   return eigenvalues(adjacencyMatrix(graph, options));
 }
 

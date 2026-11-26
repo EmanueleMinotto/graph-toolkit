@@ -21,6 +21,7 @@ export function toJson(graph: Graph): string {
     vertices: graph.vertices(),
     edges: graph.edges(),
   };
+
   return JSON.stringify(document);
 }
 
@@ -50,14 +51,17 @@ const isGraphDocument = (value: unknown): value is JsonGraph =>
 
 function parseDocument(text: string): JsonGraph {
   const value: unknown = JSON.parse(text);
+
   if (!isGraphDocument(value)) {
     throw new ParseError('Invalid graph JSON document');
   }
+
   return value;
 }
 
 export function fromJson(text: string): Graph {
   const document = parseDocument(text);
   const edges = document.edges.map((edge): ParsedEdge => ({ ...edge, weight: edge.weight ?? 1 }));
+
   return assembleGraph({ ...document, edges });
 }

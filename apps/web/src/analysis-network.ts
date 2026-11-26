@@ -42,7 +42,9 @@ function flow(solve: (graph: Graph, source: VertexId, sink: VertexId) => number,
     if (from === undefined || to === undefined) {
       return { ...NONE, summary: 'Pick source and sink.' };
     }
+
     const value = solve(graph, from, to);
+
     return {
       ...NONE,
       colors: new Map([
@@ -56,6 +58,7 @@ function flow(solve: (graph: Graph, source: VertexId, sink: VertexId) => number,
 
 function matching(graph: Graph): Highlight {
   const { pairs, size } = maximumBipartiteMatching(graph);
+
   return {
     ...NONE,
     edges: new Set(pairs.map(([a, b]) => edgeKey(a, b, graph.directed))),
@@ -71,6 +74,7 @@ function scored(name: string, compute: (graph: Graph, parameter: number | undefi
     const entries = [...compute(graph, count)].toSorted(([, left], [, right]) => right - left);
     const [best] = entries;
     const top = best?.[1] ?? 0;
+
     return {
       ...NONE,
       sizes: new Map(entries.map(([id, score]) => [id, top > 0 ? score / top : 0])),
@@ -82,6 +86,7 @@ function scored(name: string, compute: (graph: Graph, parameter: number | undefi
 
 function groupsOf(groups: Groups, summary: string): Highlight {
   const ordered = groups.toSorted((left, right) => right.length - left.length);
+
   return {
     ...NONE,
     colors: new Map(groups.flatMap((members, index) => members.map((id) => [id, index] as const))),
@@ -97,12 +102,14 @@ function communityGroups(graph: Graph, { count = DEFAULT_ROUNDS }: Selection): H
   const groups = [...Map.groupBy(assignment, ([, group]) => group).values()].map((entries) =>
     entries.map(([id]) => id),
   );
+
   return groupsOf(groups, `${groups.length} communities`);
 }
 
 function biggestClique(graph: Graph): Highlight {
   const clique = maximumClique(graph);
   const pairs = clique.flatMap((a, index) => clique.slice(index + 1).map((b) => [a, b] as const));
+
   return {
     ...NONE,
     colors: new Map(clique.map((id) => [id, 1])),
@@ -127,6 +134,7 @@ export const networkAnalyses: Readonly<
   communities: communityGroups,
   'maximal-cliques': (graph) => {
     const cliques = maximalCliques(graph);
+
     return groupsOf(cliques, `${cliques.length} maximal cliques`);
   },
   'maximum-clique': (graph) => biggestClique(graph),

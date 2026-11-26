@@ -8,6 +8,7 @@ const MAX_DISPLAY = 40;
 
 function show(graph: Graph, summary: string, build: () => Matrix): Highlight {
   const size = graph.vertexCount;
+
   return size > MAX_DISPLAY
     ? { ...NONE, summary: `${size} × ${size} is too large to display (limit ${MAX_DISPLAY})` }
     : { ...NONE, summary, matrix: { labels: graph.vertices(), rows: build().toRows() } };

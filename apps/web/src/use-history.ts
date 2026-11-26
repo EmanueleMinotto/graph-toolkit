@@ -25,6 +25,7 @@ export function useHistory<T>(initial: () => T): Timeline<T> {
     future: [],
   }));
   const { past, present, future } = history;
+
   return {
     present,
     canUndo: past.length > 0,
@@ -34,16 +35,20 @@ export function useHistory<T>(initial: () => T): Timeline<T> {
     },
     undo: () => {
       const previous = past.at(-1);
+
       if (previous === undefined) {
         return;
       }
+
       setHistory({ past: past.slice(0, -1), present: previous, future: [present, ...future] });
     },
     redo: () => {
       const [next, ...rest] = future;
+
       if (next === undefined) {
         return;
       }
+
       setHistory({ past: [...past, present], present: next, future: rest });
     },
   };

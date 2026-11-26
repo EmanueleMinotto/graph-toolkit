@@ -34,12 +34,15 @@ describe('i18n', () => {
     expect(t('Distance 5 via a → b')).toBe('Distanza 5 passando per a → b');
     expect(t('No Eulerian trail.')).toBe('Nessun cammino euleriano.');
     expect(t('Eulerian trail found')).toBe('Cammino euleriano trovato');
+
     expect(t('Bridges (cut edges) (needs an undirected graph)')).toBe(
       'Ponti (archi di taglio) (richiede un grafo non orientato)',
     );
+
     expect(t('Click vertices to choose start (a) and target (b).')).toBe(
       "Clicca i vertici per scegliere la partenza (a) e l'arrivo (b).",
     );
+
     expect(t('Petersen graph')).toBe('Grafo di Petersen');
   });
 });

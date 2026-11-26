@@ -51,12 +51,15 @@ const direction: Rule = (graph, { directed }) => {
   if (directed === undefined || directed === graph.directed) {
     return [];
   }
+
   const expected = directed ? 'directed' : 'undirected';
+
   return issue('direction', `Expected a ${expected} graph`);
 };
 
 const selfLoops: Rule = (graph, { allowSelfLoops = true }) => {
   const loops = graph.edges().filter((edge) => edge.source === edge.target);
+
   return allowSelfLoops || loops.length === 0
     ? []
     : issue(
@@ -69,6 +72,7 @@ const selfLoops: Rule = (graph, { allowSelfLoops = true }) => {
 const isolated: Rule = (graph, { allowIsolated = true }) => {
   const touched = new Set(graph.edges().flatMap((edge) => [edge.source, edge.target]));
   const lonely = graph.vertices().filter((id) => !touched.has(id));
+
   return allowIsolated || lonely.length === 0
     ? []
     : issue('isolated-vertex', `${lonely.length} isolated vertex(es)`, lonely);
@@ -78,10 +82,13 @@ const connected: Rule = (graph, { connected: isRequired }) => {
   if (isRequired !== true || graph.vertexCount < 2) {
     return [];
   }
+
   const sets = new DisjointSet(graph.vertexCount);
+
   for (const edge of graph.edges()) {
     sets.union(graph.indexOf(edge.source), graph.indexOf(edge.target));
   }
+
   return sets.setCount() === 1 ? [] : issue('disconnected', `${sets.setCount()} components`);
 };
 
@@ -96,6 +103,7 @@ const sizes: Rule = (graph, { maxVertices, maxEdges }) => [
 
 const vertexIds: Rule = (graph, { vertexIdPattern }) => {
   const bad = graph.vertices().filter((id) => vertexIdPattern?.test(id) === false);
+
   return bad.length === 0
     ? []
     : issue('vertex-id', `${bad.length} id(s) do not match the pattern`, bad);
@@ -104,12 +112,14 @@ const vertexIds: Rule = (graph, { vertexIdPattern }) => {
 function violatesWeight(weight: number, rule: WeightRule): boolean {
   const isTooLow = rule.min !== undefined && weight < rule.min;
   const isTooHigh = rule.max !== undefined && weight > rule.max;
+
   return isTooLow || isTooHigh || (rule.isInteger === true && !Number.isSafeInteger(weight));
 }
 
 const weights: Rule = (graph, { weight: rule }) => {
   const bad =
     rule === undefined ? [] : graph.edges().filter((edge) => violatesWeight(edge.weight, rule));
+
   return bad.length === 0
     ? []
     : issue(
@@ -146,6 +156,7 @@ export class ValidationError extends GraphError {
 
 export function assertValidGraph(graph: Graph, schema: GraphSchema): void {
   const issues = validateGraph(graph, schema);
+
   if (issues.length > 0) {
     throw new ValidationError(issues);
   }

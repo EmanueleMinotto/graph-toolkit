@@ -17,6 +17,7 @@ export function toDimacs(graph: Graph): string {
       (edge) =>
         `${letter} ${graph.indexOf(edge.source) + 1} ${graph.indexOf(edge.target) + 1} ${edge.weight}`,
     );
+
   return [`p ${kind} ${graph.vertexCount} ${graph.edgeCount}`, ...rows, ''].join('\n');
 }
 
@@ -26,9 +27,11 @@ function parseRow(line: string, count: number): ParsedEdge {
   const parsed = weight === undefined ? 1 : Number(weight);
   const isVertex = (value: number): boolean =>
     Number.isSafeInteger(value) && value >= 1 && value <= count;
+
   if (!isVertex(source) || !isVertex(target) || !Number.isFinite(parsed)) {
     throw new ParseError(`Invalid DIMACS line: ${line}`);
   }
+
   return { source: String(source), target: String(target), weight: parsed };
 }
 
@@ -40,10 +43,13 @@ export function fromDimacs(text: string): Graph {
     .filter((line) => line !== '' && !line.startsWith('c'));
   const header = lines.find((line) => line.startsWith('p '))?.split(/\s+/u, HEADER_FIELDS);
   const count = Number(header?.[2]);
+
   if (header === undefined || !Number.isSafeInteger(count) || count < 0) {
     throw new ParseError('DIMACS document needs a "p <kind> <vertices> <edges>" line');
   }
+
   const rows = lines.filter((line) => /^[ea]\s/u.test(line)).map((line) => parseRow(line, count));
   const vertices = Array.from({ length: count }, (_, index) => String(index + 1));
+
   return assembleGraph({ directed: header[1] === 'sp', vertices, edges: rows });
 }

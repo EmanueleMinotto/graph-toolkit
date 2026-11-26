@@ -12,9 +12,11 @@ export function buildResidual(csr: Csr, vertexCount: number): Residual {
   const to = new Uint32Array(2 * arcCount);
   const capacity = new Float64Array(2 * arcCount);
   const adjacency = Array.from({ length: vertexCount }, () => [] as number[]);
+
   for (let vertex = 0; vertex < vertexCount; vertex++) {
     for (let slot = csr.offsets[vertex]!; slot < csr.offsets[vertex + 1]!; slot++) {
       const forward = 2 * slot;
+
       to[forward] = csr.targets[slot]!;
       to[forward + 1] = vertex;
       capacity[forward] = csr.weights[slot]!;
@@ -22,6 +24,7 @@ export function buildResidual(csr: Csr, vertexCount: number): Residual {
       adjacency[csr.targets[slot]!]!.push(forward + 1);
     }
   }
+
   return { to, capacity, adjacency };
 }
 
@@ -38,11 +41,14 @@ interface Search {
 
 function explore(residual: Residual, vertex: number, search: Search): void {
   const edges = residual.adjacency[vertex]!;
+
   for (const edge of edges) {
     const target = residual.to[edge]!;
+
     if (search.visited[target] === 1 || residual.capacity[edge]! <= 0) {
       continue;
     }
+
     search.visited[target] = 1;
     search.parentEdge[target] = edge;
     search.queue.push(target);
@@ -57,35 +63,44 @@ function findAugmentingPath(residual: Residual, terminals: Terminals): Int32Arra
     visited: new Uint8Array(size),
     queue: [terminals.source],
   };
+
   search.visited[terminals.source] = 1;
+
   for (let head = 0; head < search.queue.length && search.visited[terminals.sink] === 0; head++) {
     explore(residual, search.queue[head]!, search);
   }
+
   return search.visited[terminals.sink] === 1 ? search.parentEdge : new Int32Array(0);
 }
 
 function pathEdges(residual: Residual, parentEdge: Int32Array, terminals: Terminals): number[] {
   const edges: number[] = [];
+
   for (let vertex = terminals.sink; vertex !== terminals.source;) {
     const edge = parentEdge[vertex]!;
+
     edges.push(edge);
     vertex = residual.to[edge ^ 1]!;
   }
+
   return edges;
 }
 
 function pushFlow(residual: Residual, edges: readonly number[]): number {
   const bottleneck = Math.min(...edges.map((edge) => residual.capacity[edge]!));
+
   for (const edge of edges) {
     residual.capacity[edge]! -= bottleneck;
     residual.capacity[edge ^ 1]! += bottleneck;
   }
+
   return bottleneck;
 }
 
 /** Pushes augmenting paths until none is left; mutates `residual`. Returns the flow value. */
 export function saturate(residual: Residual, terminals: Terminals): number {
   let total = 0;
+
   for (
     let path = findAugmentingPath(residual, terminals);
     path.length > 0;
@@ -93,6 +108,7 @@ export function saturate(residual: Residual, terminals: Terminals): number {
   ) {
     total += pushFlow(residual, pathEdges(residual, path, terminals));
   }
+
   return total;
 }
 
@@ -104,20 +120,27 @@ export function edmondsKarp(csr: Csr, vertexCount: number, terminals: Terminals)
 /** Vertices reachable from the source in the residual graph after a maximum flow. */
 export function sourceSide(csr: Csr, vertexCount: number, terminals: Terminals): Uint8Array {
   const residual = buildResidual(csr, vertexCount);
+
   saturate(residual, terminals);
   const reached = new Uint8Array(vertexCount);
+
   reached[terminals.source] = 1;
   const queue = [terminals.source];
+
   for (let head = 0; head < queue.length; head++) {
     const outgoing = residual.adjacency[queue[head]!]!;
+
     for (const edge of outgoing) {
       const target = residual.to[edge]!;
+
       if (reached[target] === 1 || residual.capacity[edge]! <= 0) {
         continue;
       }
+
       reached[target] = 1;
       queue.push(target);
     }
   }
+
   return reached;
 }

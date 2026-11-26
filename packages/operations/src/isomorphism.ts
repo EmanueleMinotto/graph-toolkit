@@ -17,6 +17,7 @@ export function findGraphIsomorphism(
   const image = isComparable
     ? findIsomorphism([left.csr, right.csr], left.vertexCount, options.signal)
     : undefined;
+
   return image === undefined
     ? undefined
     : new Map(left.vertices().map((id, index) => [id, right.vertexAt(imageOf(image, index))]));

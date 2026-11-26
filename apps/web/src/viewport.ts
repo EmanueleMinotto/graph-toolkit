@@ -30,6 +30,7 @@ export const toContent = (view: View, point: Pt): Pt => ({
 export function zoomAt(view: View, factor: number, anchor: Pt): View {
   const scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, view.scale * factor));
   const content = toContent(view, anchor);
+
   return { scale, x: anchor.x - content.x * scale, y: anchor.y - content.y * scale };
 }
 

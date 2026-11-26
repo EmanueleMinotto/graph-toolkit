@@ -14,6 +14,7 @@ export interface ToolState {
 export function useTool(): ToolState {
   const [kind, setKind] = useState<AnalysisKind>('none');
   const [count, setCount] = useState(1);
+
   return {
     kind,
     count,

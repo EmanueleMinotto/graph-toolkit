@@ -10,10 +10,12 @@ export function maximumMatching(graph: Graph): Matching {
   if (graph.directed) {
     throw new GraphError('maximumMatching requires an undirected graph');
   }
+
   const mate = blossomMatching(graph.csr, graph.vertexCount);
   const pairs = [...mate.keys()]
     .filter((vertex) => vertex < valueAt(mate, vertex))
     .map((vertex) => [graph.vertexAt(vertex), graph.vertexAt(valueAt(mate, vertex))] as const);
+
   return { pairs, size: pairs.length };
 }
 
@@ -29,11 +31,14 @@ export interface Assignment {
  */
 export function minimumCostAssignment(costs: readonly (readonly number[])[]): Assignment {
   const width = costs[0]?.length ?? 0;
+
   if (costs.some((row) => row.length !== width) || costs.length > width) {
     throw new GraphError('cost matrix must be rectangular with rows <= columns');
   }
+
   const assignment = hungarian(costs);
   const cost = costs.reduce((sum, row, index) => sum + valueAt(row, valueAt(assignment, index)), 0);
+
   return { assignment, cost };
 }
 
@@ -47,10 +52,13 @@ export interface MinCostFlowOptions {
 function arcsOf(graph: Graph, options: MinCostFlowOptions): readonly Arc[] {
   return graph.edges().map((edge): Arc => {
     const capacity = options.capacity(edge);
+
     if (capacity < 0) {
       throw new GraphError('capacities must be non-negative');
     }
+
     const [from, to] = [graph.indexOf(edge.source), graph.indexOf(edge.target)];
+
     return { from, to, capacity, cost: edge.weight };
   });
 }
@@ -67,9 +75,11 @@ export function minCostFlow(
   if (!graph.directed) {
     throw new GraphError('minCostFlow requires a directed graph');
   }
+
   if (ends.source === ends.sink) {
     throw new GraphError('source and sink must differ');
   }
+
   return minCostFlowKernel({
     count: graph.vertexCount,
     arcs: arcsOf(graph, options),

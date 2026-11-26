@@ -4,6 +4,7 @@ import importX from 'eslint-plugin-import-x';
 import sonarjs from 'eslint-plugin-sonarjs';
 import unicorn from 'eslint-plugin-unicorn';
 import vitest from '@vitest/eslint-plugin';
+import stylistic from '@stylistic/eslint-plugin';
 import prettier from 'eslint-config-prettier';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
@@ -59,6 +60,16 @@ const readability = {
   'import-x/no-useless-path-segments': 'error',
   'import-x/no-mutable-exports': 'error',
   'import-x/no-namespace': 'error',
+  '@stylistic/padding-line-between-statements': [
+    'error',
+    { blankLine: 'always', prev: '*', next: 'return' },
+    { blankLine: 'always', prev: ['const', 'let'], next: '*' },
+    { blankLine: 'any', prev: ['const', 'let'], next: ['const', 'let'] },
+    { blankLine: 'always', prev: '*', next: ['if', 'for', 'while', 'try', 'switch'] },
+    { blankLine: 'always', prev: ['if', 'for', 'while', 'try', 'switch'], next: '*' },
+    { blankLine: 'always', prev: 'multiline-expression', next: '*' },
+    { blankLine: 'always', prev: '*', next: 'multiline-expression' },
+  ],
   'no-negated-condition': 'error',
   'no-continue': 'error',
   'no-multi-assign': 'error',
@@ -117,7 +128,7 @@ export default tseslint.config(
       },
     },
     settings: { 'import-x/resolver-next': [createTypeScriptImportResolver()] },
-    plugins: { functional },
+    plugins: { functional, '@stylistic': stylistic },
     rules: {
       ...calisthenics,
       ...readability,

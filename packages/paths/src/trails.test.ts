@@ -11,12 +11,15 @@ const build = (
   directed = false,
 ): Graph => {
   const builder = new GraphBuilder({ directed });
+
   for (let index = 0; index < count; index++) {
     builder.addVertex(name(index));
   }
+
   for (const [from, to, weight] of arcs) {
     builder.addEdge(name(from), name(to), weight);
   }
+
   return builder.build();
 };
 
@@ -33,6 +36,7 @@ describe('eulerianTrail', () => {
       ],
       true,
     );
+
     expect(eulerianTrail(directed)).toHaveLength(4);
     const open = build(
       3,
@@ -42,6 +46,7 @@ describe('eulerianTrail', () => {
       ],
       true,
     );
+
     expect(eulerianTrail(open)).toEqual([name(0), name(1), name(2)]);
   });
 
@@ -55,6 +60,7 @@ describe('eulerianTrail', () => {
       ],
       true,
     );
+
     expect(eulerianTrail(doubled)).toBeUndefined();
     expect(eulerianTrail(completeGraph(4))).toBeUndefined();
     expect(eulerianTrail(build(3, []))).toBeUndefined();
@@ -66,6 +72,7 @@ describe('eulerianTrail', () => {
       [4, 5, 1],
       [5, 3, 1],
     ]);
+
     expect(eulerianTrail(twoCycles)).toBeUndefined();
     const badDirected = build(
       3,
@@ -75,6 +82,7 @@ describe('eulerianTrail', () => {
       ],
       true,
     );
+
     expect(eulerianTrail(badDirected)).toBeUndefined();
     const skew = build(
       4,
@@ -85,6 +93,7 @@ describe('eulerianTrail', () => {
       ],
       true,
     );
+
     expect(eulerianTrail(skew)).toBeUndefined();
   });
 });

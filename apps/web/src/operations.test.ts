@@ -31,9 +31,11 @@ describe('graph operations', () => {
       .addEdge(id('b'), id('a'))
       .build();
     const input = { other: pathGraph(2), picked: [], text: '' };
+
     expect(applyOperation('remove-loops', loops, input).edgeCount).toBe(1);
     expect(applyOperation('canonicalize', loops, input).vertices()).toEqual(['a', 'b']);
     expect(applyOperation('reindex', loops, input).vertices()).toEqual(['0', '1']);
+
     expect(applyOperation('relabel', loops, { ...input, text: 'n' }).vertices()).toEqual([
       'nb',
       'na',
@@ -49,6 +51,7 @@ describe('graph operations', () => {
   it('refuses results that would be too large', () => {
     const big = completeGraph(80);
     const input = { other: big, picked: [], text: '' };
+
     expect(() => applyOperation('cartesian', big, input)).toThrow('too large');
     expect(() => applyOperation('tensor', big, input)).toThrow('too large');
     expect(() => applyOperation('line-graph', big, input)).toThrow('too large');
@@ -66,11 +69,14 @@ describe('isomorphism analysis', () => {
 
   it('maps isomorphic graphs and rejects different ones', () => {
     const same = analyze('isomorphism', cycleGraph(5), { ...none, other: cycleGraph(5) });
+
     expect(same.summary).toBe('Isomorphic to the second graph');
     expect(same.table).toHaveLength(5);
+
     expect(
       analyze('isomorphism', cycleGraph(5), { ...none, other: pathGraph(5) }).summary,
     ).toContain('Not');
+
     expect(analyze('isomorphism', cycleGraph(5), none).summary).toContain('second graph first');
   });
 });

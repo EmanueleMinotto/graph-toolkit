@@ -21,7 +21,9 @@ export function useLayout(scene: Scene, push: (next: Scene) => void): LayoutStat
     if (scene.pinned !== undefined) {
       push({ graph: scene.graph, pinned: undefined });
     }
+
     setLayoutKind(next);
   };
+
   return { layoutKind, layout, changeLayout };
 }

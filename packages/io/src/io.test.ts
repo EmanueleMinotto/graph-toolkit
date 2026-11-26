@@ -59,6 +59,7 @@ describe.each([false, true])('round trips (directed=%s)', (directed) => {
   it('edge list keeps connected vertices', () => {
     const plain = cycleGraph(4, { directed });
     const parsed = fromEdgeList(toEdgeList(plain), { isDirected: directed });
+
     expect(parsed.directed).toBe(directed);
     expect(parsed.vertices().toSorted(byName)).toEqual(plain.vertices().toSorted(byName));
     expect(parsed.edgeCount).toBe(plain.edgeCount);
@@ -70,8 +71,10 @@ describe('json', () => {
     const graph = fromJson(
       '{"directed":false,"vertices":["x"],"edges":[{"source":"x","target":"y"}]}',
     );
+
     expect(graph.edges()[0]?.weight).toBe(1);
     expect(() => fromJson('{"directed":1}')).toThrow(ParseError);
+
     expect(() => fromJson('{"directed":true,"vertices":[],"edges":[{"source":1}]}')).toThrow(
       ParseError,
     );
@@ -81,6 +84,7 @@ describe('json', () => {
 describe('edge list', () => {
   it('parses comments, spaces and optional weights', () => {
     const graph = fromEdgeList('# header\na b\nb,c,4 # tail\n\n');
+
     expect(graph.edgeCount).toBe(2);
     expect(graph.edges().map((edge) => edge.weight)).toEqual([1, 4]);
   });
@@ -98,6 +102,7 @@ describe('dot', () => {
     const graph = fromDot(
       'strict digraph G { /* c */ rankdir=LR; x; "y z" -> x -> w [weight="3"] // end\n}',
     );
+
     expect(graph.directed).toBe(true);
     expect(graph.vertices()).toEqual(['x', 'y z', 'w']);
     expect(graph.edgeCount).toBe(2);
@@ -133,6 +138,7 @@ describe('xml formats', () => {
 describe('mermaid and adjacency csv', () => {
   it('exports mermaid flowcharts', () => {
     const text = toMermaid(pathGraph(2, { directed: true }));
+
     expect(text).toContain('n0 -->|1| n1');
     expect(toMermaid(sample(false))).toContain('---');
     expect(toMermaid(sample(false))).toContain('#quot;');
@@ -140,6 +146,7 @@ describe('mermaid and adjacency csv', () => {
 
   it('round trips adjacency csv and rejects bad cells', () => {
     const cycle = cycleGraph(4);
+
     expect(toAdjacencyCsv(fromAdjacencyCsv(toAdjacencyCsv(cycle)))).toBe(toAdjacencyCsv(cycle));
     expect(fromAdjacencyCsv('0,1\n0,0', { isDirected: true }).directed).toBe(true);
     expect(() => fromAdjacencyCsv('0,x\nx,0')).toThrow(ParseError);

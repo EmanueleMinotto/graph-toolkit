@@ -81,6 +81,7 @@ function limited(size: number, graph: () => Graph): Graph {
   if (size > MAX_RESULT) {
     throw new Error(`Result too large (${size} > ${MAX_RESULT})`);
   }
+
   return graph();
 }
 
@@ -93,9 +94,11 @@ const keptIds = (text: string): readonly VertexId[] =>
 
 function subgraph(graph: Graph, text: string): Graph {
   const keep = keptIds(text);
+
   if (keep.length === 0) {
     throw new Error('Enter the vertices to keep, separated by commas');
   }
+
   return inducedSubgraph(graph, keep);
 }
 
@@ -103,6 +106,7 @@ function contraction(graph: Graph, [keep, merge]: readonly VertexId[]): Graph {
   if (keep === undefined || merge === undefined) {
     throw new Error('Pick the two ends of the edge');
   }
+
   return contractEdge(graph, keep, merge);
 }
 

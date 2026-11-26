@@ -19,6 +19,7 @@ const keyOf = (left: number, right: number): string =>
 function embedPath(state: Embedding, path: readonly number[]): void {
   for (const [index, vertex] of path.entries()) {
     state.vertices.add(vertex);
+
     if (index > 0) {
       state.edges.add(keyOf(path[index - 1]!, vertex));
     }
@@ -34,6 +35,7 @@ function isFreeChord({ vertices, edges }: Embedding, left: number, right: number
 /** Unembedded edges whose endpoints are both already embedded. */
 function chordFragments(state: Embedding): Fragment[] {
   const chords: Fragment[] = [];
+
   for (const [vertex, around] of state.adjacency) {
     for (const next of around) {
       if (isFreeChord(state, vertex, next)) {
@@ -41,6 +43,7 @@ function chordFragments(state: Embedding): Fragment[] {
       }
     }
   }
+
   return chords;
 }
 
@@ -52,7 +55,9 @@ interface Component {
 function collectComponent(state: Embedding, start: number, seen: Set<number>): Component {
   const members = new Set([start]);
   const attachments = new Set<number>();
+
   seen.add(start);
+
   for (const member of members) {
     for (const next of state.adjacency.get(member)!) {
       if (state.vertices.has(next)) {
@@ -63,6 +68,7 @@ function collectComponent(state: Embedding, start: number, seen: Set<number>): C
       }
     }
   }
+
   return { members, attachments };
 }
 
@@ -72,18 +78,22 @@ function componentFragment(state: Embedding, { members, attachments }: Component
     isGoal: (vertex) => attachments.has(vertex) && vertex !== first,
     isBlocked: (source, target) => source === first && !members.has(target),
   });
+
   return { attachments: [...attachments], path };
 }
 
 function fragmentsOf(state: Embedding): Fragment[] {
   const seen = new Set<number>();
   const fragments = chordFragments(state);
+
   for (const start of state.adjacency.keys()) {
     if (state.vertices.has(start) || seen.has(start)) {
       continue;
     }
+
     fragments.push(componentFragment(state, collectComponent(state, start, seen)));
   }
+
   return fragments;
 }
 
@@ -92,16 +102,19 @@ const containsAll = (face: readonly number[], vertices: readonly number[]): bool
 
 function cyclicSlice(face: readonly number[], from: number, to: number): number[] {
   const out = [face[from]!];
+
   for (let index = from; index !== to;) {
     index = (index + 1) % face.length;
     out.push(face[index]!);
   }
+
   return out;
 }
 
 function splitFace(face: readonly number[], path: readonly number[]): number[][] {
   const [start, end] = [face.indexOf(path[0]!), face.indexOf(path.at(-1)!)];
   const interior = path.slice(1, -1);
+
   return [
     [...cyclicSlice(face, start, end), ...interior.toReversed()],
     [...cyclicSlice(face, end, start), ...interior],
@@ -116,12 +129,16 @@ function step(state: Embedding): boolean {
   }));
   const [pick] = options.toSorted((left, right) => left.faces.length - right.faces.length);
   const face = pick?.faces[0];
+
   if (pick === undefined || face === undefined) {
     return false;
   }
+
   embedPath(state, pick.fragment.path);
   const rest = state.faces.filter((other) => other !== face);
+
   state.faces = [...rest, ...splitFace(face, pick.fragment.path)];
+
   return true;
 }
 
@@ -135,18 +152,23 @@ function cycleThrough(adjacency: Adjacency, edge: Pair): number[] {
 /** Demoucron–Malgrange–Pertuiset planarity test for one biconnected block. */
 export function isBlockPlanar(blockEdges: readonly Pair[]): boolean {
   const adjacency = new Map<number, Set<number>>();
+
   for (const [left, right] of blockEdges) {
     adjacency.set(left, (adjacency.get(left) ?? new Set()).add(right));
     adjacency.set(right, (adjacency.get(right) ?? new Set()).add(left));
   }
+
   const cycle = cycleThrough(adjacency, blockEdges[0]!);
   const faces = [cycle, cycle.toReversed()];
   const state: Embedding = { adjacency, vertices: new Set(), edges: new Set(), faces };
+
   embedPath(state, [...cycle, cycle[0]!]);
+
   while (state.edges.size < blockEdges.length) {
     if (!step(state)) {
       return false;
     }
   }
+
   return true;
 }

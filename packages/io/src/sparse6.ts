@@ -6,9 +6,11 @@ export function toSparse6(graph: Graph): string {
   if (graph.directed) {
     throw new GraphError('sparse6 requires an undirected graph');
   }
+
   const pairs = graph
     .edges()
     .map((edge) => [graph.indexOf(edge.source), graph.indexOf(edge.target)] as const);
+
   return encodeSparse6(graph.vertexCount, pairs);
 }
 
@@ -17,11 +19,14 @@ export function fromSparse6(line: string): Graph {
   const { count, edges } = decodeSparse6(line);
   const builder = new GraphBuilder({ directed: false });
   const names = Array.from({ length: count }, (_, index) => vertexId(String(index)));
+
   for (const name of names) {
     builder.addVertex(name);
   }
+
   for (const [from, to] of edges) {
     builder.addEdge(vertexId(String(from)), vertexId(String(to)));
   }
+
   return builder.build();
 }

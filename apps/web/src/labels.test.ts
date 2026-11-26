@@ -15,6 +15,7 @@ describe('visibleLabels', () => {
   it('labels the vertices on screen once zoomed in, at their screen position', () => {
     const zoomed = { x: 10, y: 20, scale: 2 };
     const labels = visibleLabels({ vertices: ids, position, view: zoomed, box });
+
     expect(labels.map((label) => label.text)).toEqual(['a', 'b']);
     expect(labels[0]?.at).toEqual({ x: 210, y: 220 });
   });
@@ -27,6 +28,7 @@ describe('visibleLabels', () => {
       view: zoomed,
       box,
     });
+
     expect(labels.map((label) => label.text)).toEqual(['b']);
   });
 });

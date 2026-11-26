@@ -37,11 +37,13 @@ describe('path analyses', () => {
       .addEdge(zero, one, 3)
       .build();
     const result = analyze('distances', split, from(zero));
+
     expect(result.table).toEqual([
       ['0', '0'],
       ['1', '3'],
       ['2', '∞'],
     ]);
+
     expect(result.summary).toContain('2 of 3');
     expect(result.edges.size).toBe(1);
     expect(analyze('distances', split, none).summary).toContain('Pick');
@@ -56,13 +58,16 @@ describe('path analyses', () => {
       .addEdge(zero, one, -1)
       .addEdge(one, zero, -1)
       .build();
+
     expect(analyze('bellman-ford', loop, from(zero)).summary).toContain('Negative cycle');
   });
 
   it('computes all pairs and caps the table', () => {
     const small = analyze('floyd-warshall', pathGraph(3), none);
+
     expect(small.table).toContainEqual(['0 → 2', '2']);
     const big = analyze('floyd-warshall', completeGraph(30), none);
+
     expect(big.table).toHaveLength(500);
     expect(big.summary).toContain('870 ordered pairs, first 500 shown');
   });
@@ -71,13 +76,16 @@ describe('path analyses', () => {
     const graph = randomGraph(40, { probability: 0.1, seed: 5 });
     const [source, ...others] = graph.vertices();
     const tree = dijkstra(graph, source!);
+
     for (const target of others.slice(0, 10)) {
       const result = analyze('astar', graph, between(source!, target));
       const expected = tree.distanceTo(target);
+
       expect(result.summary).toContain(
         expected === Infinity ? 'Unreachable' : `distance ${expected} `,
       );
     }
+
     expect(analyze('astar', graph, from(source!)).summary).toContain('Pick');
   });
 
@@ -85,6 +93,7 @@ describe('path analyses', () => {
     expect(
       analyze('astar', cycleGraph(5, { directed: true }), between(zero, vertexId('4'))).summary,
     ).toContain('distance 4');
+
     expect(
       analyze(
         'astar',
@@ -96,13 +105,17 @@ describe('path analyses', () => {
 
   it('lists k shortest paths, cheapest first', () => {
     const result = analyze('k-shortest', cycleGraph(4), { ...between(zero, two), count: 5 });
+
     expect(result.table?.map(([, path]) => path)).toEqual(['0 → 1 → 2', '0 → 3 → 2']);
     expect(result.summary).toBe('2 loopless paths, best 2');
+
     expect(
       analyze('k-shortest', cycleGraph(4), { ...between(zero, two), count: 1 }).summary,
     ).toContain('1 loopless path,');
+
     expect(analyze('k-shortest', cycleGraph(4), between(zero, two)).table).toHaveLength(2);
     const split = new GraphBuilder().addVertex(zero).addVertex(one).build();
+
     expect(analyze('k-shortest', split, between(zero, one)).summary).toBe('Unreachable.');
     expect(analyze('k-shortest', split, from(zero)).summary).toContain('Pick');
   });

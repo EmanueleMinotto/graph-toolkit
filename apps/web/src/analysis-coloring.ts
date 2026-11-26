@@ -15,6 +15,7 @@ function vertexColoring(name: string, solve: (graph: Graph) => Coloring) {
   return (graph: Graph): Highlight => {
     const result = solve(graph);
     const check = isProperColoring(graph, result) ? 'proper' : 'NOT proper';
+
     return {
       ...NONE,
       colors: new Map(result.colors),
@@ -26,6 +27,7 @@ function vertexColoring(name: string, solve: (graph: Graph) => Coloring) {
 
 function edgeColors(graph: Graph): Highlight {
   const result = edgeColoring(graph);
+
   return {
     ...NONE,
     edgeColors: new Map(

@@ -18,9 +18,11 @@ function undirectedBlocks(graph: Graph, name: string): readonly (readonly Pair[]
   if (graph.directed) {
     throw new GraphError(`${name} requires an undirected graph`);
   }
+
   const pairs = graph
     .edges()
     .map((edge): Pair => [graph.indexOf(edge.source), graph.indexOf(edge.target)]);
+
   return biconnectedBlocks(symmetricAdjacency(graph.vertexCount, pairs));
 }
 
@@ -57,12 +59,14 @@ export function kCores(graph: Graph): Scores {
 /** Local clustering coefficient (closed triangles / possible); edge directions ignored. */
 export function clusteringCoefficients(graph: Graph): Scores {
   const adjacency = symmetricSets(graph.csr, graph.vertexCount);
+
   return new Map(graph.vertices().map((id) => [id, clustering(adjacency, graph.indexOf(id))]));
 }
 
 /** Mean of the local clustering coefficients (0 for an empty graph). */
 export function averageClustering(graph: Graph): number {
   const values = [...clusteringCoefficients(graph).values()];
+
   return values.length === 0 ? 0 : values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
@@ -87,18 +91,22 @@ export function radius(graph: Graph): number {
 export function center(graph: Graph): readonly VertexId[] {
   const eccentricity = eccentricities(graph);
   const least = radius(graph);
+
   return graph.vertices().filter((id) => eccentricity.get(id) === least);
 }
 
 /** Directed graph with an arc u→v whenever v ≠ u is reachable from u. O(V·(V + E)). */
 export function transitiveClosure(graph: Graph): Graph {
   const builder = new GraphBuilder({ directed: true });
+
   for (const id of graph.vertices()) {
     builder.addVertex(id);
   }
+
   for (const [from, to] of reachablePairs(graph.csr, graph.vertexCount)) {
     builder.addEdge(graph.vertexAt(from), graph.vertexAt(to));
   }
+
   return builder.build();
 }
 

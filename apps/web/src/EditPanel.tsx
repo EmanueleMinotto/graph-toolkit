@@ -21,6 +21,7 @@ interface Props {
 
 export function EditPanel(props: Props) {
   const hasPair = props.from !== undefined && props.to !== undefined;
+
   return (
     <Panel id="edit" title={t('Edit graph')} icon={IconPencil}>
       <SegmentedControl

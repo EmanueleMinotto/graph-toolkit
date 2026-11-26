@@ -16,25 +16,32 @@ interface Props {
 export function WebglLayer({ scene, view, box }: Props) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const renderer = useRef<Renderer | undefined>(undefined);
+
   useLayoutEffect(() => {
     const created = canvas.current === null ? undefined : createRenderer(canvas.current);
+
     // eslint-disable-next-line functional/immutable-data -- the renderer is kept between draws
     renderer.current = created;
+
     return () => {
       created?.dispose();
     };
   }, []);
+
   useLayoutEffect(() => {
     const element = canvas.current;
+
     if (element === null) {
       return;
     }
+
     renderer.current?.draw(scene, view, {
       box,
       width: element.clientWidth,
       pixelRatio: globalThis.devicePixelRatio,
     });
   });
+
   return (
     <canvas
       ref={canvas}

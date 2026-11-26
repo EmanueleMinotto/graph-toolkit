@@ -23,12 +23,15 @@ function build(
   arcs: readonly (readonly [number, number, number?])[],
 ): Graph {
   const builder = new GraphBuilder({ directed });
+
   for (let index = 0; index < count; index++) {
     builder.addVertex(v(index));
   }
+
   for (const [from, to, weight] of arcs) {
     builder.addEdge(v(from), v(to), weight);
   }
+
   return builder.build();
 }
 
@@ -50,6 +53,7 @@ describe('maximumMatching (blossom)', () => {
       [0, 4],
       [3, 5],
     ]);
+
     expect(maximumMatching(graph).size).toBe(3);
   });
 
@@ -60,6 +64,7 @@ describe('maximumMatching (blossom)', () => {
       [1, 2],
     ]);
     const { pairs, size } = maximumMatching(graph);
+
     expect(size).toBe(1);
     expect(new Set(pairs.flat()).size).toBe(2 * pairs.length);
   });
@@ -75,10 +80,13 @@ function bruteForce(
   used: ReadonlySet<string>,
 ): number {
   const [head, ...rest] = edges;
+
   if (head === undefined) {
     return 0;
   }
+
   const skip = bruteForce(rest, used);
+
   return used.has(head[0]) || used.has(head[1]) || head[0] === head[1]
     ? skip
     : Math.max(skip, 1 + bruteForce(rest, new Set([...used, ...head])));
@@ -89,6 +97,7 @@ describe('maximumMatching against brute force', () => {
     for (let seed = 1; seed <= 80; seed++) {
       const graph = randomGraph(8, { probability: 0.35, seed });
       const edges = graph.edges().map((edge) => [edge.source, edge.target] as const);
+
       expect(maximumMatching(graph).size).toBe(bruteForce(edges, new Set()));
     }
   });
@@ -101,6 +110,7 @@ describe('minimumCostAssignment', () => {
       [2, 0, 5],
       [3, 2, 2],
     ]);
+
     expect(result.cost).toBe(5);
     expect(new Set(result.assignment).size).toBe(3);
   });
@@ -112,6 +122,7 @@ describe('minimumCostAssignment', () => {
         [4, 3, -2],
       ]),
     ).toEqual({ assignment: [1, 2], cost: -3 });
+
     expect(minimumCostAssignment([])).toEqual({ assignment: [], cost: 0 });
   });
 
@@ -145,9 +156,11 @@ describe('minCostFlow', () => {
 
   it('rejects bad input', () => {
     expect(() => minCostFlow(pathGraph(3), ends, { capacity })).toThrow(GraphError);
+
     expect(() => minCostFlow(network, { source: v(0), sink: v(0) }, { capacity })).toThrow(
       GraphError,
     );
+
     expect(() => minCostFlow(network, ends, { capacity: () => -1 })).toThrow(GraphError);
   });
 });
@@ -168,6 +181,7 @@ const live = {
 describe('cancellation', () => {
   it('stops clique enumeration when the signal is already aborted', () => {
     const signal = aborted();
+
     expect(() => maximalCliques(completeGraph(6), { signal })).toThrow('stop');
     expect(() => maximumClique(completeGraph(6), { signal })).toThrow('stop');
     expect(maximumClique(completeGraph(4), { signal: live })).toHaveLength(4);

@@ -20,6 +20,7 @@ describe('reveal', () => {
       ]),
       steps: [{ vertex: a }, { vertex: b }, { vertex: c }],
     };
+
     expect([...reveal(result, 2).colors.keys()]).toEqual([a, b]);
     expect(reveal(result, 0).colors.size).toBe(0);
     expect(reveal(result, 3).colors.size).toBe(3);
@@ -33,6 +34,7 @@ describe('reveal', () => {
       steps: [{ edge: 'e1' }, { edge: 'e2' }],
     };
     const early = reveal(result, 1);
+
     expect([...early.edges]).toEqual(['e1']);
     expect(early.colors.size).toBe(1);
   });

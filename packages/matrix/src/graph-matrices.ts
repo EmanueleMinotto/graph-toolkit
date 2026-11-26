@@ -17,6 +17,7 @@ export interface MatrixOptions {
 export function adjacencyMatrix(graph: Graph, options: MatrixOptions = {}): Matrix {
   const { vertexCount } = graph;
   const data = adjacencyData(graph.csr, vertexCount, options.isWeighted ?? false);
+
   return new Matrix(vertexCount, vertexCount, data);
 }
 
@@ -29,6 +30,7 @@ export function incidenceMatrix(graph: Graph): Matrix {
     .edges()
     .map((edge) => [graph.indexOf(edge.source), graph.indexOf(edge.target)] as const);
   const data = incidenceData(graph.vertexCount, pairs, graph.directed);
+
   return new Matrix(graph.vertexCount, pairs.length, data);
 }
 
@@ -37,7 +39,9 @@ export function laplacianMatrix(graph: Graph, options: MatrixOptions = {}): Matr
   if (graph.directed) {
     throw new GraphError('laplacianMatrix requires an undirected graph');
   }
+
   const adjacency = adjacencyMatrix(graph, options).toArray();
+
   return new Matrix(
     graph.vertexCount,
     graph.vertexCount,
@@ -53,6 +57,7 @@ function assertAdjacency(matrix: Matrix, isDirected: boolean): void {
   if (matrix.rows !== matrix.columns) {
     throw new GraphError('adjacency matrix must be square');
   }
+
   if (!isDirected && !isSymmetric(matrix.toArray(), matrix.rows)) {
     throw new GraphError('undirected adjacency matrix must be symmetric');
   }
@@ -63,15 +68,20 @@ const toVertexId = (index: number): VertexId => vertexId(String(index));
 /** Builds a graph with vertices `"0"`..`"n-1"`; non-zero entries become weighted edges. */
 export function graphFromAdjacency(matrix: Matrix, options: FromMatrixOptions = {}): Graph {
   const isDirected = options.isDirected ?? false;
+
   assertAdjacency(matrix, isDirected);
   const builder = new GraphBuilder({ directed: isDirected });
   const names = Array.from({ length: matrix.rows }, (_, index) => toVertexId(index));
+
   for (const name of names) {
     builder.addVertex(name);
   }
+
   const entries = nonZeroEntries(matrix.toArray(), matrix.rows, !isDirected);
+
   for (const [row, column, value] of entries) {
     builder.addEdge(toVertexId(row), toVertexId(column), value);
   }
+
   return builder.build();
 }
