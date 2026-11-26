@@ -10,5 +10,6 @@ export * from '@graph-sdk/matrix';
 export * from '@graph-sdk/normalize';
 export * from '@graph-sdk/operations';
 export * from '@graph-sdk/paths';
+export * from '@graph-sdk/query';
 export * from '@graph-sdk/traversal';
 export * from '@graph-sdk/trees';

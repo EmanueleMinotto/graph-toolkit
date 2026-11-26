@@ -53,6 +53,7 @@
     "@graph-sdk/generators": "workspace:*",
     "@graph-sdk/normalize": "workspace:*",
     "@graph-sdk/dynamic": "workspace:*",
+    "@graph-sdk/query": "workspace:*",
     "@graph-sdk/io": "workspace:*",
     "@graph-sdk/layout": "workspace:*"
   }

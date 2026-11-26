@@ -13,6 +13,7 @@
     "packages/normalize/src/index.ts",
     "packages/operations/src/index.ts",
     "packages/paths/src/index.ts",
+    "packages/query/src/index.ts",
     "packages/traversal/src/index.ts",
     "packages/trees/src/index.ts"
   ],

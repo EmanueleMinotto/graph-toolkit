@@ -242,6 +242,9 @@ importers:
       '@graph-sdk/paths':
         specifier: workspace:*
         version: link:../paths
+      '@graph-sdk/query':
+        specifier: workspace:*
+        version: link:../query
       '@graph-sdk/traversal':
         specifier: workspace:*
         version: link:../traversal
@@ -328,6 +331,12 @@ importers:
       fast-check:
         specifier: ^4.11.0
         version: 4.11.0
+
+  packages/query:
+    dependencies:
+      '@graph-sdk/core':
+        specifier: workspace:*
+        version: link:../core
 
   packages/traversal:
     dependencies:
