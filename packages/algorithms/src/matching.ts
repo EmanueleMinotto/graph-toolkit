@@ -8,7 +8,7 @@ export interface Matching {
   readonly size: number;
 }
 
-/** Maximum matching of an undirected bipartite graph (Hopcroft–Karp, O(E·√V)). */
+/** Maximum matching of an undirected bipartite graph (Hopcroft–Karp, $O(E \cdot \sqrt{V})$). */
 export function maximumBipartiteMatching(graph: Graph): Matching {
   const parts = bipartition(graph);
   if (parts === undefined)

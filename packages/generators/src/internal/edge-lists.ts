@@ -57,7 +57,7 @@ function skipPairs(count: number, probability: number, next: () => number): Pair
 }
 
 /**
- * G(n, p) in O(n + m) by skipping geometrically distributed gaps between edges
+ * G(n, p) in $O(n + m)$ by skipping geometrically distributed gaps between edges
  * (Batagelj–Brandes) instead of testing all n² pairs.
  */
 export function randomPairs(count: number, probability: number, seed: number): Pair[] {

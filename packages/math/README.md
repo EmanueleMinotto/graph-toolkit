@@ -22,5 +22,5 @@ sets.setCount(); // 3
 
 | Export             | Notes                                                                      |
 | ------------------ | -------------------------------------------------------------------------- |
-| `MinPriorityQueue` | Binary heap; `push`, `pop` O(log n), `size` O(1). Duplicates allowed.      |
+| `MinPriorityQueue` | Binary heap; `push`, `pop` $O(\log n)$, `size` $O(1)$. Duplicates allowed. |
 | `DisjointSet`      | Union-find, union by rank + path compression; `find`, `union`, `setCount`. |

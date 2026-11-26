@@ -8,7 +8,7 @@ export interface Arborescence {
 
 /**
  * Minimum-weight spanning arborescence of a directed graph rooted at `root` (Chu–Liu/Edmonds,
- * O(V·E)): every other vertex gets exactly one incoming edge and is reachable from `root`.
+ * $O(V \cdot E)$): every other vertex gets exactly one incoming edge and is reachable from `root`.
  * Returns `undefined` if some vertex is unreachable. Throws {@link GraphError} on undirected input.
  */
 export function minimumSpanningArborescence(

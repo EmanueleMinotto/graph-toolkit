@@ -48,7 +48,7 @@ function augment(matching: Matching, vertex: number): boolean {
   return false;
 }
 
-/** Hopcroft–Karp, O(E·√V). `left` lists one side of the bipartition; returns partner indices. */
+/** Hopcroft–Karp, $O(E \cdot \sqrt{V})$. `left` lists one side of the bipartition; returns partner indices. */
 export function hopcroftKarp(csr: Csr, vertexCount: number, left: readonly number[]): Int32Array {
   const matching: Matching = {
     csr,

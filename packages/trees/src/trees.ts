@@ -7,7 +7,7 @@ export interface SpanningForest {
   readonly totalWeight: number;
 }
 
-/** Kruskal's minimum spanning forest of an undirected graph, O(E log E). */
+/** Kruskal's minimum spanning forest of an undirected graph, $O(E \log E)$. */
 export function minimumSpanningForest(graph: Graph): SpanningForest {
   if (graph.directed) throw new GraphError('minimumSpanningForest requires an undirected graph');
   const sets = new DisjointSet(graph.vertexCount);
@@ -18,7 +18,7 @@ export function minimumSpanningForest(graph: Graph): SpanningForest {
   return { edges, totalWeight: edges.reduce((total, edge) => total + edge.weight, 0) };
 }
 
-/** Whether an undirected graph has no cycles. O(V + E). */
+/** Whether an undirected graph has no cycles. $O(V + E)$. */
 export function isForest(graph: Graph): boolean {
   return graph.edgeCount === graph.vertexCount - connectedComponents(graph).length;
 }

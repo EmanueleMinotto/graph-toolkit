@@ -17,7 +17,7 @@ export function hasNegativeWeight(csr: Csr): boolean {
   return csr.weights.some((weight) => weight < 0);
 }
 
-/** Dijkstra with lazy-deletion heap, O((V + E) log V). Requires non-negative weights. */
+/** Dijkstra with lazy-deletion heap, $O((V + E) \log V)$. Requires non-negative weights. */
 export function dijkstraKernel(csr: Csr, vertexCount: number, source: number): Distances {
   const result = initialDistances(vertexCount, source);
   const { distances, predecessors } = result;
@@ -54,7 +54,7 @@ function relaxAll(csr: Csr, vertexCount: number, state: Distances): boolean {
   return changed;
 }
 
-/** Bellman-Ford, O(V·E). Returns `undefined` when a negative cycle is reachable from `source`. */
+/** Bellman-Ford, $O(V \cdot E)$. Returns `undefined` when a negative cycle is reachable from `source`. */
 export function bellmanFordKernel(
   csr: Csr,
   vertexCount: number,
@@ -88,7 +88,7 @@ function relaxVia(matrix: Float64Array, size: number, via: number): void {
   }
 }
 
-/** Floyd-Warshall, O(V³). Row-major V×V matrix; a negative diagonal entry means a negative cycle. */
+/** Floyd-Warshall, $O(V^3)$. Row-major V×V matrix; a negative diagonal entry means a negative cycle. */
 export function floydWarshallKernel(csr: Csr, vertexCount: number): Float64Array {
   const matrix = seedMatrix(csr, vertexCount);
   for (let via = 0; via < vertexCount; via++) relaxVia(matrix, vertexCount, via);

@@ -13,7 +13,7 @@ import type { SpanningForest } from './trees.js';
  * Steiner tree heuristic (Kou–Markowsky–Berman, at most twice the optimum): a minimum spanning
  * tree over shortest-path distances between `terminals`, expanded into graph edges, re-spanned and
  * pruned. Undirected graphs with non-negative weights; `undefined` if the terminals are not
- * all connected. O(k·(V + E) log V) for k terminals.
+ * all connected. $O(k \cdot (V + E) \log V)$ for k terminals.
  */
 export function steinerTree(
   graph: Graph,

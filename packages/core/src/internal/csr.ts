@@ -30,7 +30,7 @@ function prefixSums(vertexCount: number, sources: readonly number[]): Uint32Arra
   return offsets;
 }
 
-/** Counting-sort build, O(V + E). Arcs keep insertion order per vertex. */
+/** Counting-sort build, $O(V + E)$. Arcs keep insertion order per vertex. */
 export function buildCsr(vertexCount: number, list: EdgeList, directed: boolean): Csr {
   const arcs = directed ? list : symmetrize(list);
   const offsets = prefixSums(vertexCount, arcs.sources);

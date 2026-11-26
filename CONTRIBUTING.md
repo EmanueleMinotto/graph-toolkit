@@ -8,6 +8,7 @@
 
 ## Docs, benchmarks and releases
 
+- Write formulas and complexities as math: `$O(V + E)$` inline, `$$...$$` for blocks. GitHub renders it in READMEs; the API reference loads MathJax (`docs/theme/mathjax.js`) for the same delimiters in TSDoc.
 - `pnpm docs:api` builds the TypeDoc API reference into `docs/api` (git-ignored; published to GitHub Pages by `.github/workflows/pages.yml`).
 - `apps/benchmarks` holds performance budget tests (run with the normal test task) and an on-demand `bench` script.
 - Releases use Changesets: add a note with `pnpm changeset`. On `main`, `.github/workflows/release.yml` opens a "version packages" pull request; merging it publishes to npm with provenance (inactive until the `NPM_TOKEN` repository secret exists; the repository must also allow GitHub Actions to create pull requests, under Settings → Actions → General).

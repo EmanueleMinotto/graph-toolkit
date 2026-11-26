@@ -49,7 +49,7 @@ function step(state: State, calls: number[]): void {
   if (parent !== undefined) low[parent] = Math.min(low[parent]!, low[vertex]!);
 }
 
-/** Iterative Tarjan, O(V + E). Components come out in reverse topological order. */
+/** Iterative Tarjan, $O(V + E)$. Components come out in reverse topological order. */
 export function tarjan(csr: Csr, vertexCount: number): number[][] {
   const state: State = {
     csr,

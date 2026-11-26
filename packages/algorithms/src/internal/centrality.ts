@@ -34,7 +34,7 @@ function bfsPaths(csr: Csr, vertexCount: number, source: number): Bfs {
   return search;
 }
 
-/** Wasserman–Faust closeness on hop distances, O(V·(V + E)). 0 for isolated vertices. */
+/** Wasserman–Faust closeness on hop distances, $O(V \cdot (V + E))$. 0 for isolated vertices. */
 export function closeness(csr: Csr, vertexCount: number): Float64Array {
   return Float64Array.from({ length: vertexCount }, (_, source) => {
     const { distance } = bfsPaths(csr, vertexCount, source);
@@ -56,7 +56,7 @@ function accumulate(search: Bfs, source: number, scores: Float64Array): void {
   }
 }
 
-/** Brandes betweenness on hop distances, O(V·E). Undirected pairs are counted once. */
+/** Brandes betweenness on hop distances, $O(V \cdot E)$. Undirected pairs are counted once. */
 export function betweenness(csr: Csr, vertexCount: number, isDirected: boolean): Float64Array {
   const scores = new Float64Array(vertexCount);
   for (let source = 0; source < vertexCount; source++) {

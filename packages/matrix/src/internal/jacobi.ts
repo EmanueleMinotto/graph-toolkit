@@ -61,7 +61,7 @@ export interface Eigen {
   readonly vectors: number[][];
 }
 
-/** Eigenpairs of a symmetric row-major matrix by cyclic Jacobi sweeps, O(n³) per sweep. */
+/** Eigenpairs of a symmetric row-major matrix by cyclic Jacobi sweeps, $O(n^3)$ per sweep. */
 export function jacobiEigen(matrix: Float64Array, size: number): Eigen {
   const identity = Float64Array.from({ length: size * size }, (_, cell) =>
     cell % (size + 1) === 0 ? 1 : 0,

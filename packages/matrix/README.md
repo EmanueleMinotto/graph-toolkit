@@ -15,12 +15,12 @@ laplacianMatrix(cycleGraph(4)).toRows(); // each row sums to 0
 
 ## API
 
-| Export                                   | Notes                                                                           |
-| ---------------------------------------- | ------------------------------------------------------------------------------- |
-| `Matrix`                                 | Immutable dense matrix: `get`, `toRows`, `multiply` O(n³), `power` O(n³ log k). |
-| `adjacencyMatrix(g, { isWeighted? })`    | Vertex insertion order; entries 1 or edge weights.                              |
-| `laplacianMatrix(g, { isWeighted? })`    | L = D − A, undirected only.                                                     |
-| `graphFromAdjacency(m, { isDirected? })` | Vertices `"0"`..`"n-1"`; undirected input must be symmetric.                    |
+| Export                                   | Notes                                                                                  |
+| ---------------------------------------- | -------------------------------------------------------------------------------------- |
+| `Matrix`                                 | Immutable dense matrix: `get`, `toRows`, `multiply` $O(n^3)$, `power` $O(n^3 \log k)$. |
+| `adjacencyMatrix(g, { isWeighted? })`    | Vertex insertion order; entries 1 or edge weights.                                     |
+| `laplacianMatrix(g, { isWeighted? })`    | L = D − A, undirected only.                                                            |
+| `graphFromAdjacency(m, { isDirected? })` | Vertices `"0"`..`"n-1"`; undirected input must be symmetric.                           |
 
 Planned: incidence matrix, spectrum (eigenvalues).
 

@@ -14,7 +14,7 @@ function eulerInput(graph: Graph): EulerInput {
 
 /**
  * Eulerian trail (closed when all degrees are balanced) using every edge exactly once,
- * or `undefined` when none exists. O(V + E).
+ * or `undefined` when none exists. $O(V + E)$.
  */
 export function eulerianTrail(graph: Graph): readonly VertexId[] | undefined {
   const input = eulerInput(graph);

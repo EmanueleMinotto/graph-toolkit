@@ -117,7 +117,7 @@ function solve(count: number, arcs: readonly Linked[], root: number): Linked[] |
   return inner === undefined ? undefined : expand(best, inner, contraction);
 }
 
-/** Chu–Liu/Edmonds, O(V·E). Returns indices of `arcs` forming the cheapest arborescence. */
+/** Chu–Liu/Edmonds, $O(V \cdot E)$. Returns indices of `arcs` forming the cheapest arborescence. */
 export function minimumArborescence(
   count: number,
   arcs: readonly Arc[],

@@ -76,7 +76,7 @@ function blockingFlow(blocking: Blocking, terminals: Terminals): number {
   return total;
 }
 
-/** Dinic's algorithm, O(V²·E). Arc weights are capacities. */
+/** Dinic's algorithm, $O(V^2 \cdot E)$. Arc weights are capacities. */
 export function dinicKernel(csr: Csr, vertexCount: number, terminals: Terminals): number {
   const residual = buildResidual(csr, vertexCount);
   let total = 0;

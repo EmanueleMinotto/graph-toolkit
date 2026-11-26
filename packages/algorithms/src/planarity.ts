@@ -9,7 +9,7 @@ const pairsOf = (graph: Graph): readonly (readonly [number, number])[] =>
 
 /**
  * Planarity test of an undirected graph (self-loops ignored): splits into biconnected blocks and
- * runs the Demoucron–Malgrange–Pertuiset algorithm on each, O(V²) per block.
+ * runs the Demoucron–Malgrange–Pertuiset algorithm on each, $O(V^2)$ per block.
  */
 export function isPlanar(graph: Graph): boolean {
   if (graph.directed) throw new GraphError('isPlanar requires an undirected graph');

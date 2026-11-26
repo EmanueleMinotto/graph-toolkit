@@ -59,7 +59,7 @@ function flip(state: State, end: number): void {
   }
 }
 
-/** Hungarian algorithm with potentials, O(rows²·columns). Requires rows ≤ columns. */
+/** Hungarian algorithm with potentials, $O(\text{rows}^2 \cdot \text{columns})$. Requires rows ≤ columns. */
 export function hungarian(costs: readonly (readonly number[])[]): number[] {
   const columns = costs[0]?.length ?? 0;
   const state: State = {

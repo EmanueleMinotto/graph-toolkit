@@ -51,7 +51,7 @@ function candidatesAfter(round: Round): IndexPath[] {
 const isKnown = (paths: readonly IndexPath[], path: IndexPath): boolean =>
   paths.some((other) => other.path.join(',') === path.path.join(','));
 
-/** Yen's k shortest loopless paths, O(k · V · (V + E) log V). */
+/** Yen's k shortest loopless paths, $O(k \cdot V \cdot (V + E) \log V)$. */
 export function yenKernel(csr: Csr, endpoints: Endpoints, count: number): IndexPath[] {
   const first = restrictedDijkstra(csr, endpoints, {
     blockedSlots: new Set(),

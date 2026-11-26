@@ -119,7 +119,7 @@ function augment(forest: Forest, end: number): void {
   }
 }
 
-/** Edmonds' blossom algorithm, O(V·E) per augmentation. Returns the mate of each vertex (-1 if free). */
+/** Edmonds' blossom algorithm, $O(V \cdot E)$ per augmentation. Returns the mate of each vertex (-1 if free). */
 export function blossomMatching(csr: Csr, count: number): Int32Array {
   const forest: Forest = {
     csr,

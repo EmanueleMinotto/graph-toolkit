@@ -15,7 +15,7 @@ function smallestFree(used: ReadonlySet<number>): number {
   return color;
 }
 
-/** Colors vertices in the given index order with the smallest free color, O(V + E) + order. */
+/** Colors vertices in the given index order with the smallest free color, $O(V + E)$ + order. */
 export function greedyKernel(csr: Csr, vertexCount: number, order: readonly number[]): Int32Array {
   const colors = new Int32Array(vertexCount).fill(-1);
   for (const vertex of order) colors[vertex] = smallestFree(neighborColors(csr, vertex, colors));
@@ -46,7 +46,7 @@ function mostSaturated(csr: Csr, colors: Int32Array): number {
   return best;
 }
 
-/** DSATUR heuristic, O(V·E). */
+/** DSATUR heuristic, $O(V \cdot E)$. */
 export function dsaturKernel(csr: Csr, vertexCount: number): Int32Array {
   const colors = new Int32Array(vertexCount).fill(-1);
   for (let step = 0; step < vertexCount; step++) {
@@ -73,7 +73,7 @@ function colorComponent(csr: Csr, start: number, colors: Int32Array): boolean {
   return true;
 }
 
-/** BFS 2-coloring, O(V + E). `undefined` when an odd cycle exists. */
+/** BFS 2-coloring, $O(V + E)$. `undefined` when an odd cycle exists. */
 export function bipartiteKernel(csr: Csr, vertexCount: number): Int32Array | undefined {
   const colors = new Int32Array(vertexCount).fill(-1);
   for (let start = 0; start < vertexCount; start++) {

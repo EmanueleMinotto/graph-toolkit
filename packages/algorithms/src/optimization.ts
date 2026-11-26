@@ -5,7 +5,7 @@ import { blossomMatching } from './internal/blossom.js';
 import { minCostFlowKernel, type Arc, type FlowResult } from './internal/min-cost.js';
 import type { Matching } from './matching.js';
 
-/** Maximum matching of any undirected graph (Edmonds' blossom algorithm, O(V·E) per phase). */
+/** Maximum matching of any undirected graph (Edmonds' blossom algorithm, $O(V \cdot E)$ per phase). */
 export function maximumMatching(graph: Graph): Matching {
   if (graph.directed) throw new GraphError('maximumMatching requires an undirected graph');
   const mate = blossomMatching(graph.csr, graph.vertexCount);
@@ -22,7 +22,7 @@ export interface Assignment {
 }
 
 /**
- * Minimum-cost assignment of every row to a distinct column (Hungarian algorithm, O(rows²·columns)).
+ * Minimum-cost assignment of every row to a distinct column (Hungarian algorithm, $O(\text{rows}^2 \cdot \text{columns})$).
  * Needs a rectangular matrix with rows ≤ columns; costs may be negative.
  */
 export function minimumCostAssignment(costs: readonly (readonly number[])[]): Assignment {
