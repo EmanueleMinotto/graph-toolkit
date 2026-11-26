@@ -1,6 +1,6 @@
 {
   "name": "@graph-sdk/paths",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Shortest paths (Dijkstra, Bellman-Ford, Floyd-Warshall) and cycle detection",
   "license": "MIT",
   "repository": {

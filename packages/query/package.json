@@ -1,6 +1,6 @@
 {
   "name": "@graph-sdk/query",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Fluent, immutable vertex selection and edge filtering over graphs",
   "license": "MIT",
   "repository": {

@@ -1,5 +1,12 @@
 # @graph-sdk/normalize
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [75e52c5]
+  - @graph-sdk/math@0.2.0
+
 ## 0.1.1
 
 ### Patch Changes
