@@ -8,6 +8,7 @@ core (no deps)
 core ─┬─ matrix · operations · coloring · generators · layout · traversal
       ├─ io (core, matrix)
       ├─ normalize (core, math)
+      ├─ cli (core, io, generators, traversal)
       ├─ dynamic (core)
       ├─ embedding (core, matrix)
       ├─ query (core)

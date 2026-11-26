@@ -2,6 +2,7 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": [
     "packages/algorithms/src/index.ts",
+    "packages/cli/src/index.ts",
     "packages/coloring/src/index.ts",
     "packages/core/src/index.ts",
     "packages/dynamic/src/index.ts",

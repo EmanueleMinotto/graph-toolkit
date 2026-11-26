@@ -177,6 +177,21 @@ importers:
         specifier: workspace:*
         version: link:../generators
 
+  packages/cli:
+    dependencies:
+      '@graph-sdk/core':
+        specifier: workspace:*
+        version: link:../core
+      '@graph-sdk/generators':
+        specifier: workspace:*
+        version: link:../generators
+      '@graph-sdk/io':
+        specifier: workspace:*
+        version: link:../io
+      '@graph-sdk/traversal':
+        specifier: workspace:*
+        version: link:../traversal
+
   packages/coloring:
     dependencies:
       '@graph-sdk/core':

@@ -41,6 +41,7 @@ toDot(graph);
 | [`@graph-sdk/dynamic`](packages/dynamic)       | Graph diffs, patches and undo/redo history                                                                            |
 | [`@graph-sdk/query`](packages/query)           | Fluent vertex selection (attributes, neighbors, hops, subgraph), edge filtering                                       |
 | [`@graph-sdk/embedding`](packages/embedding)   | Seeded random walks, spectral embedding                                                                               |
+| [`@graph-sdk/cli`](packages/cli)               | `graph-toolkit` command: convert formats, generate graphs, print statistics                                           |
 | [`@graph-sdk/io`](packages/io)                 | JSON, edge list/CSV, DOT, GraphML, GEXF, GML, graph6, Mermaid, adjacency CSV                                          |
 | [`@graph-sdk/layout`](packages/layout)         | Deterministic 2D layouts: circular, grid, force-directed, layered, radial                                             |
 
