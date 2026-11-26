@@ -25,8 +25,12 @@ export class GraphBuilder {
   }
 
   public addVertex(id: VertexId): this {
-    if (this.#indices.has(id)) throw new DuplicateError(`Duplicate vertex: ${id}`);
+    if (this.#indices.has(id)) {
+      throw new DuplicateError(`Duplicate vertex: ${id}`);
+    }
+
     this.#indices.set(id, this.#indices.size);
+
     return this;
   }
 
@@ -34,13 +38,16 @@ export class GraphBuilder {
     const from = this.#indexOf(source);
     const to = this.#indexOf(target);
     const key = this.#directed || from <= to ? `${from}:${to}` : `${to}:${from}`;
+
     if (!this.#allowParallel && this.#edgeKeys.has(key)) {
       throw new DuplicateError(`Duplicate edge: ${source} -> ${target}`);
     }
+
     this.#edgeKeys.add(key);
     this.#sources.push(from);
     this.#targets.push(to);
     this.#weights.push(weight);
+
     return this;
   }
 
@@ -50,6 +57,7 @@ export class GraphBuilder {
       { sources: this.#sources, targets: this.#targets, weights: this.#weights },
       this.#directed,
     );
+
     return new CsrGraph([...this.#indices.keys()], csr, {
       directed: this.#directed,
       edgeCount: this.#sources.length,
@@ -58,7 +66,11 @@ export class GraphBuilder {
 
   #indexOf(id: VertexId): number {
     const index = this.#indices.get(id);
-    if (index === undefined) throw new UnknownVertexError(`Unknown vertex: ${id}`);
+
+    if (index === undefined) {
+      throw new UnknownVertexError(`Unknown vertex: ${id}`);
+    }
+
     return index;
   }
 }

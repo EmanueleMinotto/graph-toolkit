@@ -6,6 +6,7 @@ type Search = (csr: Graph['csr'], start: number, visited: Uint8Array) => readonl
 
 function visit(graph: Graph, start: VertexId, search: Search): readonly VertexId[] {
   const visited = new Uint8Array(graph.vertexCount);
+
   return search(graph.csr, graph.indexOf(start), visited).map((index) => graph.vertexAt(index));
 }
 
@@ -22,12 +23,16 @@ export function dfs(graph: Graph, start: VertexId): readonly VertexId[] {
 /** Topological order of a directed graph, or `undefined` if it has a cycle. $O(V + E)$. */
 export function topologicalSort(graph: Graph): readonly VertexId[] | undefined {
   const order = kahnOrder(graph.csr, graph.vertexCount);
+
   return order.length < graph.vertexCount ? undefined : order.map((index) => graph.vertexAt(index));
 }
 
 /** Connected components of an undirected graph; throws {@link GraphError} if directed. $O(V + E)$. */
 export function connectedComponents(graph: Graph): readonly (readonly VertexId[])[] {
-  if (graph.directed) throw new GraphError('connectedComponents requires an undirected graph');
+  if (graph.directed) {
+    throw new GraphError('connectedComponents requires an undirected graph');
+  }
+
   return componentIndices(graph.csr, graph.vertexCount).map((component) =>
     component.map((index) => graph.vertexAt(index)),
   );
@@ -38,8 +43,10 @@ export function connectedComponents(graph: Graph): readonly (readonly VertexId[]
  * condensation. $O(V + E)$. Throws {@link GraphError} for undirected graphs.
  */
 export function stronglyConnectedComponents(graph: Graph): readonly (readonly VertexId[])[] {
-  if (!graph.directed)
+  if (!graph.directed) {
     throw new GraphError('stronglyConnectedComponents requires a directed graph');
+  }
+
   return tarjan(graph.csr, graph.vertexCount).map((component) =>
     component.map((index) => graph.vertexAt(index)),
   );

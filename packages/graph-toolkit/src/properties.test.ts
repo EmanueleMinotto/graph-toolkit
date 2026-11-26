@@ -40,14 +40,24 @@ const pairKey = (from: number, to: number, directed: boolean): string =>
 /** Simple weighted graph: later duplicates and self-loops are dropped. */
 function weighted(edges: readonly (readonly [number, number, number])[], directed: boolean): Graph {
   const builder = new GraphBuilder({ directed });
-  for (let index = 0; index < SIZE; index++) builder.addVertex(name(index));
+
+  for (let index = 0; index < SIZE; index++) {
+    builder.addVertex(name(index));
+  }
+
   const seen = new Set<string>();
+
   for (const [from, to, weight] of edges) {
     const key = pairKey(from, to, directed);
-    if (from === to || seen.has(key)) continue;
+
+    if (from === to || seen.has(key)) {
+      continue;
+    }
+
     seen.add(key);
     builder.addEdge(name(from), name(to), weight);
   }
+
   return builder.build();
 }
 
@@ -63,7 +73,10 @@ describe('properties', () => {
       fc.property(edgeList, (edges) => {
         const graph = weighted(edges, true);
         const [fast, slow] = [dijkstra(graph, name(0)), bellmanFord(graph, name(0))];
-        for (const id of graph.vertices()) expect(fast.distanceTo(id)).toBe(slow.distanceTo(id));
+
+        for (const id of graph.vertices()) {
+          expect(fast.distanceTo(id)).toBe(slow.distanceTo(id));
+        }
       }),
     );
   });
@@ -73,9 +86,11 @@ describe('properties', () => {
       fc.property(edgeList, (edges) => {
         const graph = weighted(edges, true);
         const [fast, slow] = [johnson(graph), floydWarshall(graph)];
+
         for (const from of graph.vertices()) {
-          for (const to of graph.vertices())
+          for (const to of graph.vertices()) {
             expect(fast.distance(from, to)).toBe(slow.distance(from, to));
+          }
         }
       }),
     );
@@ -86,6 +101,7 @@ describe('properties', () => {
       fc.property(edgeList, (edges) => {
         const graph = weighted(edges, false);
         const kruskal = minimumSpanningForest(graph).totalWeight;
+
         expect(primMinimumSpanningForest(graph).totalWeight).toBe(kruskal);
         expect(boruvkaMinimumSpanningForest(graph).totalWeight).toBe(kruskal);
       }),
@@ -99,6 +115,7 @@ describe('properties', () => {
           ([from, to, weight]) => [from % 3, 3 + (to % 4), weight] as const,
         );
         const graph = weighted(bipartite, false);
+
         expect(maximumMatching(graph).size).toBe(maximumBipartiteMatching(graph).size);
       }),
     );
@@ -108,6 +125,7 @@ describe('properties', () => {
     fc.assert(
       fc.property(edgeList, (edges) => {
         const graph = weighted(edges, false);
+
         expect(sortedEdges(fromGraph6(toGraph6(graph)))).toEqual(sortedEdges(graph));
         expect(sortedEdges(fromGml(toGml(graph)))).toEqual(sortedEdges(graph));
       }),
@@ -118,6 +136,7 @@ describe('properties', () => {
     fc.assert(
       fc.property(fc.integer({ min: 0, max: 1000 }), (seed) => {
         const options = { probability: 0.4, seed };
+
         expect(randomGraph(9, options).edges()).toEqual(randomGraph(9, options).edges());
       }),
     );

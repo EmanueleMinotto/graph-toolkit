@@ -131,7 +131,13 @@ export const toolOf = (id: AnalysisKind): Tool => TOOLS.find((entry) => entry.id
 
 /** Why `tool` cannot run on `graph`, or `undefined` when it can. */
 export function unavailableReason(entry: Tool, graph: Graph): string | undefined {
-  if (entry.requires === 'undirected' && graph.directed) return 'needs an undirected graph';
-  if (entry.requires === 'directed' && !graph.directed) return 'needs a directed graph';
+  if (entry.requires === 'undirected' && graph.directed) {
+    return 'needs an undirected graph';
+  }
+
+  if (entry.requires === 'directed' && !graph.directed) {
+    return 'needs a directed graph';
+  }
+
   return undefined;
 }

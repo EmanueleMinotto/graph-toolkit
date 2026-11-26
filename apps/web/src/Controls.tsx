@@ -18,6 +18,7 @@ export function Panel({ id, title, icon: Glyph, children }: PanelProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
   });
+
   return (
     <Accordion.Item
       value={id}

@@ -26,7 +26,11 @@ function Verdict({ report }: { readonly report: Report }) {
       </Text>
     );
   }
-  if (report.issues.length === 0) return <Text size="sm">Valid: no issues found.</Text>;
+
+  if (report.issues.length === 0) {
+    return <Text size="sm">Valid: no issues found.</Text>;
+  }
+
   return (
     <Stack gap={4}>
       {report.issues.map((issue) => (
@@ -68,6 +72,7 @@ export function ValidationPanel({ graph }: { readonly graph: Graph }) {
       setReport({ failure: error instanceof Error ? error.message : 'Invalid schema' });
     }
   };
+
   return (
     <Panel id="validate" title={t('Validation')} icon={IconShieldCheck}>
       <SegmentedControl

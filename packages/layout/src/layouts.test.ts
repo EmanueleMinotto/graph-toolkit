@@ -6,14 +6,17 @@ import { circularLayout, forceLayout, gridLayout, layeredLayout, radialLayout } 
 describe('layouts', () => {
   it('places vertices on a circle', () => {
     const layout = circularLayout(cycleGraph(4), 2);
+
     for (const point of layout.values()) {
       expect(Math.hypot(point.x, point.y)).toBeCloseTo(2, 9);
     }
+
     expect(circularLayout(cycleGraph(4)).size).toBe(4);
   });
 
   it('places vertices on a grid', () => {
     const layout = gridLayout(pathGraph(5), 10);
+
     expect(layout.size).toBe(5);
     expect(layout.get(pathGraph(5).vertices()[4]!)).toEqual({ x: 10, y: 10 });
     expect(gridLayout(pathGraph(0)).size).toBe(0);
@@ -22,8 +25,10 @@ describe('layouts', () => {
   it('computes deterministic, bounded force layouts', () => {
     const graph = completeGraph(6);
     const first = forceLayout(graph, { seed: 7 });
+
     expect(forceLayout(graph, { seed: 7 })).toEqual(first);
     expect(forceLayout(graph, { seed: 8 })).not.toEqual(first);
+
     for (const point of first.values()) {
       expect(point.x).toBeGreaterThanOrEqual(0);
       expect(point.x).toBeLessThanOrEqual(1);
@@ -38,6 +43,7 @@ describe('layouts', () => {
       { x: number; y: number },
       { x: number; y: number },
     ];
+
     expect(Math.hypot(left.x - right.x, left.y - right.y)).toBeGreaterThan(0);
   });
 });
@@ -47,15 +53,22 @@ const name = (index: number) => vertexId(String(index));
 describe('layeredLayout', () => {
   it('puts DAG levels on increasing y and centers each layer', () => {
     const builder = new GraphBuilder({ directed: true });
-    for (let index = 0; index < 4; index++) builder.addVertex(name(index));
+
+    for (let index = 0; index < 4; index++) {
+      builder.addVertex(name(index));
+    }
+
     for (const [from, to] of [
       [0, 1],
       [0, 2],
       [1, 3],
       [2, 3],
-    ] as const)
+    ] as const) {
       builder.addEdge(name(from), name(to));
+    }
+
     const layout = layeredLayout(builder.build(), { layerGap: 10, nodeGap: 4 });
+
     expect(layout.get(name(0))).toEqual({ x: 0, y: 0 });
     expect(layout.get(name(3))).toEqual({ x: 0, y: 20 });
     expect(layout.get(name(1))!.x).toBe(-layout.get(name(2))!.x);
@@ -63,17 +76,24 @@ describe('layeredLayout', () => {
 
   it('uses BFS depth for cyclic and undirected graphs and orders by barycenter', () => {
     const cycle = layeredLayout(cycleGraph(4));
+
     expect(cycle.get(vertexId('0'))!.y).toBe(0);
     expect(cycle.get(vertexId('2'))!.y).toBe(2);
     const crossing = new GraphBuilder({ directed: true });
-    for (let index = 0; index < 5; index++) crossing.addVertex(name(index));
+
+    for (let index = 0; index < 5; index++) {
+      crossing.addVertex(name(index));
+    }
+
     for (const [from, to] of [
       [0, 3],
       [1, 2],
       [2, 4],
       [3, 4],
-    ] as const)
+    ] as const) {
       crossing.addEdge(name(from), name(to));
+    }
+
     expect(layeredLayout(crossing.build()).size).toBe(5);
   });
 
@@ -85,20 +105,26 @@ describe('layeredLayout', () => {
 describe('radialLayout', () => {
   it('puts the root at the origin and neighbors on ring 1', () => {
     const layout = radialLayout(starGraph(5));
+
     expect(layout.get(vertexId('0'))).toEqual({ x: 0, y: 0 });
+
     for (const leaf of ['1', '2', '3', '4']) {
       const point = layout.get(vertexId(leaf))!;
+
       expect(Math.hypot(point.x, point.y)).toBeCloseTo(1);
     }
   });
 
   it('honors root and ringGap, and parks unreachable vertices on the outer ring', () => {
     const builder = new GraphBuilder({ directed: false });
+
     builder.addVertex(vertexId('a')).addVertex(vertexId('b')).addVertex(vertexId('c'));
     builder.addEdge(vertexId('a'), vertexId('b'));
     const layout = radialLayout(builder.build(), { root: vertexId('b'), ringGap: 2 });
+
     expect(layout.get(vertexId('b'))).toEqual({ x: 0, y: 0 });
     const { x, y } = layout.get(vertexId('c'))!;
+
     expect(Math.hypot(x, y)).toBeCloseTo(4);
   });
 

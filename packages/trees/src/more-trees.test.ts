@@ -15,8 +15,15 @@ const name = (index: number) => vertexId(String(index));
 
 const weighted = (count: number, arcs: readonly (readonly [number, number, number])[]): Graph => {
   const builder = new GraphBuilder();
-  for (let index = 0; index < count; index++) builder.addVertex(name(index));
-  for (const [from, to, weight] of arcs) builder.addEdge(name(from), name(to), weight);
+
+  for (let index = 0; index < count; index++) {
+    builder.addVertex(name(index));
+  }
+
+  for (const [from, to, weight] of arcs) {
+    builder.addEdge(name(from), name(to), weight);
+  }
+
   return builder.build();
 };
 
@@ -25,10 +32,12 @@ describe('Prim and Borůvka', () => {
     const arcs = fc.uniqueArray(fc.tuple(fc.nat(6), fc.nat(6), fc.integer({ min: 1, max: 20 })), {
       selector: ([a, b]) => `${Math.min(a, b)}:${Math.max(a, b)}`,
     });
+
     fc.assert(
       fc.property(arcs, (list) => {
         const graph = weighted(7, list);
         const expected = minimumSpanningForest(graph).totalWeight;
+
         expect(primMinimumSpanningForest(graph).totalWeight).toBe(expected);
         expect(boruvkaMinimumSpanningForest(graph).totalWeight).toBe(expected);
       }),
@@ -37,6 +46,7 @@ describe('Prim and Borůvka', () => {
 
   it('rejects directed graphs', () => {
     const directed = new GraphBuilder({ directed: true }).build();
+
     expect(() => primMinimumSpanningForest(directed)).toThrow(GraphError);
     expect(() => boruvkaMinimumSpanningForest(directed)).toThrow(GraphError);
   });
@@ -49,6 +59,7 @@ describe('Prim and Borůvka', () => {
         [0, 2, 9],
       ]),
     );
+
     expect(forest.totalWeight).toBe(5);
     expect(forest.edges.map((edge) => edge.target)).toEqual([name(1), name(2)]);
   });
@@ -98,6 +109,7 @@ describe('Prüfer codes', () => {
         const vertices = Array.from({ length: raw.length + 2 }, (_, index) => name(index));
         const code = raw.map((value) => name(value % vertices.length));
         const tree = treeFromPruferCode(vertices, code);
+
         expect(tree.edgeCount).toBe(vertices.length - 1);
         expect(pruferCode(tree)).toEqual(code);
       }),

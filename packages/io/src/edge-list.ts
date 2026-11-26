@@ -15,8 +15,9 @@ export function toEdgeList(graph: Graph): string {
 }
 
 function parseLine(line: string): ParsedEdge {
-  const [source, target, weight, ...extra] = line.split(/[\s,]+/);
+  const [source, target, weight, ...extra] = line.split(/[\s,]+/u);
   const parsedWeight = weight === undefined ? 1 : Number(weight);
+
   if (
     source === undefined ||
     target === undefined ||
@@ -25,6 +26,7 @@ function parseLine(line: string): ParsedEdge {
   ) {
     throw new ParseError(`Invalid edge line: ${line}`);
   }
+
   return { source, target, weight: parsedWeight };
 }
 
@@ -32,8 +34,9 @@ function parseLine(line: string): ParsedEdge {
 export function fromEdgeList(text: string, options: EdgeListOptions = {}): Graph {
   const edges = text
     .split('\n')
-    .map((line) => line.replace(/#.*/, '').trim())
+    .map((line) => line.replace(/#.*/u, '').trim())
     .filter((line) => line !== '')
     .map((line) => parseLine(line));
+
   return assembleGraph({ directed: options.isDirected ?? false, vertices: [], edges });
 }

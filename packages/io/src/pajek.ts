@@ -15,15 +15,21 @@ export function toPajek(graph: Graph): string {
     .edges()
     .map((edge) => `${index(edge.source)} ${index(edge.target)} ${edge.weight}`);
   const section = graph.directed ? '*Arcs' : '*Edges';
-  return [`*Vertices ${graph.vertexCount}`, ...vertices, section, ...edges].join('\n') + '\n';
+
+  return [`*Vertices ${graph.vertexCount}`, ...vertices, section, ...edges, ''].join('\n');
 }
 
 const VERTEX = /^(\d+)\s*(?:"([^"]*)"|(\S+))?/u;
 
 function parseVertex(line: string): readonly [number, string] {
   const match = VERTEX.exec(line);
-  if (match === null) throw new ParseError(`Invalid Pajek vertex line: ${line}`);
+
+  if (match === null) {
+    throw new ParseError(`Invalid Pajek vertex line: ${line}`);
+  }
+
   const id = Number(match[1]);
+
   return [id, match[2] ?? match[3] ?? String(id)];
 }
 
@@ -31,20 +37,30 @@ function parseEdge(names: ReadonlyMap<number, string>, line: string): ParsedEdge
   const [from, to, weight] = line.split(/\s+/u, EDGE_FIELDS);
   const source = names.get(Number(from));
   const target = names.get(Number(to));
+
   if (source === undefined || target === undefined) {
     throw new ParseError(`Pajek edge with unknown vertex: ${line}`);
   }
+
   const parsed = weight === undefined ? 1 : Number(weight);
-  if (!Number.isFinite(parsed)) throw new ParseError(`Invalid Pajek weight: ${line}`);
+
+  if (!Number.isFinite(parsed)) {
+    throw new ParseError(`Invalid Pajek weight: ${line}`);
+  }
+
   return { source, target, weight: parsed };
 }
 
 /** Reads `*Vertices`, `*Edges` and `*Arcs` sections; `%` starts a comment, other sections are ignored. */
 export function fromPajek(text: string): Graph {
   const { directed, vertices, rows } = splitSections(text);
-  if (vertices.length === 0 && rows.length === 0)
+
+  if (vertices.length === 0 && rows.length === 0) {
     throw new ParseError('Pajek document has no vertices');
+  }
+
   const names = new Map(vertices.map((line) => parseVertex(line)));
+
   return assembleGraph({
     directed,
     vertices: [...names.values()],

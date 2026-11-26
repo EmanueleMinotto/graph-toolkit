@@ -13,18 +13,23 @@ function assertSymmetric(matrix: Matrix): void {
 /** Eigenvalues in ascending order of a symmetric matrix (Jacobi method, $O(n^3)$ per sweep). */
 export function eigenvalues(matrix: Matrix): readonly number[] {
   assertSymmetric(matrix);
+
   return jacobiEigenvalues(matrix.toArray(), matrix.rows);
 }
 
 /** Eigenvalues (ascending) with their unit eigenvectors, for a symmetric matrix. */
 export function eigenDecomposition(matrix: Matrix): Eigen {
   assertSymmetric(matrix);
+
   return jacobiEigen(matrix.toArray(), matrix.rows);
 }
 
 /** Adjacency spectrum of an undirected graph, ascending. */
 export function adjacencySpectrum(graph: Graph, options: MatrixOptions = {}): readonly number[] {
-  if (graph.directed) throw new GraphError('adjacencySpectrum requires an undirected graph');
+  if (graph.directed) {
+    throw new GraphError('adjacencySpectrum requires an undirected graph');
+  }
+
   return eigenvalues(adjacencyMatrix(graph, options));
 }
 

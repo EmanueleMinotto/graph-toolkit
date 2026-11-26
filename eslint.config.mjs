@@ -4,6 +4,7 @@ import importX from 'eslint-plugin-import-x';
 import sonarjs from 'eslint-plugin-sonarjs';
 import unicorn from 'eslint-plugin-unicorn';
 import vitest from '@vitest/eslint-plugin';
+import stylistic from '@stylistic/eslint-plugin';
 import prettier from 'eslint-config-prettier';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
@@ -28,6 +29,65 @@ const calisthenics = {
   ],
 };
 
+// Readability rules: flag ambiguous syntax, dead code and needless nesting.
+const readability = {
+  '@typescript-eslint/switch-exhaustiveness-check': 'error',
+  '@typescript-eslint/prefer-readonly': 'error',
+  '@typescript-eslint/member-ordering': 'error',
+  '@typescript-eslint/consistent-type-exports': 'error',
+  '@typescript-eslint/default-param-last': 'error',
+  '@typescript-eslint/method-signature-style': 'error',
+  '@typescript-eslint/no-useless-empty-export': 'error',
+  '@typescript-eslint/no-shadow': 'error',
+  '@typescript-eslint/strict-boolean-expressions': 'error',
+  '@typescript-eslint/no-use-before-define': ['error', { functions: false, variables: false }],
+  'sonarjs/no-collapsible-if': 'error',
+  'sonarjs/prefer-immediate-return': 'error',
+  'sonarjs/prefer-object-literal': 'error',
+  'sonarjs/no-commented-code': 'error',
+  'sonarjs/nested-control-flow': 'error',
+  'sonarjs/destructuring-assignment-syntax': 'error',
+  'sonarjs/max-union-size': 'error',
+  'sonarjs/no-unused-function-argument': 'error',
+  'sonarjs/no-duplicate-string': 'error',
+  'sonarjs/expression-complexity': 'error',
+  'unicorn/consistent-destructuring': 'error',
+  'unicorn/no-unused-properties': 'error',
+  'unicorn/better-regex': 'error',
+  'unicorn/template-indent': 'error',
+  'import-x/first': 'error',
+  'import-x/order': 'error',
+  'import-x/no-useless-path-segments': 'error',
+  'import-x/no-mutable-exports': 'error',
+  'import-x/no-namespace': 'error',
+  '@stylistic/padding-line-between-statements': [
+    'error',
+    { blankLine: 'always', prev: '*', next: 'return' },
+    { blankLine: 'always', prev: ['const', 'let'], next: '*' },
+    { blankLine: 'any', prev: ['const', 'let'], next: ['const', 'let'] },
+    { blankLine: 'always', prev: '*', next: ['if', 'for', 'while', 'try', 'switch'] },
+    { blankLine: 'always', prev: ['if', 'for', 'while', 'try', 'switch'], next: '*' },
+    { blankLine: 'always', prev: 'multiline-expression', next: '*' },
+    { blankLine: 'always', prev: '*', next: 'multiline-expression' },
+  ],
+  'no-negated-condition': 'error',
+  'no-continue': 'error',
+  'no-multi-assign': 'error',
+  'no-param-reassign': 'error',
+  'no-implicit-coercion': 'error',
+  'logical-assignment-operators': 'error',
+  'object-shorthand': 'error',
+  'arrow-body-style': 'error',
+  'default-case': 'error',
+  'no-underscore-dangle': 'error',
+  camelcase: ['error', { properties: 'never' }],
+  eqeqeq: 'error',
+  'no-plusplus': 'error',
+  'prefer-template': 'error',
+  'prefer-destructuring': 'error',
+  'require-unicode-regexp': 'error',
+};
+
 // Hot-path kernels: mutation confined here, never exposed through the public API.
 const internalKernels = {
   'functional/immutable-data': 'off',
@@ -42,6 +102,10 @@ const internalKernels = {
   '@typescript-eslint/no-non-null-assertion': 'off',
   'max-depth': ['error', 3],
   'no-magic-numbers': 'off',
+  'no-plusplus': 'off',
+  'no-continue': 'off',
+  // Braces on every `if` add lines; kernels get more room than the public API.
+  'max-lines-per-function': ['error', { max: 30, skipBlankLines: true, skipComments: true }],
 };
 
 export default tseslint.config(
@@ -64,9 +128,10 @@ export default tseslint.config(
       },
     },
     settings: { 'import-x/resolver-next': [createTypeScriptImportResolver()] },
-    plugins: { functional },
+    plugins: { functional, '@stylistic': stylistic },
     rules: {
       ...calisthenics,
+      ...readability,
       '@typescript-eslint/explicit-module-boundary-types': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-non-null-assertion': 'error',
@@ -102,6 +167,12 @@ export default tseslint.config(
     rules: {
       ...vitest.configs.recommended.rules,
       'max-lines-per-function': 'off',
+      'max-lines': 'off',
+      'no-plusplus': 'off',
+      'no-continue': 'off',
+      'require-unicode-regexp': 'off',
+      'sonarjs/no-duplicate-string': 'off',
+      'import-x/no-namespace': 'off',
       'no-magic-numbers': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       'functional/immutable-data': 'off',
@@ -119,6 +190,7 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'max-lines-per-function': 'off',
+      'max-lines': ['error', { max: 200, skipBlankLines: true, skipComments: true }],
       'no-magic-numbers': 'off',
       'unicorn/filename-case': ['error', { cases: { kebabCase: true, pascalCase: true } }],
       'unicorn/name-replacements': 'off',
@@ -141,13 +213,20 @@ export default tseslint.config(
     rules: {
       'functional/no-let': 'off',
       'functional/immutable-data': 'off',
+      'max-lines-per-function': 'off',
+      'no-plusplus': 'off',
       'no-magic-numbers': 'off',
       'unicorn/consistent-function-scoping': 'off',
     },
   },
   {
     files: ['**/*.config.{ts,mjs}'],
-    rules: { 'import-x/no-default-export': 'off', 'import-x/no-extraneous-dependencies': 'off' },
+    rules: {
+      'max-lines': 'off',
+      camelcase: 'off',
+      'import-x/no-default-export': 'off',
+      'import-x/no-extraneous-dependencies': 'off',
+    },
   },
   {
     files: ['**/*.mjs'],
@@ -155,4 +234,5 @@ export default tseslint.config(
     rules: { ...tseslint.configs.disableTypeChecked.rules, 'no-magic-numbers': 'off' },
   },
   prettier,
+  { rules: { curly: 'error' } }, // after prettier, which would turn it off
 );

@@ -31,5 +31,6 @@ export function visibleLabels({ vertices, position, view, box }: Request): reado
     .filter((entry): entry is Placed => entry.point !== undefined);
   const shown = placed.filter(({ point }) => isInView(point, view, box));
   const labels = shown.map(({ text, point }) => ({ text, at: toScreen(view, point) }));
+
   return view.scale < LABEL_MIN_SCALE ? [] : labels.slice(0, MAX_LABELS);
 }

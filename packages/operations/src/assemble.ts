@@ -1,5 +1,5 @@
-import { uniqueEdges } from './internal/dedupe.js';
 import { GraphBuilder, type Edge, type Graph, type VertexId } from '@graph-sdk/core';
+import { uniqueEdges } from './internal/dedupe.js';
 
 export function assemble(
   directed: boolean,
@@ -7,8 +7,15 @@ export function assemble(
   edges: readonly Edge[],
 ): Graph {
   const builder = new GraphBuilder({ directed });
-  for (const vertex of vertices) builder.addVertex(vertex);
-  for (const edge of edges) builder.addEdge(edge.source, edge.target, edge.weight);
+
+  for (const vertex of vertices) {
+    builder.addVertex(vertex);
+  }
+
+  for (const edge of edges) {
+    builder.addEdge(edge.source, edge.target, edge.weight);
+  }
+
   return builder.build();
 }
 

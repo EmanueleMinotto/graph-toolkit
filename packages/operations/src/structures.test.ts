@@ -14,6 +14,7 @@ const name = (index: number) => vertexId(String(index));
 describe('products', () => {
   it('builds grids as Cartesian products of paths', () => {
     const product = cartesianProduct(pathGraph(2), pathGraph(3));
+
     expect(product.vertexCount).toBe(6);
     expect(product.edgeCount).toBe(7);
     expect(areIsomorphic(product, gridGraph(2, 3))).toBe(true);
@@ -27,6 +28,7 @@ describe('products', () => {
       pathGraph(2, { directed: true }),
       pathGraph(2, { directed: true }),
     );
+
     expect(directed.edgeCount).toBe(1);
   });
 
@@ -34,6 +36,7 @@ describe('products', () => {
     expect(() => cartesianProduct(pathGraph(2), pathGraph(2, { directed: true }))).toThrow(
       GraphError,
     );
+
     expect(() => tensorProduct(pathGraph(2), pathGraph(2, { directed: true }))).toThrow(GraphError);
   });
 });
@@ -47,6 +50,7 @@ describe('lineGraph', () => {
 
   it('follows arc direction', () => {
     const line = lineGraph(pathGraph(3, { directed: true }));
+
     expect(line.edges()).toEqual([{ source: '0->1', target: '1->2', weight: 1 }]);
   });
 });

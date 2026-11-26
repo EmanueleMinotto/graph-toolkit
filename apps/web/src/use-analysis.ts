@@ -27,6 +27,7 @@ const hasWorker = typeof Worker !== 'undefined';
 export function useAnalysis(kind: AnalysisKind, graph: Graph, selection: Selection): AnalysisState {
   const { result, isPending } = useRawAnalysis(kind, graph, selection);
   const [shown, playback] = usePlayback(result);
+
   return { result: shown, isPending, playback };
 }
 
@@ -47,11 +48,16 @@ function useRawAnalysis(kind: AnalysisKind, graph: Graph, selection: Selection):
   });
 
   useEffect(() => {
-    if (!hasWorker || job.kind === 'none') return;
+    if (!hasWorker || job.kind === 'none') {
+      return;
+    }
+
     const worker = new Worker(new URL('analysis.worker.ts', import.meta.url), { type: 'module' });
+
     worker.addEventListener('message', (event: MessageEvent<Highlight>) => {
       setDone({ job, result: event.data });
     });
+
     const request: WorkerRequest = {
       kind: job.kind,
       json: toJson(job.graph),
@@ -60,7 +66,9 @@ function useRawAnalysis(kind: AnalysisKind, graph: Graph, selection: Selection):
       to,
       count,
     };
+
     worker.postMessage(request);
+
     return () => {
       worker.terminate();
     };
@@ -70,7 +78,14 @@ function useRawAnalysis(kind: AnalysisKind, graph: Graph, selection: Selection):
     () => (hasWorker || kind === 'none' ? IDLE : analyze(kind, graph, { from, to, count, other })),
     [kind, graph, from, to, count, other],
   );
-  if (kind === 'none') return { result: IDLE, isPending: false };
-  if (!hasWorker) return { result: inline, isPending: false };
+
+  if (kind === 'none') {
+    return { result: IDLE, isPending: false };
+  }
+
+  if (!hasWorker) {
+    return { result: inline, isPending: false };
+  }
+
   return { result: done.result, isPending: done.job !== job };
 }

@@ -37,6 +37,7 @@ const plural = (count: number, word: string): string => `${count} ${word}${count
 
 function bridgeEdges(graph: Graph): Highlight {
   const found = bridges(graph);
+
   return {
     ...NONE,
     edges: new Set(found.map(([a, b]) => edgeKey(a, b, graph.directed))),
@@ -47,6 +48,7 @@ function bridgeEdges(graph: Graph): Highlight {
 
 function cutVertices(graph: Graph): Highlight {
   const found = articulationPoints(graph);
+
   return {
     ...NONE,
     colors: new Map(found.map((id) => [id, FIRST_COLOR])),
@@ -57,6 +59,7 @@ function cutVertices(graph: Graph): Highlight {
 
 function blocks(graph: Graph): Highlight {
   const found = biconnectedComponents(graph);
+
   return {
     ...NONE,
     colors: new Map(found.flatMap((members, index) => members.map((id) => [id, index] as const))),
@@ -72,6 +75,7 @@ function ranked(
 ): Highlight {
   const entries = [...scores].toSorted(([, left], [, right]) => right - left);
   const top = entries[0]?.[1] ?? 0;
+
   return {
     ...NONE,
     sizes: new Map(entries.map(([id, score]) => [id, top > 0 ? score / top : 0])),
@@ -82,6 +86,7 @@ function ranked(
 
 function distanceMeasures(graph: Graph): Highlight {
   const middle = center(graph);
+
   return {
     ...NONE,
     colors: new Map(middle.map((id) => [id, FIRST_COLOR])),
@@ -92,6 +97,7 @@ function distanceMeasures(graph: Graph): Highlight {
 
 function spectrum(graph: Graph): Highlight {
   const values = adjacencySpectrum(graph);
+
   return {
     ...NONE,
     summary: `Algebraic connectivity ${rounded(algebraicConnectivity(graph))}`,

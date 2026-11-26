@@ -11,6 +11,7 @@ export function isInView(
   box: { readonly width: number; readonly height: number },
 ): boolean {
   const { x, y } = toScreen(view, point);
+
   return x >= -MARGIN && x <= box.width + MARGIN && y >= -MARGIN && y <= box.height + MARGIN;
 }
 
@@ -38,8 +39,10 @@ export function nextInDirection<T extends string>(
         (point.x - from.x) * heading.dx + (point.y - from.y) * heading.dy,
         Math.abs((point.x - from.x) * heading.dy - (point.y - from.y) * heading.dx),
       ];
+
       return { id, along, score: along + side };
     })
     .filter((entry) => entry.along > 0);
+
   return scored.toSorted((left, right) => left.score - right.score)[0]?.id;
 }

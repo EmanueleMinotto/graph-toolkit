@@ -13,16 +13,19 @@ export function lineEdges(
   isDirected: boolean,
 ): Edge[] {
   const links: Edge[] = [];
+
   for (const [first, firstEdge] of edges.entries()) {
     for (const [second, secondEdge] of edges.entries()) {
       const isLinked = isDirected
         ? firstEdge.target === secondEdge.source
         : first < second && sharesEndpoint(firstEdge, secondEdge);
+
       if (isLinked) {
         links.push({ source: ids[first]!, target: ids[second]!, weight: 1 });
       }
     }
   }
+
   return links;
 }
 

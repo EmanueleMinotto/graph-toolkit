@@ -19,6 +19,7 @@ export function fitToBox(layout: Layout, box: Box): Layout {
   );
   const offsetX = (box.width - spanX * scale) / 2;
   const offsetY = (box.height - spanY * scale) / 2;
+
   return new Map(
     [...layout].map(([id, point]) => [
       id,

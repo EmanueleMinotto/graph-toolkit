@@ -14,6 +14,7 @@ describe('culling', () => {
 
   it('follows zoom and pan', () => {
     const zoomed = { x: -1000, y: 0, scale: 2 };
+
     expect(isInView({ x: 600, y: 100 }, zoomed, box)).toBe(true);
     expect(isInView({ x: 10, y: 100 }, zoomed, box)).toBe(false);
   });
@@ -31,6 +32,7 @@ describe('culling', () => {
         ],
       ]),
     ).toBe('M1 2L3 4M5 6L7 8');
+
     expect(segmentsPath([])).toBe('');
   });
 
@@ -42,6 +44,7 @@ describe('culling', () => {
       ['far', { x: 90, y: 0 }],
       ['behind', { x: -10, y: 0 }],
     ] as const;
+
     expect(nextInDirection(from, { dx: 1, dy: 0 }, others)).toBe('near');
     expect(nextInDirection(from, { dx: -1, dy: 0 }, others)).toBe('behind');
     expect(nextInDirection(from, { dx: 0, dy: 1 }, others)).toBe('aside');

@@ -62,6 +62,7 @@ export function GraphView({
       onToggle: group.toggle,
       edit,
     });
+
   useImperativeHandle(ref, () => ({ snapshot: positions }));
   const { x, y, scale } = view;
   const mode = renderMode(graph, hasWebgl());
@@ -72,6 +73,7 @@ export function GraphView({
     onPick,
     hit,
   });
+
   return (
     <Paper withBorder radius="md" className="graph-wrap">
       <ExportBar svg={svg} onReset={reset} />

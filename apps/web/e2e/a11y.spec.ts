@@ -4,6 +4,7 @@ import { choose } from './helpers.js';
 
 const scan = async (page: Page) => {
   const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+
   return violations.map(
     (violation) => `${violation.id}: ${violation.nodes.length} (${violation.help})`,
   );
@@ -24,6 +25,7 @@ for (const scheme of ['light', 'dark'] as const) {
 test('vertices can be focused and selected with the keyboard', async ({ page }) => {
   await page.goto('/');
   const vertex = page.getByRole('button', { name: 'Vertex 2' });
+
   await vertex.focus();
   await page.keyboard.press('Enter');
   await expect(vertex).toHaveAttribute('aria-pressed', 'true');

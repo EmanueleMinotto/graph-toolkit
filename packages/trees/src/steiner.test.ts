@@ -12,8 +12,15 @@ function build(
 ): Graph {
   const builder = new GraphBuilder({ directed: false });
   const names = new Set([...links.flatMap(([a, b]) => [a, b]), ...extra]);
-  for (const name of names) builder.addVertex(v(name));
-  for (const [a, b, w] of links) builder.addEdge(v(a), v(b), w);
+
+  for (const name of names) {
+    builder.addVertex(v(name));
+  }
+
+  for (const [a, b, w] of links) {
+    builder.addEdge(v(a), v(b), w);
+  }
+
   return builder.build();
 }
 
@@ -30,6 +37,7 @@ describe('steinerTree', () => {
 
   it('uses a Steiner vertex when it is cheaper than joining terminals directly', () => {
     const tree = steinerTree(star, [v('a'), v('b'), v('c')]);
+
     expect(tree?.totalWeight).toBe(3);
     expect(tree?.edges).toHaveLength(3);
   });
@@ -47,6 +55,7 @@ describe('steinerTree', () => {
       ['c', 'd', 1],
       ['b', 'x', 1],
     ]);
+
     expect(steinerTree(graph, [v('a'), v('c')])?.totalWeight).toBe(2);
   });
 
@@ -68,6 +77,7 @@ describe('prune', () => {
       [edge('a', 'b'), edge('b', 'c'), edge('c', 'd'), edge('d', 'e')],
       new Set([v('a'), v('c')]),
     );
+
     expect(kept.map((item) => `${item.source}${item.target}`)).toEqual(['ab', 'bc']);
   });
 });

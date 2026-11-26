@@ -21,6 +21,7 @@ const triangle = (directed: boolean) =>
 describe('GraphBuilder', () => {
   it('builds an undirected graph with symmetric arcs', () => {
     const graph = triangle(false);
+
     expect(graph.vertexCount).toBe(3);
     expect(graph.edgeCount).toBe(3);
     expect(graph.hasEdge(b, a)).toBe(true);
@@ -30,6 +31,7 @@ describe('GraphBuilder', () => {
 
   it('builds a directed graph', () => {
     const graph = triangle(true);
+
     expect(graph.hasEdge(a, b)).toBe(true);
     expect(graph.hasEdge(b, a)).toBe(false);
     expect(graph.neighbors(a)).toEqual([{ source: a, target: b, weight: 2 }]);
@@ -38,6 +40,7 @@ describe('GraphBuilder', () => {
 
   it('exposes vertices and index mapping', () => {
     const graph = triangle(false);
+
     expect(graph.vertices()).toEqual([a, b, c]);
     expect(graph.hasVertex(a)).toBe(true);
     expect(graph.hasVertex(vertexId('z'))).toBe(false);
@@ -46,10 +49,12 @@ describe('GraphBuilder', () => {
 
   it('rejects duplicates and unknown vertices', () => {
     const builder = new GraphBuilder().addVertex(a).addVertex(b).addEdge(a, b);
+
     expect(() => builder.addVertex(a)).toThrow(DuplicateError);
     expect(() => builder.addEdge(b, a)).toThrow(DuplicateError);
     expect(() => builder.addEdge(a, c)).toThrow(UnknownVertexError);
     const graph = builder.build();
+
     expect(() => graph.indexOf(c)).toThrow(UnknownVertexError);
     expect(() => graph.vertexAt(9)).toThrow(UnknownVertexError);
   });
@@ -62,11 +67,19 @@ describe('GraphBuilder', () => {
         }),
         (pairs) => {
           const builder = new GraphBuilder();
-          for (let index = 0; index < 8; index++) builder.addVertex(vertexId(String(index)));
-          for (const [x, y] of pairs) builder.addEdge(vertexId(String(x)), vertexId(String(y)));
+
+          for (let index = 0; index < 8; index++) {
+            builder.addVertex(vertexId(String(index)));
+          }
+
+          for (const [x, y] of pairs) {
+            builder.addEdge(vertexId(String(x)), vertexId(String(y)));
+          }
+
           const graph = builder.build();
           const loops = pairs.filter(([x, y]) => x === y).length;
           const total = graph.vertices().reduce((sum, id) => sum + graph.degree(id), 0);
+
           expect(total).toBe(2 * graph.edgeCount - loops);
         },
       ),
@@ -81,13 +94,16 @@ describe('GraphBuilder', () => {
       .addEdge(b, a, 3)
       .addEdge(a, a)
       .build();
+
     expect(multi.edgeCount).toBe(3);
+
     expect(
       multi
         .edges()
         .map((edge) => edge.weight)
         .toSorted((x, y) => x - y),
     ).toEqual([1, 1, 3]);
+
     expect(multi.degree(a)).toBe(3);
   });
 });

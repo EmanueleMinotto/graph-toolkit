@@ -27,10 +27,17 @@ export type AnalysisKind =
 export { edgeKey, type Highlight, type Selection } from './analysis-types.js';
 
 function shortestPath(graph: Graph, { from, to }: Selection): Highlight {
-  if (from === undefined || to === undefined) return { ...NONE, summary: 'Pick two vertices.' };
+  if (from === undefined || to === undefined) {
+    return { ...NONE, summary: 'Pick two vertices.' };
+  }
+
   const tree = dijkstra(graph, from);
   const path = tree.pathTo(to);
-  if (path === undefined) return { ...NONE, summary: 'Unreachable.' };
+
+  if (path === undefined) {
+    return { ...NONE, summary: 'Unreachable.' };
+  }
+
   return {
     colors: new Map(path.map((id) => [id, 1])),
     edges: pathEdges(path, graph.directed),
@@ -39,8 +46,12 @@ function shortestPath(graph: Graph, { from, to }: Selection): Highlight {
 }
 
 function breadthFirst(graph: Graph, { from }: Selection): Highlight {
-  if (from === undefined) return { ...NONE, summary: 'Pick a start vertex.' };
+  if (from === undefined) {
+    return { ...NONE, summary: 'Pick a start vertex.' };
+  }
+
   const order = bfs(graph, from);
+
   return {
     ...NONE,
     colors: new Map(order.map((id) => [id, 1])),

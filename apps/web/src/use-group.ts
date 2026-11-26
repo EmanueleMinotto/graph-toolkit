@@ -16,25 +16,42 @@ const isTyping = (target: EventTarget | null): boolean =>
  */
 export function useGroup(onDelete: ((ids: ReadonlySet<VertexId>) => void) | undefined): Group {
   const [members, setMembers] = useState<ReadonlySet<VertexId>>(new Set());
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent): void => {
-      if (members.size === 0 || isTyping(event.target)) return;
-      if (event.key === 'Escape') setMembers(new Set());
-      if (onDelete === undefined || !['Delete', 'Backspace'].includes(event.key)) return;
+      if (members.size === 0 || isTyping(event.target)) {
+        return;
+      }
+
+      if (event.key === 'Escape') {
+        setMembers(new Set());
+      }
+
+      if (onDelete === undefined || !['Delete', 'Backspace'].includes(event.key)) {
+        return;
+      }
+
       onDelete(members);
       setMembers(new Set());
     };
+
     globalThis.addEventListener('keydown', onKey);
+
     return () => {
       globalThis.removeEventListener('keydown', onKey);
     };
   }, [members, onDelete]);
+
   return {
     members,
     toggle: (id) => {
       setMembers((current) => {
         const next = new Set(current);
-        if (!next.delete(id)) next.add(id);
+
+        if (!next.delete(id)) {
+          next.add(id);
+        }
+
         return next;
       });
     },

@@ -26,15 +26,24 @@ interface AnalysisProps {
 
 function selectionHint(tool: Tool, from = '–', to = '–'): string {
   const { needs } = tool;
-  if (tool.usesOther === true) return 'Compares with the second graph (Operations panel).';
-  if (needs === 0) return '';
+
+  if (tool.usesOther === true) {
+    return 'Compares with the second graph (Operations panel).';
+  }
+
+  if (needs === 0) {
+    return '';
+  }
+
   const target = needs === 2 ? ` and target (${to})` : '';
+
   return `Click vertices to choose start (${from})${target}.`;
 }
 
 export function AnalysisPanel(props: AnalysisProps) {
   const active = toolOf(props.kind);
   const hint = selectionHint(active, props.from, props.to);
+
   return (
     <Panel id="analysis" title={t('Analysis')} icon={IconChartInfographic}>
       <ChoiceSelect
@@ -65,6 +74,7 @@ function ParamInput(props: {
   readonly onChange: (value: number) => void;
 }) {
   const { param } = props;
+
   return (
     <NumberInput
       label={t(param.label)}

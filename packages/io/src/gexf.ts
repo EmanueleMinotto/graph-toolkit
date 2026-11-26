@@ -18,6 +18,7 @@ const edgeLines = (graph: Graph): readonly string[] =>
 /** GEXF 1.3 with edge `weight` attributes. */
 export function toGexf(graph: Graph): string {
   const type = graph.directed ? 'directed' : 'undirected';
+
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<gexf xmlns="http://gexf.net/1.3" version="1.3">',
@@ -36,7 +37,11 @@ export function toGexf(graph: Graph): string {
 
 export function fromGexf(text: string): Graph {
   const [graph] = findElements(text, 'graph');
-  if (graph === undefined) throw new ParseError('Missing <graph> element');
+
+  if (graph === undefined) {
+    throw new ParseError('Missing <graph> element');
+  }
+
   const edges = findElements(text, 'edge').map((edge): ParsedEdge => ({
     source: requireAttribute(edge, 'source', 'edge'),
     target: requireAttribute(edge, 'target', 'edge'),
@@ -44,5 +49,6 @@ export function fromGexf(text: string): Graph {
   }));
   const vertices = findElements(text, 'node').map((node) => requireAttribute(node, 'id', 'node'));
   const directed = graph.attributes.get('defaultedgetype') === 'directed';
+
   return assembleGraph({ directed, vertices, edges });
 }

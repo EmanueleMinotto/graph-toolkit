@@ -21,36 +21,47 @@ export function toJson(graph: Graph): string {
     vertices: graph.vertices(),
     edges: graph.edges(),
   };
+
   return JSON.stringify(document);
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
+const isOptionalNumber = (value: unknown): boolean =>
+  value === undefined || typeof value === 'number';
+
 const isEdge = (value: unknown): value is JsonEdge =>
   isRecord(value) &&
   typeof value['source'] === 'string' &&
   typeof value['target'] === 'string' &&
-  (value['weight'] === undefined || typeof value['weight'] === 'number');
+  isOptionalNumber(value['weight']);
 
 const isStringArray = (value: unknown): value is readonly string[] =>
   Array.isArray(value) && value.every((item) => typeof item === 'string');
+
+const isEdgeArray = (value: unknown): boolean =>
+  Array.isArray(value) && value.every((edge) => isEdge(edge));
 
 const isGraphDocument = (value: unknown): value is JsonGraph =>
   isRecord(value) &&
   typeof value['directed'] === 'boolean' &&
   isStringArray(value['vertices']) &&
-  Array.isArray(value['edges']) &&
-  value['edges'].every((edge) => isEdge(edge));
+  isEdgeArray(value['edges']);
 
 function parseDocument(text: string): JsonGraph {
   const value: unknown = JSON.parse(text);
-  if (!isGraphDocument(value)) throw new ParseError('Invalid graph JSON document');
+
+  if (!isGraphDocument(value)) {
+    throw new ParseError('Invalid graph JSON document');
+  }
+
   return value;
 }
 
 export function fromJson(text: string): Graph {
   const document = parseDocument(text);
   const edges = document.edges.map((edge): ParsedEdge => ({ ...edge, weight: edge.weight ?? 1 }));
+
   return assembleGraph({ ...document, edges });
 }

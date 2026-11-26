@@ -22,8 +22,10 @@ export interface AStarRequest {
  * Returns `undefined` when `target` is unreachable. Non-negative weights only.
  */
 export function aStar(graph: Graph, request: AStarRequest): PathResult | undefined {
-  if (graph.csr.weights.some((weight) => weight < 0))
+  if (graph.csr.weights.some((weight) => weight < 0)) {
     throw new GraphError('aStar requires non-negative weights');
+  }
+
   const endpoints = {
     source: graph.indexOf(request.source),
     target: graph.indexOf(request.target),
@@ -33,5 +35,6 @@ export function aStar(graph: Graph, request: AStarRequest): PathResult | undefin
     blockedVertices: new Set(),
     heuristic: (index) => request.heuristic(graph.vertexAt(index)),
   });
+
   return found === undefined ? undefined : toResult(graph, found);
 }

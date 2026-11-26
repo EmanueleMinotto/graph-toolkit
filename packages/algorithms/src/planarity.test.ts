@@ -7,8 +7,15 @@ const name = (index: number) => vertexId(String(index));
 
 const fromPairs = (count: number, pairs: readonly (readonly [number, number])[]): Graph => {
   const builder = new GraphBuilder();
-  for (let index = 0; index < count; index++) builder.addVertex(name(index));
-  for (const [from, to] of pairs) builder.addEdge(name(from), name(to));
+
+  for (let index = 0; index < count; index++) {
+    builder.addVertex(name(index));
+  }
+
+  for (const [from, to] of pairs) {
+    builder.addEdge(name(from), name(to));
+  }
+
   return builder.build();
 };
 
@@ -66,6 +73,7 @@ describe('isPlanar', () => {
       [3, 5],
       [5, 4],
     ]);
+
     expect(isPlanar(subdividedK5)).toBe(false);
     const pendant = fromPairs(7, [
       [0, 1],
@@ -78,6 +86,7 @@ describe('isPlanar', () => {
       [4, 5],
       [5, 6],
     ]);
+
     expect(isPlanar(pendant)).toBe(true);
   });
 
@@ -90,11 +99,13 @@ describe('isPlanar', () => {
       [3, 4],
       [4, 2],
     ]);
+
     expect(isPlanar(bowtie)).toBe(true);
     const k5 = completeGraph(5)
       .edges()
       .map((edge) => [Number(edge.source), Number(edge.target)] as const);
     const attached = fromPairs(6, [...k5, [4, 5]]);
+
     expect(isPlanar(attached)).toBe(false);
   });
 
@@ -102,14 +113,17 @@ describe('isPlanar', () => {
     const slots = completeGraph(5)
       .edges()
       .map((edge) => [Number(edge.source), Number(edge.target)] as const);
+
     for (let mask = 0; mask < 1 << slots.length; mask++) {
       const chosen = slots.filter((_, bit) => (mask >> bit) & 1);
+
       expect(isPlanar(fromPairs(5, chosen))).toBe(chosen.length < slots.length);
     }
   });
 
   it('ignores self loops and rejects directed graphs', () => {
     const looped = new GraphBuilder().addVertex(name(0)).addEdge(name(0), name(0)).build();
+
     expect(isPlanar(looped)).toBe(true);
     expect(() => isPlanar(pathGraph(3, { directed: true }))).toThrow(GraphError);
   });

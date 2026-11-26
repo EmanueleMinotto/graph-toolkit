@@ -21,14 +21,22 @@ const name = (index: number) => vertexId(String(index));
 
 const network = (count: number, arcs: readonly (readonly [number, number, number])[]): Graph => {
   const builder = new GraphBuilder({ directed: true });
-  for (let index = 0; index < count; index++) builder.addVertex(name(index));
-  for (const [from, to, capacity] of arcs) builder.addEdge(name(from), name(to), capacity);
+
+  for (let index = 0; index < count; index++) {
+    builder.addVertex(name(index));
+  }
+
+  for (const [from, to, capacity] of arcs) {
+    builder.addEdge(name(from), name(to), capacity);
+  }
+
   return builder.build();
 };
 
 describe('centrality', () => {
   it('scores a star', () => {
     const star = starGraph(5);
+
     expect(degreeCentrality(star).get(name(0))).toBe(1);
     expect(degreeCentrality(pathGraph(1)).get(name(0))).toBe(0);
     expect(closenessCentrality(star).get(name(0))).toBe(1);
@@ -44,6 +52,7 @@ describe('centrality', () => {
       [0, 1, 1],
       [1, 2, 1],
     ]);
+
     expect(betweennessCentrality(directed).get(name(1))).toBe(1);
   });
 });
@@ -51,7 +60,11 @@ describe('centrality', () => {
 describe('communities', () => {
   it('separates two cliques joined by a bridge', () => {
     const builder = new GraphBuilder();
-    for (let index = 0; index < 8; index++) builder.addVertex(name(index));
+
+    for (let index = 0; index < 8; index++) {
+      builder.addVertex(name(index));
+    }
+
     for (const [first, second] of [
       [0, 1],
       [0, 2],
@@ -69,7 +82,9 @@ describe('communities', () => {
     ]) {
       builder.addEdge(name(first!), name(second!));
     }
+
     const groups = communities(builder.build());
+
     expect(groups.get(name(0))).toBe(groups.get(name(3)));
     expect(groups.get(name(4))).toBe(groups.get(name(7)));
     expect(groups.get(name(0))).not.toBe(groups.get(name(4)));
@@ -82,6 +97,7 @@ describe('communities', () => {
       .addEdge(name(0), name(0))
       .addEdge(name(0), name(1))
       .build();
+
     expect(communities(looped).size).toBe(2);
   });
 
@@ -107,6 +123,7 @@ describe('cliques', () => {
         const largest = maximumClique(graph).length;
         const isClique = (mask: number): boolean => {
           const members = graph.vertices().filter((_, index) => (mask >> index) & 1);
+
           return members.every((left) =>
             members.every((right) => left === right || graph.hasEdge(left, right)),
           );
@@ -117,6 +134,7 @@ describe('cliques', () => {
             isClique(mask) ? mask.toString(2).replaceAll('0', '').length : 0,
           ),
         );
+
         expect(largest).toBe(best);
       }),
     );

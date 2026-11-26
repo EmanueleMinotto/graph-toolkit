@@ -22,18 +22,25 @@ export function usePlayback(result: Highlight): readonly [Highlight, Playback] {
   const total = result.steps?.length ?? 0;
   const [state, setState] = useState({ result, step: total, isPlaying: false });
   const current = state.result === result ? state : { result, step: total, isPlaying: false };
+
   useEffect(() => {
-    if (!current.isPlaying) return;
+    if (!current.isPlaying) {
+      return;
+    }
+
     const timer = setInterval(() => {
       setState((previous) => {
         const done = previous.step >= total;
+
         return { ...previous, result, step: done ? total : previous.step + 1, isPlaying: !done };
       });
     }, STEP_MS);
+
     return () => {
       clearInterval(timer);
     };
   }, [current.isPlaying, result, total]);
+
   const shown = useMemo(() => reveal(result, current.step), [result, current.step]);
   const playback: Playback = {
     total,
@@ -50,5 +57,6 @@ export function usePlayback(result: Highlight): readonly [Highlight, Playback] {
       });
     },
   };
+
   return [shown, playback];
 }

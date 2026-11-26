@@ -16,8 +16,10 @@ export class RootedTree {
   readonly #table: readonly Int32Array[];
 
   public constructor(graph: Graph, root: VertexId) {
-    if (graph.directed || !isTree(graph))
+    if (graph.directed || !isTree(graph)) {
       throw new GraphError('RootedTree requires an undirected tree');
+    }
+
     this.root = root;
     this.#graph = graph;
     this.#parents = rootAt(graph.csr, graph.vertexCount, graph.indexOf(root));
@@ -27,6 +29,7 @@ export class RootedTree {
   /** `undefined` for the root. */
   public parentOf(vertex: VertexId): VertexId | undefined {
     const parent = valueAt(this.#parents.parent, this.#graph.indexOf(vertex));
+
     return parent === -1 ? undefined : this.#graph.vertexAt(parent);
   }
 
@@ -43,6 +46,7 @@ export class RootedTree {
 
   public lowestCommonAncestor(left: VertexId, right: VertexId): VertexId {
     const pair = [this.#graph.indexOf(left), this.#graph.indexOf(right)] as const;
+
     return this.#graph.vertexAt(lowestCommonAncestor(this.#table, this.#parents.depth, pair));
   }
 }

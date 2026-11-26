@@ -30,6 +30,7 @@ export function OperationsPanel({ graph, other, picked, onOther, onResult, guard
   const [operation, setOperation] = useState<OperationKind>('union');
   const [text, setText] = useState('');
   const field = OPERATIONS.find((entry) => entry.id === operation)?.field;
+
   return (
     <Panel id="operations" title={t('Operations')} icon={IconTool}>
       <Group grow align="flex-end">

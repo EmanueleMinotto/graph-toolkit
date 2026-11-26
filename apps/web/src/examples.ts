@@ -23,10 +23,15 @@ type Link = readonly [string, string, number?];
 function from(directed: boolean, links: readonly Link[]): Graph {
   const builder = new GraphBuilder({ directed });
   const names = new Set(links.flatMap(([source, target]) => [source, target]));
-  for (const name of names) builder.addVertex(vertexId(name));
+
+  for (const name of names) {
+    builder.addVertex(vertexId(name));
+  }
+
   for (const [source, target, weight] of links) {
     builder.addEdge(vertexId(source), vertexId(target), weight);
   }
+
   return builder.build();
 }
 

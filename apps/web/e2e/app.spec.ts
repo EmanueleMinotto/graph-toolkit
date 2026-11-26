@@ -49,10 +49,12 @@ test('zooms with the wheel, pans the background and resets', async ({ page }) =>
   const viewport = page.getByTestId('viewport');
   const before = await viewport.getAttribute('transform');
   const box = (await page.locator('svg.graph').boundingBox())!;
+
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.wheel(0, -400);
   await expect(viewport).not.toHaveAttribute('transform', before!);
   const zoomed = await viewport.getAttribute('transform');
+
   await page.mouse.move(box.x + 20, box.y + 20);
   await page.mouse.down();
   await page.mouse.move(box.x + 80, box.y + 60);
@@ -66,6 +68,7 @@ test('drags a vertex without selecting it', async ({ page }) => {
   const node = page.locator('svg.graph [data-testid=viewport] > g', { hasText: '0' });
   const before = await node.getAttribute('transform');
   const box = (await node.locator('circle').boundingBox())!;
+
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
   await page.mouse.move(box.x + 120, box.y + 90, { steps: 5 });
@@ -80,6 +83,7 @@ test('generates a large graph quickly and caps oversized input', async ({ page }
   await choose(page, 'Kind', 'Random');
   await page.getByLabel('Size').fill('1000');
   const start = Date.now();
+
   await page.getByRole('button', { name: 'Generate', exact: true }).click();
   // Big graphs are drawn by one WebGL canvas (or, without WebGL, as SVG).
   await drawnVertices(page, 1000);
@@ -120,8 +124,10 @@ test('random graphs honor seed and probability', async ({ page }) => {
 test('exports Mermaid, downloads it and uploads a file back', async ({ page }) => {
   await choose(page, 'Format', 'Mermaid');
   const pending = page.waitForEvent('download');
+
   await page.getByRole('button', { name: 'Download' }).click();
   const saved = await pending;
+
   expect(saved.suggestedFilename()).toBe('graph.mmd');
   await page.locator('input[type=file]').setInputFiles('e2e/fixtures/tiny.dot');
   await expect(page.getByRole('combobox', { name: 'Format', exact: true })).toHaveValue('DOT');
@@ -134,6 +140,7 @@ test('random generation differs every time unless a seed is typed', async ({ pag
   await page.getByLabel('Size').fill('30');
   const edges = async () => {
     await page.getByRole('button', { name: 'Generate', exact: true }).click();
+
     return page
       .locator('svg.graph line')
       .evaluateAll((lines) =>
@@ -141,6 +148,7 @@ test('random generation differs every time unless a seed is typed', async ({ pag
       );
   };
   const first = await edges();
+
   await expect(page.getByText(/Last seed: \d+/)).toBeVisible();
   expect(await edges()).not.toBe(first);
   await page.getByLabel('Seed').fill('42');

@@ -11,17 +11,25 @@ export interface Rings {
 
 function hops(csr: Csr, count: number, root: number): Int32Array {
   const depth = new Int32Array(count).fill(-1);
+
   depth[root] = 0;
   const queue = [root];
+
   for (let head = 0; head < queue.length; head++) {
     const vertex = queue[head]!;
+
     for (let slot = csr.offsets[vertex]!; slot < csr.offsets[vertex + 1]!; slot++) {
       const target = csr.targets[slot]!;
-      if (depth[target] !== -1) continue;
+
+      if (depth[target] !== -1) {
+        continue;
+      }
+
       depth[target] = depth[vertex]! + 1;
       queue.push(target);
     }
   }
+
   return depth;
 }
 
@@ -31,9 +39,14 @@ export function ringsAround(csr: Csr, count: number, root: number): Rings {
   const outer = Math.max(...ring) + 1;
   const sizes = new Int32Array(outer + 1);
   const rank = new Int32Array(count);
+
   for (let vertex = 0; vertex < count; vertex++) {
-    if (ring[vertex] === -1) ring[vertex] = outer;
+    if (ring[vertex] === -1) {
+      ring[vertex] = outer;
+    }
+
     rank[vertex] = sizes[ring[vertex]!]!++;
   }
+
   return { ring, rank, sizes };
 }

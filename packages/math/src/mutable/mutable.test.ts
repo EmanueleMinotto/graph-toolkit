@@ -11,9 +11,14 @@ describe('MinPriorityQueue', () => {
     fc.assert(
       fc.property(fc.array(fc.double({ noNaN: true })), (priorities) => {
         const queue = new MinPriorityQueue();
-        for (const [item, priority] of priorities.entries()) queue.push(item, priority);
+
+        for (const [item, priority] of priorities.entries()) {
+          queue.push(item, priority);
+        }
+
         expect(queue.size()).toBe(priorities.length);
         const popped = priorities.map(() => queue.pop()!.priority);
+
         expect(popped).toEqual(priorities.toSorted((a, b) => a - b));
         expect(queue.size()).toBe(0);
       }),
@@ -24,12 +29,14 @@ describe('MinPriorityQueue', () => {
 describe('DisjointSet', () => {
   it('starts with singleton sets', () => {
     const sets = new DisjointSet(3);
+
     expect(sets.setCount()).toBe(3);
     expect(sets.find(2)).toBe(2);
   });
 
   it('merges sets and reports redundant unions', () => {
     const sets = new DisjointSet(5);
+
     expect(sets.union(0, 1)).toBe(true);
     expect(sets.union(1, 0)).toBe(false);
     sets.union(2, 3);
@@ -41,7 +48,11 @@ describe('DisjointSet', () => {
 
   it('compresses long chains', () => {
     const sets = new DisjointSet(64);
-    for (let index = 1; index < 64; index++) sets.union(index - 1, index);
+
+    for (let index = 1; index < 64; index++) {
+      sets.union(index - 1, index);
+    }
+
     expect(new Set(Array.from({ length: 64 }, (_, index) => sets.find(index))).size).toBe(1);
   });
 });

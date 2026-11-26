@@ -9,5 +9,6 @@ import { edgeId, lineEdges } from './internal/links.js';
 export function lineGraph(graph: Graph): Graph {
   const edges = graph.edges();
   const ids = edges.map((edge) => edgeId(edge, graph.directed));
+
   return assembleUnique(graph.directed, ids, lineEdges(edges, ids, graph.directed));
 }

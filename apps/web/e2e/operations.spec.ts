@@ -49,9 +49,11 @@ test('normalizes with a prefix and validates the result', async ({ page }) => {
   await choose(page, 'Operation', 'Relabel with a prefix');
   await page.getByLabel('Prefix').fill('v');
   await page.getByRole('button', { name: 'Apply' }).click();
+
   await expect(
     page.locator('svg.graph [data-testid=viewport] > g', { hasText: 'v0' }),
   ).toBeVisible();
+
   await page.getByLabel('Vertex id pattern (regex)').fill('^[0-9]+$');
   await page.getByLabel('Must be connected').check();
   await page.getByRole('button', { name: 'Validate', exact: true }).click();

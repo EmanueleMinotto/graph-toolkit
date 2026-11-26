@@ -10,9 +10,13 @@ interface Grid {
 
 function offDiagonal({ data, size }: Grid): number {
   let sum = 0;
+
   for (let row = 0; row < size; row++) {
-    for (let column = row + 1; column < size; column++) sum += data[row * size + column]! ** 2;
+    for (let column = row + 1; column < size; column++) {
+      sum += data[row * size + column]! ** 2;
+    }
   }
+
   return sum;
 }
 
@@ -27,6 +31,7 @@ interface Turn {
 function turnColumns(cells: Float64Array, size: number, { p, q, cos, sin }: Turn): void {
   for (let k = 0; k < size; k++) {
     const [kp, kq] = [cells[k * size + p]!, cells[k * size + q]!];
+
     cells[k * size + p] = cos * kp - sin * kq;
     cells[k * size + q] = sin * kp + cos * kq;
   }
@@ -36,6 +41,7 @@ function turnColumns(cells: Float64Array, size: number, { p, q, cos, sin }: Turn
 function turnRows(cells: Float64Array, size: number, { p, q, cos, sin }: Turn): void {
   for (let k = 0; k < size; k++) {
     const [pk, qk] = [cells[p * size + k]!, cells[q * size + k]!];
+
     cells[p * size + k] = cos * pk - sin * qk;
     cells[q * size + k] = sin * pk + cos * qk;
   }
@@ -44,11 +50,16 @@ function turnRows(cells: Float64Array, size: number, { p, q, cos, sin }: Turn): 
 /** Applies the Jacobi rotation that zeroes entry (p, q), in place on a symmetric matrix. */
 function rotate({ data, size, vectors }: Grid, p: number, q: number): void {
   const apq = data[p * size + q]!;
-  if (apq === 0) return;
+
+  if (apq === 0) {
+    return;
+  }
+
   const theta = (data[q * size + q]! - data[p * size + p]!) / (2 * apq);
   const t = Math.sign(theta || 1) / (Math.abs(theta) + Math.hypot(theta, 1));
   const cos = 1 / Math.hypot(t, 1);
   const turn: Turn = { p, q, cos, sin: t * cos };
+
   turnColumns(data, size, turn);
   turnRows(data, size, turn);
   turnColumns(vectors, size, turn);
@@ -67,14 +78,19 @@ export function jacobiEigen(matrix: Float64Array, size: number): Eigen {
     cell % (size + 1) === 0 ? 1 : 0,
   );
   const grid: Grid = { data: Float64Array.from(matrix), size, vectors: identity };
+
   for (let sweep = 0; sweep < MAX_SWEEPS && offDiagonal(grid) > EPSILON; sweep++) {
     for (let p = 0; p < size; p++) {
-      for (let q = p + 1; q < size; q++) rotate(grid, p, q);
+      for (let q = p + 1; q < size; q++) {
+        rotate(grid, p, q);
+      }
     }
   }
+
   const order = Array.from({ length: size }, (_, index) => index).toSorted(
     (a, b) => grid.data[a * size + a]! - grid.data[b * size + b]!,
   );
+
   return {
     values: order.map((index) => grid.data[index * size + index]!),
     vectors: order.map((column) =>

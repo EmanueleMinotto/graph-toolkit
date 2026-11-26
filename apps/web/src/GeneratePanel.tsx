@@ -17,6 +17,7 @@ interface Props {
 const readOptions = (data: FormData): GenerateOptions => {
   const probability = data.get('probability');
   const seed = data.get('seed');
+
   return {
     directed: data.get('directed') === 'on',
     seed: typeof seed === 'string' && seed !== '' ? Number(seed) : randomSeed(),
@@ -28,6 +29,7 @@ const readOptions = (data: FormData): GenerateOptions => {
 export function GeneratePanel({ onGenerate }: Props) {
   const [kind, setKind] = useState<SampleKind>('cycle');
   const [lastSeed, setLastSeed] = useState<number | undefined>();
+
   return (
     <Panel id="generate" title={t('New graph')} icon={IconWand}>
       <form
@@ -35,6 +37,7 @@ export function GeneratePanel({ onGenerate }: Props) {
           event.preventDefault();
           const data = new FormData(event.currentTarget);
           const options = readOptions(data);
+
           setLastSeed(options.seed);
           onGenerate(kind, Number(data.get('size')), options);
         }}

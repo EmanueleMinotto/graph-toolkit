@@ -8,10 +8,16 @@ const keyOf = (edge: Edge, isDirected: boolean): string =>
 /** Drops repeated edges, keeping the first occurrence. */
 export function uniqueEdges(isDirected: boolean, edges: readonly Edge[]): Edge[] {
   const seen = new Set<string>();
+
   return edges.filter((edge) => {
     const key = keyOf(edge, isDirected);
-    if (seen.has(key)) return false;
+
+    if (seen.has(key)) {
+      return false;
+    }
+
     seen.add(key);
+
     return true;
   });
 }

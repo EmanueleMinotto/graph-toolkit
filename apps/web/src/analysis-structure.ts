@@ -30,8 +30,12 @@ function groupsOf(groups: Groups, word: string): Highlight {
 }
 
 function depthFirst(graph: Graph, { from }: Selection): Highlight {
-  if (from === undefined) return { ...NONE, summary: 'Pick a start vertex.' };
+  if (from === undefined) {
+    return { ...NONE, summary: 'Pick a start vertex.' };
+  }
+
   const order = dfs(graph, from);
+
   return {
     ...NONE,
     colors: new Map(order.map((id) => [id, 1])),
@@ -43,8 +47,11 @@ function depthFirst(graph: Graph, { from }: Selection): Highlight {
 
 function topological(graph: Graph): Highlight {
   const order = topologicalSort(graph);
-  if (order === undefined)
+
+  if (order === undefined) {
     return { ...NONE, summary: 'No topological order: the graph has a cycle.' };
+  }
+
   return {
     ...NONE,
     summary: `${order.length} vertices ordered`,
@@ -54,14 +61,19 @@ function topological(graph: Graph): Highlight {
 
 function bipartite(graph: Graph): Highlight {
   const result = bipartition(graph);
+
   return result === undefined
     ? { ...NONE, summary: 'Not bipartite (odd cycle).' }
     : { ...NONE, colors: new Map(result.colors), summary: 'Bipartite: two sides found.' };
 }
 
 function treeCheck(graph: Graph): Highlight {
-  if (isTree(graph)) return { ...NONE, summary: 'A tree: connected and acyclic.' };
+  if (isTree(graph)) {
+    return { ...NONE, summary: 'A tree: connected and acyclic.' };
+  }
+
   const kind = isForest(graph) ? 'a forest (acyclic, not connected)' : 'not a forest (has a cycle)';
+
   return { ...NONE, summary: `Not a tree: it is ${kind}.` };
 }
 

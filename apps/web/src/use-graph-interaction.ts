@@ -73,6 +73,7 @@ export function useGraphInteraction({
 
   const toSvg = (event: { readonly clientX: number; readonly clientY: number }): Pt => {
     const rect = svg.current!.getBoundingClientRect();
+
     return {
       x: ((event.clientX - rect.left) * box.width) / rect.width,
       y: ((event.clientY - rect.top) * box.height) / rect.height,
@@ -81,7 +82,11 @@ export function useGraphInteraction({
 
   useEffect(() => {
     const element = svg.current;
-    if (element === null) return;
+
+    if (element === null) {
+      return;
+    }
+
     const onWheel = (event: WheelEvent): void => {
       event.preventDefault();
       const rect = element.getBoundingClientRect();
@@ -89,9 +94,12 @@ export function useGraphInteraction({
         x: ((event.clientX - rect.left) * box.width) / rect.width,
         y: ((event.clientY - rect.top) * box.height) / rect.height,
       };
+
       setView((current) => zoomAt(current, wheelFactor(event.deltaY), anchor));
     };
+
     element.addEventListener('wheel', onWheel, { passive: false });
+
     return () => {
       element.removeEventListener('wheel', onWheel);
     };
@@ -104,23 +112,34 @@ export function useGraphInteraction({
   };
 
   const moveDrag = (event: PointerEvent): void => {
-    const current = drag.current;
-    if (current === undefined) return;
+    const { current } = drag;
+
+    if (current === undefined) {
+      return;
+    }
+
     const point = toSvg(event);
     const [dx, dy] = [point.x - current.last.x, point.y - current.last.y];
+
     drag.current = { ...current, last: point, travelled: current.travelled + Math.hypot(dx, dy) };
     const { target } = current;
+
     if (target !== undefined && edit !== undefined) {
       setLink({ from: target, to: toContent(view, point) });
+
       return;
     }
+
     if (target === undefined) {
       setView((previous) => panBy(previous, dx, dy));
+
       return;
     }
+
     const movers = (group.has(target) ? [...group] : [target]).map(
       (id) => [id, position(id) ?? point] as const,
     );
+
     setMoved((previous) => shifted(previous, movers, [dx / view.scale, dy / view.scale]));
   };
 
@@ -130,19 +149,26 @@ export function useGraphInteraction({
   const vertexAt = (point: Pt): VertexId | undefined =>
     base.keys().find((id) => {
       const at = position(id);
+
       return at !== undefined && Math.hypot(at.x - point.x, at.y - point.y) <= HIT_RADIUS;
     });
 
   const finishLink = (source: VertexId, point: Pt): void => {
     const hit = vertexAt(point);
-    if (hit !== undefined && hit !== source) edit?.onLink(source, hit);
+
+    if (hit !== undefined && hit !== source) {
+      edit?.onLink(source, hit);
+    }
   };
 
   const release = ({ target, last, travelled, isAdditive }: Drag): void => {
     const isClick = travelled < CLICK_SLOP;
     const point = toContent(view, last);
+
     if (target === undefined) {
-      if (isClick) edit?.onAdd(point);
+      if (isClick) {
+        edit?.onAdd(point);
+      }
     } else if (isClick) {
       (isAdditive ? onToggle : onPick)(target);
     } else {
@@ -151,10 +177,14 @@ export function useGraphInteraction({
   };
 
   const endDrag = (): void => {
-    const current = drag.current;
+    const { current } = drag;
+
     drag.current = undefined;
     setLink(undefined);
-    if (current !== undefined) release(current);
+
+    if (current !== undefined) {
+      release(current);
+    }
   };
 
   const reset = (): void => {

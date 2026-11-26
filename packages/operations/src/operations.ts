@@ -15,15 +15,20 @@ export function inducedSubgraph(graph: Graph, keep: readonly VertexId[]): Graph 
   const kept = new Set(keep);
   const vertices = graph.vertices().filter((vertex) => kept.has(vertex));
   const edges = graph.edges().filter((edge) => kept.has(edge.source) && kept.has(edge.target));
+
   return assemble(graph.directed, vertices, edges);
 }
 
 /** Reverses every arc of a directed graph; undirected graphs are returned unchanged. */
 export function transpose(graph: Graph): Graph {
-  if (!graph.directed) return graph;
+  if (!graph.directed) {
+    return graph;
+  }
+
   const reversed = graph
     .edges()
     .map((edge): Edge => ({ source: edge.target, target: edge.source, weight: edge.weight }));
+
   return assemble(true, graph.vertices(), reversed);
 }
 
@@ -36,6 +41,7 @@ export function complement(graph: Graph): Graph {
       .filter((target) => !graph.hasEdge(source, target))
       .map((target): Edge => ({ source, target, weight: 1 })),
   );
+
   return assemble(graph.directed, vertices, edges);
 }
 
@@ -44,6 +50,7 @@ export function union(left: Graph, right: Graph): Graph {
   assertSameKind(left, right);
   const vertices = [...left.vertices(), ...right.vertices().filter((id) => !left.hasVertex(id))];
   const edges = [...left.edges(), ...right.edges().filter((edge) => !containsEdge(left, edge))];
+
   return assemble(left.directed, vertices, edges);
 }
 
@@ -52,5 +59,6 @@ export function intersection(left: Graph, right: Graph): Graph {
   assertSameKind(left, right);
   const vertices = left.vertices().filter((id) => right.hasVertex(id));
   const edges = left.edges().filter((edge) => containsEdge(right, edge));
+
   return assemble(left.directed, vertices, edges);
 }

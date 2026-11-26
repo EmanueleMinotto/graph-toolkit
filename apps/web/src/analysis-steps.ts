@@ -16,6 +16,7 @@ export function settleOrder(
         last === undefined || before === undefined
           ? undefined
           : edgeKey(before, last, graph.directed);
+
       return edge === undefined ? { vertex } : { vertex, edge };
     });
 }

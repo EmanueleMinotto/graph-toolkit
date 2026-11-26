@@ -13,6 +13,7 @@ test('shows analysis tables and disables tools the graph cannot run', async ({ p
   await page.getByLabel('Graph text').fill('a b');
   await page.getByRole('button', { name: 'Import', exact: true }).click();
   await page.getByRole('combobox', { name: 'Algorithm', exact: true }).click();
+
   await expect(
     page.getByRole('option', { name: /Minimum spanning tree \(Kruskal\) \(needs/ }),
   ).toBeDisabled();
@@ -65,6 +66,7 @@ test('ranks vertices by centrality and sizes the nodes', async ({ page }) => {
   const radii = await page
     .locator('svg.graph circle')
     .evaluateAll((circles) => circles.map((circle) => Number(circle.getAttribute('r'))));
+
   expect(Math.max(...radii)).toBeGreaterThan(Math.min(...radii));
 });
 

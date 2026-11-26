@@ -16,6 +16,7 @@ interface Props {
 /** One vertex: a focusable circle with its label. */
 export function VertexNode(props: Props) {
   const { id, point, radius, className, isPressed, isLabelShown } = props;
+
   return (
     <g
       transform={`translate(${point.x} ${point.y})`}
@@ -24,7 +25,10 @@ export function VertexNode(props: Props) {
       aria-label={`Vertex ${id}`}
       aria-pressed={isPressed}
       onKeyDown={(event) => {
-        if (event.key !== 'Enter' && event.key !== ' ') return;
+        if (event.key !== 'Enter' && event.key !== ' ') {
+          return;
+        }
+
         event.preventDefault();
         props.onActivate();
       }}

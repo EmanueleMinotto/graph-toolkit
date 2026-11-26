@@ -40,11 +40,13 @@ export interface Operation {
   readonly field?: string;
 }
 
+const TWO_GRAPHS = 'Two graphs';
+
 export const OPERATIONS: readonly Operation[] = [
-  { id: 'union', label: 'Union', group: 'Two graphs' },
-  { id: 'intersection', label: 'Intersection', group: 'Two graphs' },
-  { id: 'cartesian', label: 'Cartesian product', group: 'Two graphs' },
-  { id: 'tensor', label: 'Tensor product', group: 'Two graphs' },
+  { id: 'union', label: 'Union', group: TWO_GRAPHS },
+  { id: 'intersection', label: 'Intersection', group: TWO_GRAPHS },
+  { id: 'cartesian', label: 'Cartesian product', group: TWO_GRAPHS },
+  { id: 'tensor', label: 'Tensor product', group: TWO_GRAPHS },
   { id: 'complement', label: 'Complement', group: 'One graph' },
   { id: 'transpose', label: 'Transpose (reverse arcs)', group: 'One graph' },
   { id: 'line-graph', label: 'Line graph', group: 'One graph' },
@@ -76,7 +78,10 @@ const adjacentEdgePairs = (graph: Graph): number =>
 
 /** Refuses results that would freeze the page: `size` is the vertex or edge count they produce. */
 function limited(size: number, graph: () => Graph): Graph {
-  if (size > MAX_RESULT) throw new Error(`Result too large (${size} > ${MAX_RESULT})`);
+  if (size > MAX_RESULT) {
+    throw new Error(`Result too large (${size} > ${MAX_RESULT})`);
+  }
+
   return graph();
 }
 
@@ -89,12 +94,19 @@ const keptIds = (text: string): readonly VertexId[] =>
 
 function subgraph(graph: Graph, text: string): Graph {
   const keep = keptIds(text);
-  if (keep.length === 0) throw new Error('Enter the vertices to keep, separated by commas');
+
+  if (keep.length === 0) {
+    throw new Error('Enter the vertices to keep, separated by commas');
+  }
+
   return inducedSubgraph(graph, keep);
 }
 
 function contraction(graph: Graph, [keep, merge]: readonly VertexId[]): Graph {
-  if (keep === undefined || merge === undefined) throw new Error('Pick the two ends of the edge');
+  if (keep === undefined || merge === undefined) {
+    throw new Error('Pick the two ends of the edge');
+  }
+
   return contractEdge(graph, keep, merge);
 }
 

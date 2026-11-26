@@ -53,6 +53,7 @@ export function useEditor({ scene, picked, view, commit, clearPicked, guarded }:
       ...(view.current?.snapshot() ?? []),
       ...(extra === undefined ? [] : [extra]),
     ]);
+
     commit({ graph, pinned: new Map([...known].filter(([id]) => graph.hasVertex(id))) });
   };
   const { graph } = scene;
@@ -71,6 +72,7 @@ export function useEditor({ scene, picked, view, commit, clearPicked, guarded }:
         ? {
             onAdd: (at) => {
               const id = nextVertexId(graph);
+
               guarded(() => {
                 change(addVertex(graph, id), [id, at]);
               });
@@ -83,7 +85,10 @@ export function useEditor({ scene, picked, view, commit, clearPicked, guarded }:
           }
         : undefined,
     removeVertex: () => {
-      if (from === undefined) return;
+      if (from === undefined) {
+        return;
+      }
+
       change(removeVertex(graph, from));
       clearPicked();
     },
@@ -92,11 +97,17 @@ export function useEditor({ scene, picked, view, commit, clearPicked, guarded }:
       clearPicked();
     },
     removeEdge: () => {
-      if (from === undefined || to === undefined) return;
+      if (from === undefined || to === undefined) {
+        return;
+      }
+
       change(removeEdges(graph, { source: from, target: to }));
     },
     applyWeight: () => {
-      if (from === undefined || to === undefined) return;
+      if (from === undefined || to === undefined) {
+        return;
+      }
+
       change(setWeight(graph, { source: from, target: to }, weight));
     },
   };
