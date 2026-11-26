@@ -1,5 +1,12 @@
 # @graph-sdk/core
 
+## 0.2.0
+
+### Minor Changes
+
+- 384de06: Add vertex and edge attributes: `GraphBuilder.addVertex(id, attributes)`, `addEdge(a, b, { weight, attributes })`, `Graph.vertexAttributes`, `Graph.edgesBetween` and `Edge.attributes`. JSON import and export keep them.
+- 68b8c01: Make graphs editable: `GraphBuilder.from(graph)` reopens an existing graph, and `removeEdge` / `removeVertex` delete edges and vertices (new `UnknownEdgeError`).
+
 ## 0.1.0
 
 ### Minor Changes

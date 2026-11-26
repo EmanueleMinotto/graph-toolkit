@@ -1,5 +1,20 @@
 # @graph-sdk/io
 
+## 0.2.0
+
+### Minor Changes
+
+- 384de06: Add vertex and edge attributes: `GraphBuilder.addVertex(id, attributes)`, `addEdge(a, b, { weight, attributes })`, `Graph.vertexAttributes`, `Graph.edgesBetween` and `Edge.attributes`. JSON import and export keep them.
+- 549151d: Add a compact binary format: `toBinary` and `fromBinary` encode a graph as a `Uint8Array` (varint counts, UTF-8 names, one byte per unit weight).
+- d734154: Add streaming edge lists: `toEdgeListLines` yields lines lazily and `fromEdgeListStream` parses any sync or async iterable of text chunks without holding the whole text.
+
+### Patch Changes
+
+- Updated dependencies [384de06]
+- Updated dependencies [68b8c01]
+  - @graph-sdk/core@0.2.0
+  - @graph-sdk/matrix@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
