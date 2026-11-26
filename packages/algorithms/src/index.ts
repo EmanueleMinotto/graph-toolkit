@@ -13,6 +13,7 @@ export {
   type Scores,
 } from './centrality.js';
 export { maximalCliques, maximumClique } from './cliques.js';
+export { globalMinCut, type GlobalMinCut } from './global-cut.js';
 export { communities } from './communities.js';
 export { maximumBipartiteMatching, type Matching } from './matching.js';
 export { isPlanar } from './planarity.js';

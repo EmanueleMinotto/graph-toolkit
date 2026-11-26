@@ -22,6 +22,7 @@ maximumBipartiteMatching(bipartiteGraph).size;
 
 | Function                                                          | Notes                                                                     | Complexity                              |
 | ----------------------------------------------------------------- | ------------------------------------------------------------------------- | --------------------------------------- |
+| `globalMinCut(g)`                                                 | Stoer–Wagner on undirected graphs; weights ≥ 0, parallel edges add up.    | $O(V^3)$                                |
 | `maxFlow(g, s, t)`                                                | Edmonds–Karp. Directed graph, weights are capacities ≥ 0.                 | $O(V \cdot E^2)$                        |
 | `maxFlowDinic(g, s, t)`                                           | Dinic, same contract.                                                     | $O(V^2 \cdot E)$                        |
 | `maximumBipartiteMatching(g)`                                     | Hopcroft–Karp; throws on non-bipartite graphs. Returns `{ pairs, size }`. | $O(E \cdot \sqrt{V})$                   |
