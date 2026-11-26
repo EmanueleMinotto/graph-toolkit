@@ -33,6 +33,7 @@ maximumBipartiteMatching(bipartiteGraph).size;
 | `approximateBetweenness(g, { samples?, seed? })`                  | Brandes–Pich pivot sampling, reproducible by seed; exact when samples ≥ V.       | $O(k \cdot E)$                          |
 | `communities(g, maxRounds?)`                                      | Greedy modularity local moving (Louvain phase 1), deterministic.                 | $O(\text{rounds} \cdot E)$              |
 | `louvain(g, { resolution?, maxIterations? })`                     | Weighted Louvain with aggregation and a resolution γ; communities are connected. | $O(E \log V)$ typical                   |
+| `leiden(g, { resolution?, maxIterations? })`                      | Louvain plus a refinement phase (well-connected groups); deterministic.          | $O(E \log V)$ typical                   |
 | `maximalCliques(g)`, `maximumClique(g)`                           | Bron–Kerbosch with pivoting; output can be exponential.                          | exponential                             |
 | `isPlanar(g)`                                                     | Biconnected blocks + Demoucron–Malgrange–Pertuiset; self-loops ignored.          | $O(V^2)$ per block                      |
 | `minCut(g, s, t)`                                                 | Max-flow min-cut: `{ value, sourceSide, sinkSide, edges }`.                      | $O(V \cdot E^2)$                        |

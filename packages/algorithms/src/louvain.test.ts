@@ -2,7 +2,7 @@ import { GraphBuilder, GraphError, vertexId, type Graph, type VertexId } from '@
 import { completeGraph, pathGraph, randomGraph } from '@graph-sdk/generators';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { louvain } from './index.js';
+import { leiden, louvain } from './index.js';
 
 const name = (index: number) => vertexId(String(index));
 
@@ -54,10 +54,13 @@ const modularity = (graph: Graph, groups: ReadonlyMap<VertexId, number>): number
 
 const countOf = (groups: ReadonlyMap<VertexId, number>): number => new Set(groups.values()).size;
 
-describe('louvain', () => {
+describe.each([
+  ['louvain', louvain],
+  ['leiden', leiden],
+])('%s', (_name, detect) => {
   it('separates two triangles joined by a bridge', () => {
     const graph = build(6, [...clique(0, 3), ...clique(3, 3), [2, 3]]);
-    const groups = louvain(graph);
+    const groups = detect(graph);
 
     expect([...groups.values()]).toEqual([0, 0, 0, 1, 1, 1]);
   });
@@ -68,7 +71,7 @@ describe('louvain', () => {
       ...clique(index * size, size),
       [index * size, ((index + 1) % 4) * size + 1],
     ]).flat();
-    const groups = louvain(build(4 * size, arcs));
+    const groups = detect(build(4 * size, arcs));
 
     expect(countOf(groups)).toBe(4);
     expect(groups.get(name(0))).toBe(groups.get(name(4)));
@@ -76,7 +79,7 @@ describe('louvain', () => {
   });
 
   it('honors edge weights', () => {
-    const groups = louvain(
+    const groups = detect(
       build(4, [
         [0, 1, 10],
         [1, 2, 1],
@@ -90,8 +93,8 @@ describe('louvain', () => {
   it('merges or splits communities as the resolution moves', () => {
     const graph = build(6, [...clique(0, 3), ...clique(3, 3), [2, 3]]);
 
-    expect(countOf(louvain(graph, { resolution: 0.01 }))).toBe(1);
-    expect(countOf(louvain(graph, { resolution: 50 }))).toBe(6);
+    expect(countOf(detect(graph, { resolution: 0.01 }))).toBe(1);
+    expect(countOf(detect(graph, { resolution: 50 }))).toBe(6);
   });
 
   it('ignores direction, keeps loops in the degrees and handles graphs without edges', () => {
@@ -107,26 +110,26 @@ describe('louvain', () => {
       true,
     );
 
-    expect(countOf(louvain(directed))).toBe(2);
-    expect(countOf(louvain(build(3, [])))).toBe(3);
-    expect(louvain(build(0, [])).size).toBe(0);
+    expect(countOf(detect(directed))).toBe(2);
+    expect(countOf(detect(build(3, [])))).toBe(3);
+    expect(detect(build(0, [])).size).toBe(0);
   });
 
   it('respects the sweep cap', () => {
     const graph = build(6, [...clique(0, 3), ...clique(3, 3), [2, 3]]);
 
-    expect(countOf(louvain(graph, { maxIterations: 0 }))).toBe(6);
-    expect(countOf(louvain(graph, { maxIterations: 1 }))).toBeLessThanOrEqual(2);
+    expect(countOf(detect(graph, { maxIterations: 0 }))).toBe(6);
+    expect(countOf(detect(graph, { maxIterations: 1 }))).toBeLessThanOrEqual(2);
   });
 
   it('never does worse than singletons and always returns connected communities', () => {
     fc.assert(
       fc.property(fc.integer({ min: 2, max: 25 }), fc.integer(), (count, seed) => {
         const graph = randomGraph(count, { probability: 0.15, seed });
-        const groups = louvain(graph);
+        const groups = detect(graph);
         const singletons = new Map(graph.vertices().map((id, index) => [id, index]));
 
-        expect(louvain(graph)).toEqual(groups);
+        expect(detect(graph)).toEqual(groups);
 
         expect(modularity(graph, groups)).toBeGreaterThanOrEqual(
           modularity(graph, singletons) - 1e-9,
@@ -138,16 +141,16 @@ describe('louvain', () => {
   });
 
   it('beats one big community on a path and on a complete graph stays whole', () => {
-    expect(countOf(louvain(pathGraph(12)))).toBeGreaterThan(1);
-    expect(countOf(louvain(completeGraph(6)))).toBe(1);
+    expect(countOf(detect(pathGraph(12)))).toBeGreaterThan(1);
+    expect(countOf(detect(completeGraph(6)))).toBe(1);
   });
 
   it('validates options and weights', () => {
     const graph = pathGraph(3);
 
-    expect(() => louvain(graph, { resolution: 0 })).toThrow(GraphError);
-    expect(() => louvain(graph, { resolution: Infinity })).toThrow(GraphError);
-    expect(() => louvain(build(2, [[0, 1, -1]]))).toThrow(GraphError);
+    expect(() => detect(graph, { resolution: 0 })).toThrow(GraphError);
+    expect(() => detect(graph, { resolution: Infinity })).toThrow(GraphError);
+    expect(() => detect(build(2, [[0, 1, -1]]))).toThrow(GraphError);
   });
 });
 
