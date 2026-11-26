@@ -43,6 +43,11 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     needs: verify
+    # One runner per browser: they run in parallel and each installs only its own binary.
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -52,10 +57,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm turbo run build
-      - run: pnpm --filter @graph-sdk/web exec playwright install --with-deps
+      - run: pnpm --filter @graph-sdk/web exec playwright install --with-deps ${{ matrix.browser }}
       # Software OpenGL so headless Firefox can create a WebGL context.
       - run: sudo apt-get install -y --no-install-recommends libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers xvfb
-      - run: xvfb-run --auto-servernum pnpm --filter @graph-sdk/web e2e
+      - run: xvfb-run --auto-servernum pnpm --filter @graph-sdk/web e2e --project=${{ matrix.browser }}
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
 
