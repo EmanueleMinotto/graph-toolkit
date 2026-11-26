@@ -109,7 +109,7 @@ const internalKernels = {
 };
 
 export default tseslint.config(
-  { ignores: ['**/{dist,public,coverage,.turbo}/**', 'docs/{api,theme}/**'] },
+  { ignores: ['**/{dist,public,coverage,.turbo,.stryker-tmp,reports}/**', 'docs/{api,theme}/**'] },
   js.configs.recommended,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
@@ -220,7 +220,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['**/*.config.{ts,mjs}'],
+    files: ['**/*.config.{ts,mjs}', '**/*.config.base.mjs'],
     rules: {
       'max-lines': 'off',
       camelcase: 'off',
