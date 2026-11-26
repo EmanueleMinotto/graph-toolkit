@@ -1,5 +1,14 @@
 # @graph-sdk/paths
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [384de06]
+- Updated dependencies [68b8c01]
+  - @graph-sdk/core@0.2.0
+  - @graph-sdk/traversal@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

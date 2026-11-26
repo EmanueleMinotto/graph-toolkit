@@ -1,6 +1,6 @@
 {
   "name": "@graph-sdk/operations",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Set-style operations on graphs: union, intersection, complement, subgraph, transpose",
   "license": "MIT",
   "repository": {

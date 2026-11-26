@@ -1,5 +1,17 @@
 # @graph-sdk/operations
 
+## 0.2.0
+
+### Minor Changes
+
+- 616f483: Add `graphEditDistance`, the exact edit distance between two small graphs with configurable vertex and edge costs.
+
+### Patch Changes
+
+- Updated dependencies [384de06]
+- Updated dependencies [68b8c01]
+  - @graph-sdk/core@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@graph-sdk/io",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Import and export graphs: JSON, edge list/CSV, DOT, GraphML, GEXF, Mermaid, adjacency CSV",
   "license": "MIT",
   "repository": {
