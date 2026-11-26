@@ -1,6 +1,6 @@
 {
   "name": "@graph-sdk/cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "graph-toolkit command line: convert between graph formats, generate graphs, print statistics",
   "license": "MIT",
   "repository": {

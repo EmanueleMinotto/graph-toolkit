@@ -1,6 +1,6 @@
 {
   "name": "@graph-sdk/dynamic",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Graph diffs, patches and undo/redo history for evolving immutable graphs",
   "license": "MIT",
   "repository": {

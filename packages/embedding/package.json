@@ -1,6 +1,6 @@
 {
   "name": "@graph-sdk/embedding",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Vertex embeddings: seeded random walks and spectral embedding",
   "license": "MIT",
   "repository": {
