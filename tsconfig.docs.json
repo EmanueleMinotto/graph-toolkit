@@ -4,7 +4,8 @@
     "paths": {
       "@graph-sdk/*": ["./packages/*/src/index.ts"]
     },
-    "isolatedDeclarations": false
+    "isolatedDeclarations": false,
+    "types": ["node"]
   },
   "include": ["packages/*/src/**/*.ts"],
   "exclude": ["packages/*/src/**/*.test.ts", "packages/graph-toolkit/**"]
