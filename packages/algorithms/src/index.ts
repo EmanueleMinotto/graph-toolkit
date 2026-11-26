@@ -22,6 +22,7 @@ export { communities } from './communities.js';
 export { louvain, type LouvainOptions } from './louvain.js';
 export { maximumBipartiteMatching, type Matching } from './matching.js';
 export { isPlanar } from './planarity.js';
+export { treewidth, type TreewidthOptions } from './treewidth.js';
 export {
   articulationPoints,
   averageClustering,
