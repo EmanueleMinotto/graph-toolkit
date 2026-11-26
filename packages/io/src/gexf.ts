@@ -36,7 +36,9 @@ export function toGexf(graph: Graph): string {
 
 export function fromGexf(text: string): Graph {
   const [graph] = findElements(text, 'graph');
-  if (graph === undefined) throw new ParseError('Missing <graph> element');
+  if (graph === undefined) {
+    throw new ParseError('Missing <graph> element');
+  }
   const edges = findElements(text, 'edge').map((edge): ParsedEdge => ({
     source: requireAttribute(edge, 'source', 'edge'),
     target: requireAttribute(edge, 'target', 'edge'),

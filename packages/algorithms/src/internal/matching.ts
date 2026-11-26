@@ -15,7 +15,9 @@ function layerFrom(matching: Matching, vertex: number, queue: number[]): boolean
   for (let slot = csr.offsets[vertex]!; slot < csr.offsets[vertex + 1]!; slot++) {
     const mate = partner[csr.targets[slot]!]!;
     isAugmentable ||= mate === -1;
-    if (mate === -1 || distance[mate] !== UNREACHED) continue;
+    if (mate === -1 || distance[mate] !== UNREACHED) {
+      continue;
+    }
     distance[mate] = distance[vertex]! + 1;
     queue.push(mate);
   }
@@ -25,7 +27,9 @@ function layerFrom(matching: Matching, vertex: number, queue: number[]): boolean
 function layer(matching: Matching, left: readonly number[]): boolean {
   const { partner, distance } = matching;
   const queue = left.filter((vertex) => partner[vertex] === -1);
-  for (const vertex of left) distance[vertex] = partner[vertex] === -1 ? 0 : UNREACHED;
+  for (const vertex of left) {
+    distance[vertex] = partner[vertex] === -1 ? 0 : UNREACHED;
+  }
   let isAugmentable = false;
   for (let head = 0; head < queue.length; head++) {
     isAugmentable = layerFrom(matching, queue[head]!, queue) || isAugmentable;
@@ -57,7 +61,9 @@ export function hopcroftKarp(csr: Csr, vertexCount: number, left: readonly numbe
   };
   while (layer(matching, left)) {
     for (const vertex of left) {
-      if (matching.partner[vertex] === -1) augment(matching, vertex);
+      if (matching.partner[vertex] === -1) {
+        augment(matching, vertex);
+      }
     }
   }
   return matching.partner;

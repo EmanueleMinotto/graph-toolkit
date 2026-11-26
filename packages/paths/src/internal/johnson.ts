@@ -6,7 +6,9 @@ function relaxRound(csr: Csr, height: Float64Array): boolean {
   for (let vertex = 0; vertex < height.length; vertex++) {
     for (let slot = csr.offsets[vertex]!; slot < csr.offsets[vertex + 1]!; slot++) {
       const candidate = height[vertex]! + csr.weights[slot]!;
-      if (candidate >= height[csr.targets[slot]!]!) continue;
+      if (candidate >= height[csr.targets[slot]!]!) {
+        continue;
+      }
       height[csr.targets[slot]!] = candidate;
       changed = true;
     }
@@ -18,7 +20,9 @@ function relaxRound(csr: Csr, height: Float64Array): boolean {
 export function potentials(csr: Csr, count: number): Float64Array | undefined {
   const height = new Float64Array(count);
   for (let round = 0; round <= count; round++) {
-    if (!relaxRound(csr, height)) return height;
+    if (!relaxRound(csr, height)) {
+      return height;
+    }
   }
   return undefined;
 }
@@ -37,7 +41,9 @@ function reweighted(csr: Csr, height: Float64Array): Csr {
 /** Johnson all-pairs, O(V·E log V). Row-major V×V, or `undefined` on a negative cycle. */
 export function johnsonKernel(csr: Csr, count: number): Float64Array | undefined {
   const height = potentials(csr, count);
-  if (height === undefined) return undefined;
+  if (height === undefined) {
+    return undefined;
+  }
   const positive = reweighted(csr, height);
   const cells = new Float64Array(count * count);
   for (let source = 0; source < count; source++) {
@@ -55,11 +61,15 @@ export function dagKernel(csr: Csr, order: readonly number[], source: number): D
   const predecessors = new Int32Array(order.length).fill(-1);
   distances[source] = 0;
   for (const vertex of order) {
-    if (distances[vertex] === Infinity) continue;
+    if (distances[vertex] === Infinity) {
+      continue;
+    }
     for (let slot = csr.offsets[vertex]!; slot < csr.offsets[vertex + 1]!; slot++) {
       const target = csr.targets[slot]!;
       const candidate = distances[vertex]! + csr.weights[slot]!;
-      if (candidate >= distances[target]!) continue;
+      if (candidate >= distances[target]!) {
+        continue;
+      }
       distances[target] = candidate;
       predecessors[target] = vertex;
     }

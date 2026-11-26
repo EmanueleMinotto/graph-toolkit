@@ -27,7 +27,9 @@ export function topologicalSort(graph: Graph): readonly VertexId[] | undefined {
 
 /** Connected components of an undirected graph; throws {@link GraphError} if directed. O(V + E). */
 export function connectedComponents(graph: Graph): readonly (readonly VertexId[])[] {
-  if (graph.directed) throw new GraphError('connectedComponents requires an undirected graph');
+  if (graph.directed) {
+    throw new GraphError('connectedComponents requires an undirected graph');
+  }
   return componentIndices(graph.csr, graph.vertexCount).map((component) =>
     component.map((index) => graph.vertexAt(index)),
   );
@@ -38,8 +40,9 @@ export function connectedComponents(graph: Graph): readonly (readonly VertexId[]
  * condensation. O(V + E). Throws {@link GraphError} for undirected graphs.
  */
 export function stronglyConnectedComponents(graph: Graph): readonly (readonly VertexId[])[] {
-  if (!graph.directed)
+  if (!graph.directed) {
     throw new GraphError('stronglyConnectedComponents requires a directed graph');
+  }
   return tarjan(graph.csr, graph.vertexCount).map((component) =>
     component.map((index) => graph.vertexAt(index)),
   );

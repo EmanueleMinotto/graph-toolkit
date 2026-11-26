@@ -10,8 +10,12 @@ const NETWORK_SIZE = 6;
 
 const network = (arcs: readonly (readonly [number, number, number])[]): Graph => {
   const builder = new GraphBuilder({ directed: true });
-  for (let index = 0; index < NETWORK_SIZE; index++) builder.addVertex(name(index));
-  for (const [from, to, capacity] of arcs) builder.addEdge(name(from), name(to), capacity);
+  for (let index = 0; index < NETWORK_SIZE; index++) {
+    builder.addVertex(name(index));
+  }
+  for (const [from, to, capacity] of arcs) {
+    builder.addEdge(name(from), name(to), capacity);
+  }
   return builder.build();
 };
 
@@ -55,13 +59,16 @@ describe('matching', () => {
 
   it('re-routes earlier matches along alternating paths', () => {
     const builder = new GraphBuilder();
-    for (let index = 0; index < 4; index++) builder.addVertex(name(index));
+    for (let index = 0; index < 4; index++) {
+      builder.addVertex(name(index));
+    }
     for (const [from, to] of [
       [0, 2],
       [0, 3],
       [1, 2],
-    ] as const)
+    ] as const) {
       builder.addEdge(name(from), name(to));
+    }
     expect(maximumBipartiteMatching(builder.build()).size).toBe(2);
   });
 

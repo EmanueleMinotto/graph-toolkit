@@ -39,8 +39,9 @@ const rounded = (value: number): string => String(Number(value.toPrecision(4)));
 
 function flow(solve: (graph: Graph, source: VertexId, sink: VertexId) => number, name: string) {
   return (graph: Graph, { from, to }: Selection): Highlight => {
-    if (from === undefined || to === undefined)
+    if (from === undefined || to === undefined) {
       return { ...NONE, summary: 'Pick source and sink.' };
+    }
     const value = solve(graph, from, to);
     return {
       ...NONE,

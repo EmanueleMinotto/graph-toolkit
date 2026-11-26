@@ -26,7 +26,9 @@ export function WebglLayer({ scene, view, box }: Props) {
   }, []);
   useLayoutEffect(() => {
     const element = canvas.current;
-    if (element === null) return;
+    if (element === null) {
+      return;
+    }
     renderer.current?.draw(scene, view, {
       box,
       width: element.clientWidth,

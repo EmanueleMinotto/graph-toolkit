@@ -16,8 +16,9 @@ export class RootedTree {
   readonly #table: readonly Int32Array[];
 
   public constructor(graph: Graph, root: VertexId) {
-    if (graph.directed || !isTree(graph))
+    if (graph.directed || !isTree(graph)) {
       throw new GraphError('RootedTree requires an undirected tree');
+    }
     this.root = root;
     this.#graph = graph;
     this.#parents = rootAt(graph.csr, graph.vertexCount, graph.indexOf(root));

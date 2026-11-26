@@ -8,8 +8,12 @@ const from0 = { from: v(0), to: undefined };
 
 function digraph(count: number, arcs: readonly (readonly [number, number, number])[]): Graph {
   const builder = new GraphBuilder({ directed: true });
-  for (let index = 0; index < count; index++) builder.addVertex(v(index));
-  for (const [from, to, weight] of arcs) builder.addEdge(v(from), v(to), weight);
+  for (let index = 0; index < count; index++) {
+    builder.addVertex(v(index));
+  }
+  for (const [from, to, weight] of arcs) {
+    builder.addEdge(v(from), v(to), weight);
+  }
   return builder.build();
 }
 

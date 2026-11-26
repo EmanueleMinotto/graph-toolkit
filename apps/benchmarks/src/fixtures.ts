@@ -23,19 +23,26 @@ export function randomWeighted(size: Size, isDirected: boolean): Graph {
   const next = prng(12_345);
   const builder = new GraphBuilder({ directed: isDirected });
   const name = (index: number) => vertexId(`n${index}`);
-  for (let index = 0; index < size.vertices; index++) builder.addVertex(name(index));
+  for (let index = 0; index < size.vertices; index++) {
+    builder.addVertex(name(index));
+  }
   const seen = new Set<number>();
   const add = (from: number, to: number): void => {
     const key = isDirected
       ? from * size.vertices + to
       : Math.min(from, to) * size.vertices + Math.max(from, to);
-    if (from === to || seen.has(key)) return;
+    if (from === to || seen.has(key)) {
+      return;
+    }
     seen.add(key);
     builder.addEdge(name(from), name(to), 1 + Math.floor(next() * 9));
   };
-  for (let index = 1; index < size.vertices; index++) add(index - 1, index);
-  while (seen.size < size.edges)
+  for (let index = 1; index < size.vertices; index++) {
+    add(index - 1, index);
+  }
+  while (seen.size < size.edges) {
     add(Math.floor(next() * size.vertices), Math.floor(next() * size.vertices));
+  }
   return builder.build();
 }
 

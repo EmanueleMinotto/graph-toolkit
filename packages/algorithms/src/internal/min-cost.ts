@@ -51,10 +51,14 @@ function relaxFrom(network: Network, search: Search, vertex: number): void {
   for (const edge of outgoing) {
     const target = network.to[edge]!;
     const candidate = search.distance[vertex]! + network.cost[edge]!;
-    if (network.capacity[edge]! <= 0 || candidate >= search.distance[target]!) continue;
+    if (network.capacity[edge]! <= 0 || candidate >= search.distance[target]!) {
+      continue;
+    }
     search.distance[target] = candidate;
     search.parentEdge[target] = edge;
-    if (search.queued.has(target)) continue;
+    if (search.queued.has(target)) {
+      continue;
+    }
     search.queued.add(target);
     search.queue.push(target);
   }
@@ -104,7 +108,9 @@ export function minCostFlowKernel(problem: Problem): FlowResult {
   while (flow < problem.limit) {
     const search = cheapestPath(network, problem.source);
     const unitCost = search.distance[problem.sink]!;
-    if (unitCost === Infinity) break;
+    if (unitCost === Infinity) {
+      break;
+    }
     const edges = pathTo(network, search, problem);
     const amount = Math.min(problem.limit - flow, ...edges.map((edge) => network.capacity[edge]!));
     push(network, edges, amount);

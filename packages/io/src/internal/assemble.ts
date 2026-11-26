@@ -17,11 +17,15 @@ export function assembleGraph(parsed: ParsedGraph): Graph {
   const builder = new GraphBuilder({ directed: parsed.directed });
   const seen = new Set<string>();
   const declare = (name: string): void => {
-    if (seen.has(name)) return;
+    if (seen.has(name)) {
+      return;
+    }
     seen.add(name);
     builder.addVertex(vertexId(name));
   };
-  for (const name of parsed.vertices) declare(name);
+  for (const name of parsed.vertices) {
+    declare(name);
+  }
   for (const edge of parsed.edges) {
     declare(edge.source);
     declare(edge.target);

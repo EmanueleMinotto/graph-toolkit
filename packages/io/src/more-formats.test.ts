@@ -23,9 +23,13 @@ function everyGraph(count: number): Graph[] {
     .map((edge) => [edge.source, edge.target] as const);
   return Array.from({ length: 2 ** pairs.length }, (_, mask) => {
     const builder = new GraphBuilder({ directed: false });
-    for (let index = 0; index < count; index++) builder.addVertex(vertexId(String(index)));
+    for (let index = 0; index < count; index++) {
+      builder.addVertex(vertexId(String(index)));
+    }
     for (const [bit, [source, target]] of pairs.entries()) {
-      if ((mask >> bit) & 1) builder.addEdge(source, target);
+      if ((mask >> bit) & 1) {
+        builder.addEdge(source, target);
+      }
     }
     return builder.build();
   });
@@ -104,7 +108,9 @@ describe('sparse6', () => {
 
   it('accepts edges given high-to-low', () => {
     const builder = new GraphBuilder({ directed: false });
-    for (const name of ['0', '1', '2']) builder.addVertex(vertexId(name));
+    for (const name of ['0', '1', '2']) {
+      builder.addVertex(vertexId(name));
+    }
     builder.addEdge(vertexId('2'), vertexId('0')).addEdge(vertexId('2'), vertexId('1'));
     expect(keys(fromSparse6(toSparse6(builder.build())))).toEqual(['0-2', '1-2']);
   });

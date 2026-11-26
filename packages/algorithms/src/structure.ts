@@ -15,7 +15,9 @@ import { valueAt } from './internal/access.js';
 import type { Scores } from './centrality.js';
 
 function undirectedBlocks(graph: Graph, name: string): readonly (readonly Pair[])[] {
-  if (graph.directed) throw new GraphError(`${name} requires an undirected graph`);
+  if (graph.directed) {
+    throw new GraphError(`${name} requires an undirected graph`);
+  }
   const pairs = graph
     .edges()
     .map((edge): Pair => [graph.indexOf(edge.source), graph.indexOf(edge.target)]);
@@ -91,7 +93,9 @@ export function center(graph: Graph): readonly VertexId[] {
 /** Directed graph with an arc u→v whenever v ≠ u is reachable from u. O(V·(V + E)). */
 export function transitiveClosure(graph: Graph): Graph {
   const builder = new GraphBuilder({ directed: true });
-  for (const id of graph.vertices()) builder.addVertex(id);
+  for (const id of graph.vertices()) {
+    builder.addVertex(id);
+  }
   for (const [from, to] of reachablePairs(graph.csr, graph.vertexCount)) {
     builder.addEdge(graph.vertexAt(from), graph.vertexAt(to));
   }

@@ -10,7 +10,9 @@ const LARGE_DIGITS = 3;
 const DIGIT_MASK = 63;
 
 export function encodeOrder(count: number): string {
-  if (count <= SMALL_LIMIT) return String.fromCodePoint(count + OFFSET);
+  if (count <= SMALL_LIMIT) {
+    return String.fromCodePoint(count + OFFSET);
+  }
   const digits = [count >> 12, (count >> 6) & DIGIT_MASK, count & DIGIT_MASK];
   return String.fromCodePoint(LARGE_MARK, ...digits.map((digit) => digit + OFFSET));
 }
@@ -27,10 +29,14 @@ export function encodeGraph6(
   count: number,
   isLinked: (from: number, to: number) => boolean,
 ): string {
-  if (count > LARGE_LIMIT) throw new GraphError('graph6 supports at most 258047 vertices');
+  if (count > LARGE_LIMIT) {
+    throw new GraphError('graph6 supports at most 258047 vertices');
+  }
   const bits: number[] = [];
   for (let to = 1; to < count; to++) {
-    for (let from = 0; from < to; from++) bits.push(isLinked(from, to) ? 1 : 0);
+    for (let from = 0; from < to; from++) {
+      bits.push(isLinked(from, to) ? 1 : 0);
+    }
   }
   return encodeOrder(count) + packBits(bits);
 }
@@ -64,7 +70,9 @@ export function decodeGraph6(line: string): { count: number; edges: [number, num
   for (let to = 1; to < count; to++) {
     for (let from = 0; from < to; from++, position++) {
       const value = body.codePointAt(Math.floor(position / BITS))! - OFFSET;
-      if ((value >> (BITS - 1 - (position % BITS))) & 1) edges.push([from, to]);
+      if ((value >> (BITS - 1 - (position % BITS))) & 1) {
+        edges.push([from, to]);
+      }
     }
   }
   return { count, edges };

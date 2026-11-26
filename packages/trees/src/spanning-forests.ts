@@ -3,7 +3,9 @@ import { boruvkaKernel, primKernel, type IndexEdge } from './internal/spanning.j
 import type { SpanningForest } from './trees.js';
 
 function assertUndirected(graph: Graph, name: string): void {
-  if (graph.directed) throw new GraphError(`${name} requires an undirected graph`);
+  if (graph.directed) {
+    throw new GraphError(`${name} requires an undirected graph`);
+  }
 }
 
 function toForest(graph: Graph, edges: readonly IndexEdge[]): SpanningForest {

@@ -40,7 +40,9 @@ function explore(residual: Residual, vertex: number, search: Search): void {
   const edges = residual.adjacency[vertex]!;
   for (const edge of edges) {
     const target = residual.to[edge]!;
-    if (search.visited[target] === 1 || residual.capacity[edge]! <= 0) continue;
+    if (search.visited[target] === 1 || residual.capacity[edge]! <= 0) {
+      continue;
+    }
     search.visited[target] = 1;
     search.parentEdge[target] = edge;
     search.queue.push(target);
@@ -110,7 +112,9 @@ export function sourceSide(csr: Csr, vertexCount: number, terminals: Terminals):
     const outgoing = residual.adjacency[queue[head]!]!;
     for (const edge of outgoing) {
       const target = residual.to[edge]!;
-      if (reached[target] === 1 || residual.capacity[edge]! <= 0) continue;
+      if (reached[target] === 1 || residual.capacity[edge]! <= 0) {
+        continue;
+      }
       reached[target] = 1;
       queue.push(target);
     }

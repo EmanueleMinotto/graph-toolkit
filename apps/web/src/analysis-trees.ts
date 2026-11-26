@@ -26,7 +26,9 @@ function spanning(name: string, solve: (graph: Graph) => SpanningForest) {
 
 /** Colors each vertex by depth and lists parent and depth. */
 function rooted(graph: Graph, { from }: Selection): Highlight {
-  if (from === undefined) return { ...NONE, summary: 'Pick the root vertex.' };
+  if (from === undefined) {
+    return { ...NONE, summary: 'Pick the root vertex.' };
+  }
   const tree = new RootedTree(graph, from);
   const ids = graph.vertices();
   const height = Math.max(...ids.map((id) => tree.depthOf(id)));
@@ -39,9 +41,13 @@ function rooted(graph: Graph, { from }: Selection): Highlight {
 }
 
 function ancestor(graph: Graph, { from, to }: Selection): Highlight {
-  if (from === undefined || to === undefined) return { ...NONE, summary: 'Pick two vertices.' };
+  if (from === undefined || to === undefined) {
+    return { ...NONE, summary: 'Pick two vertices.' };
+  }
   const [root] = graph.vertices();
-  if (root === undefined) return { ...NONE, summary: 'The graph is empty.' };
+  if (root === undefined) {
+    return { ...NONE, summary: 'The graph is empty.' };
+  }
   const common = new RootedTree(graph, root).lowestCommonAncestor(from, to);
   return {
     ...NONE,

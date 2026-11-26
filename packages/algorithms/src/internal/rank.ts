@@ -13,7 +13,9 @@ function step(csr: Csr, ranks: Float64Array, damping: number): Float64Array {
   for (let vertex = 0; vertex < count; vertex++) {
     const start = csr.offsets[vertex]!;
     const end = csr.offsets[vertex + 1]!;
-    if (start === end) dangling += ranks[vertex]!;
+    if (start === end) {
+      dangling += ranks[vertex]!;
+    }
     for (let slot = start; slot < end; slot++) {
       next[csr.targets[slot]!]! += (damping * ranks[vertex]!) / (end - start);
     }
@@ -33,7 +35,9 @@ export function pageRankKernel(csr: Csr, count: number, options: RankOptions): F
     const next = step(csr, ranks, options.damping);
     const converged = distance(ranks, next) < options.tolerance;
     ranks = next;
-    if (converged) break;
+    if (converged) {
+      break;
+    }
   }
   return ranks;
 }

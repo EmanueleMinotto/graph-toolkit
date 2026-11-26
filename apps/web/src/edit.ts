@@ -3,8 +3,12 @@ import { GraphBuilder, vertexId, type Edge, type Graph, type VertexId } from 'gr
 /** Always allows parallel edges: duplicate checks are made by `addEdge` so users can opt in. */
 function rebuild(graph: Graph, vertices: readonly VertexId[], edges: readonly Edge[]): Graph {
   const builder = new GraphBuilder({ directed: graph.directed, allowParallelEdges: true });
-  for (const vertex of vertices) builder.addVertex(vertex);
-  for (const edge of edges) builder.addEdge(edge.source, edge.target, edge.weight);
+  for (const vertex of vertices) {
+    builder.addVertex(vertex);
+  }
+  for (const edge of edges) {
+    builder.addEdge(edge.source, edge.target, edge.weight);
+  }
   return builder.build();
 }
 

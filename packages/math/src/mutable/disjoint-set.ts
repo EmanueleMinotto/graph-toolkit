@@ -12,7 +12,9 @@ export class DisjointSet {
 
   public find(element: number): number {
     let root = element;
-    while (this.#parent[root] !== root) root = this.#parent[root]!;
+    while (this.#parent[root] !== root) {
+      root = this.#parent[root]!;
+    }
     let node = element;
     while (this.#parent[node] !== root) {
       const next = this.#parent[node]!;
@@ -25,9 +27,13 @@ export class DisjointSet {
   /** Merges the sets of `left` and `right`; returns false when already joined. */
   public union(left: number, right: number): boolean {
     const [low, high] = this.#byRank(this.find(left), this.find(right));
-    if (low === high) return false;
+    if (low === high) {
+      return false;
+    }
     this.#parent[low] = high;
-    if (this.#rank[low] === this.#rank[high]) this.#rank[high]!++;
+    if (this.#rank[low] === this.#rank[high]) {
+      this.#rank[high]!++;
+    }
     this.#sets--;
     return true;
   }

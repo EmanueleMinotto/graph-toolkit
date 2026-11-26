@@ -65,8 +65,11 @@ export async function pngBlob(svg: SVGSVGElement): Promise<Blob> {
   canvas.getContext('2d')?.drawImage(image, 0, 0, canvas.width, canvas.height);
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {
-      if (blob === null) reject(new Error('Could not encode the PNG.'));
-      else resolve(blob);
+      if (blob === null) {
+        reject(new Error('Could not encode the PNG.'));
+      } else {
+        resolve(blob);
+      }
     }, 'image/png');
   });
 }

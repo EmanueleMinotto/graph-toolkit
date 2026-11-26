@@ -20,7 +20,9 @@ export function toGml(graph: Graph): string {
 
 function nameOf(node: GmlList): readonly [number, string] {
   const id = valueOf(node, 'id');
-  if (typeof id !== 'number') throw new ParseError('GML node without numeric id');
+  if (typeof id !== 'number') {
+    throw new ParseError('GML node without numeric id');
+  }
   const label = valueOf(node, 'label');
   return [id, typeof label === 'string' ? label : String(id)];
 }
@@ -29,7 +31,9 @@ function edgeOf(names: ReadonlyMap<number, string>, edge: GmlList): ParsedEdge {
   const [source, target] = [valueOf(edge, 'source'), valueOf(edge, 'target')];
   const from = typeof source === 'number' ? names.get(source) : undefined;
   const to = typeof target === 'number' ? names.get(target) : undefined;
-  if (from === undefined || to === undefined) throw new ParseError('GML edge with unknown node');
+  if (from === undefined || to === undefined) {
+    throw new ParseError('GML edge with unknown node');
+  }
   const weight = valueOf(edge, 'weight');
   return { source: from, target: to, weight: typeof weight === 'number' ? weight : 1 };
 }
@@ -37,7 +41,9 @@ function edgeOf(names: ReadonlyMap<number, string>, edge: GmlList): ParsedEdge {
 /** Parses GML written by {@link toGml} or other tools (extra attributes are ignored). */
 export function fromGml(text: string): Graph {
   const [body] = listsOf(parseGml(text), 'graph');
-  if (body === undefined) throw new ParseError('GML document has no graph');
+  if (body === undefined) {
+    throw new ParseError('GML document has no graph');
+  }
   const names = new Map(listsOf(body, 'node').map((node) => nameOf(node)));
   return assembleGraph({
     directed: valueOf(body, 'directed') === 1,

@@ -59,7 +59,9 @@ export function ChoiceSelect<T extends string>(props: Props<T>) {
         );
       }}
       onChange={(value) => {
-        if (value !== null) props.onChange(value as T);
+        if (value !== null) {
+          props.onChange(value as T);
+        }
       }}
     />
   );

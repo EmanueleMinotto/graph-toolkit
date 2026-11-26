@@ -25,7 +25,9 @@ export class GraphBuilder {
   }
 
   public addVertex(id: VertexId): this {
-    if (this.#indices.has(id)) throw new DuplicateError(`Duplicate vertex: ${id}`);
+    if (this.#indices.has(id)) {
+      throw new DuplicateError(`Duplicate vertex: ${id}`);
+    }
     this.#indices.set(id, this.#indices.size);
     return this;
   }
@@ -58,7 +60,9 @@ export class GraphBuilder {
 
   #indexOf(id: VertexId): number {
     const index = this.#indices.get(id);
-    if (index === undefined) throw new UnknownVertexError(`Unknown vertex: ${id}`);
+    if (index === undefined) {
+      throw new UnknownVertexError(`Unknown vertex: ${id}`);
+    }
     return index;
   }
 }

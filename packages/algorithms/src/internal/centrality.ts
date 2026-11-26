@@ -15,7 +15,9 @@ function visit(search: Bfs, csr: Csr, vertex: number): void {
       distance[next] = distance[vertex]! + 1;
       order.push(next);
     }
-    if (distance[next] !== distance[vertex]! + 1) continue;
+    if (distance[next] !== distance[vertex]! + 1) {
+      continue;
+    }
     paths[next]! += paths[vertex]!;
     predecessors[next]!.push(vertex);
   }
@@ -30,7 +32,9 @@ function bfsPaths(csr: Csr, vertexCount: number, source: number): Bfs {
   };
   search.distance[source] = 0;
   search.paths[source] = 1;
-  for (let head = 0; head < search.order.length; head++) visit(search, csr, search.order[head]!);
+  for (let head = 0; head < search.order.length; head++) {
+    visit(search, csr, search.order[head]!);
+  }
   return search;
 }
 
@@ -52,7 +56,9 @@ function accumulate(search: Bfs, source: number, scores: Float64Array): void {
     for (const before of parents) {
       delta[before]! += (search.paths[before]! / search.paths[vertex]!) * (1 + delta[vertex]!);
     }
-    if (vertex !== source) scores[vertex]! += delta[vertex]!;
+    if (vertex !== source) {
+      scores[vertex]! += delta[vertex]!;
+    }
   }
 }
 

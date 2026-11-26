@@ -25,7 +25,9 @@ export function treeFromPruferCode(
     throw new GraphError('code must have vertices.length - 2 entries, all from vertices');
   }
   const builder = new GraphBuilder();
-  for (const vertex of vertices) builder.addVertex(vertex);
+  for (const vertex of vertices) {
+    builder.addVertex(vertex);
+  }
   for (const [from, to] of decodePrufer(indices)) {
     builder.addEdge(itemAt(vertices, from), itemAt(vertices, to));
   }

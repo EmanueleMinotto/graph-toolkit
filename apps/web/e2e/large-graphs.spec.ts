@@ -19,7 +19,9 @@ test('draws big graphs on a WebGL canvas that follows zoom and selection', async
   const before = await canvas.screenshot();
   const box = (await page.locator('svg.graph').boundingBox())!;
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-  for (let step = 0; step < 10; step++) await page.mouse.wheel(0, -400);
+  for (let step = 0; step < 10; step++) {
+    await page.mouse.wheel(0, -400);
+  }
   await expect
     .poll(async () => {
       const after = await canvas.screenshot();
@@ -85,7 +87,9 @@ test('shows the label of the vertex under the pointer on a big graph', async ({ 
         box.x + box.width * (0.1 + (0.8 * ((step * 7) % 10)) / 10),
         box.y + box.height * (0.1 + (0.8 * (step % 10)) / 10),
       );
-      if ((await page.locator('svg.graph text.label').count()) > 0) return;
+      if ((await page.locator('svg.graph text.label').count()) > 0) {
+        return;
+      }
     }
     throw new Error('no vertex was hovered');
   }).toPass({ timeout: 15_000 });

@@ -11,8 +11,12 @@ const build = (
   directed = false,
 ): Graph => {
   const builder = new GraphBuilder({ directed });
-  for (let index = 0; index < count; index++) builder.addVertex(name(index));
-  for (const [from, to, weight] of arcs) builder.addEdge(name(from), name(to), weight);
+  for (let index = 0; index < count; index++) {
+    builder.addVertex(name(index));
+  }
+  for (const [from, to, weight] of arcs) {
+    builder.addEdge(name(from), name(to), weight);
+  }
   return builder.build();
 };
 

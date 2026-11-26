@@ -25,7 +25,9 @@ export interface Endpoints {
 
 function unwind(predecessors: Int32Array, target: number): number[] {
   const path = [target];
-  for (let node = predecessors[target]!; node !== -1; node = predecessors[node]!) path.push(node);
+  for (let node = predecessors[target]!; node !== -1; node = predecessors[node]!) {
+    path.push(node);
+  }
   return path.toReversed();
 }
 
@@ -44,7 +46,9 @@ function relax(search: Search, vertex: number): void {
     const next = csr.targets[slot]!;
     const cost = distances[vertex]! + csr.weights[slot]!;
     const isBlocked = restrictions.blockedSlots.has(slot) || restrictions.blockedVertices.has(next);
-    if (isBlocked || cost >= distances[next]!) continue;
+    if (isBlocked || cost >= distances[next]!) {
+      continue;
+    }
     distances[next] = cost;
     search.predecessors[next] = vertex;
     search.queue.push(next, cost + search.estimate(next));
@@ -74,8 +78,12 @@ export function restrictedDijkstra(
 ): IndexPath | undefined {
   const search = newSearch(csr, endpoints.source, restrictions);
   for (let entry = search.queue.pop(); entry !== undefined; entry = search.queue.pop()) {
-    if (entry.priority > search.distances[entry.item]! + search.estimate(entry.item)) continue;
-    if (entry.item === endpoints.target) break;
+    if (entry.priority > search.distances[entry.item]! + search.estimate(entry.item)) {
+      continue;
+    }
+    if (entry.item === endpoints.target) {
+      break;
+    }
     relax(search, entry.item);
   }
   const cost = search.distances[endpoints.target]!;

@@ -37,13 +37,17 @@ export class CsrGraph implements Graph {
 
   public indexOf(id: VertexId): number {
     const index = this.#indices.get(id);
-    if (index === undefined) throw new UnknownVertexError(`Unknown vertex: ${id}`);
+    if (index === undefined) {
+      throw new UnknownVertexError(`Unknown vertex: ${id}`);
+    }
     return index;
   }
 
   public vertexAt(index: number): VertexId {
     const id = this.#ids[index];
-    if (id === undefined) throw new UnknownVertexError(`Unknown vertex index: ${String(index)}`);
+    if (id === undefined) {
+      throw new UnknownVertexError(`Unknown vertex index: ${String(index)}`);
+    }
     return id;
   }
 

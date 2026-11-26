@@ -20,7 +20,9 @@ export function inducedSubgraph(graph: Graph, keep: readonly VertexId[]): Graph 
 
 /** Reverses every arc of a directed graph; undirected graphs are returned unchanged. */
 export function transpose(graph: Graph): Graph {
-  if (!graph.directed) return graph;
+  if (!graph.directed) {
+    return graph;
+  }
   const reversed = graph
     .edges()
     .map((edge): Edge => ({ source: edge.target, target: edge.source, weight: edge.weight }));

@@ -44,9 +44,13 @@ function step(state: State, calls: number[]): void {
     return;
   }
   calls.pop();
-  if (low[vertex] === index[vertex]) closeComponent(state, vertex);
+  if (low[vertex] === index[vertex]) {
+    closeComponent(state, vertex);
+  }
   const parent = calls.at(-1);
-  if (parent !== undefined) low[parent] = Math.min(low[parent]!, low[vertex]!);
+  if (parent !== undefined) {
+    low[parent] = Math.min(low[parent]!, low[vertex]!);
+  }
 }
 
 /** Iterative Tarjan, O(V + E). Components come out in reverse topological order. */
@@ -62,10 +66,14 @@ export function tarjan(csr: Csr, vertexCount: number): number[][] {
     counter: 0,
   };
   for (let root = 0; root < vertexCount; root++) {
-    if (state.index[root] !== -1) continue;
+    if (state.index[root] !== -1) {
+      continue;
+    }
     enter(state, root);
     const calls = [root];
-    while (calls.length > 0) step(state, calls);
+    while (calls.length > 0) {
+      step(state, calls);
+    }
   }
   return state.components;
 }

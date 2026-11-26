@@ -6,7 +6,9 @@ import { App } from './App.js';
 import './styles.css';
 
 const container = document.querySelector('#root');
-if (container === null) throw new Error('Missing #root element');
+if (container === null) {
+  throw new Error('Missing #root element');
+}
 createRoot(container).render(
   <StrictMode>
     <MantineProvider defaultColorScheme="auto" theme={{ primaryShade: { light: 8, dark: 8 } }}>

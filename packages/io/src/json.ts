@@ -50,7 +50,9 @@ const isGraphDocument = (value: unknown): value is JsonGraph =>
 
 function parseDocument(text: string): JsonGraph {
   const value: unknown = JSON.parse(text);
-  if (!isGraphDocument(value)) throw new ParseError('Invalid graph JSON document');
+  if (!isGraphDocument(value)) {
+    throw new ParseError('Invalid graph JSON document');
+  }
   return value;
 }
 

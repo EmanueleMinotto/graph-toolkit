@@ -69,7 +69,9 @@ const IT: Readonly<Record<string, string>> = {
 
 const detect = (): Lang => {
   const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved === 'en' || saved === 'it') return saved;
+  if (saved === 'en' || saved === 'it') {
+    return saved;
+  }
   return navigator.language.toLowerCase().startsWith('it') ? 'it' : 'en';
 };
 
@@ -81,11 +83,15 @@ const exact = (text: string): string | undefined =>
 
 function inItalian(text: string): string {
   const known = exact(text);
-  if (known !== undefined) return known;
+  if (known !== undefined) {
+    return known;
+  }
   const rule = RULES.map(([pattern, build]) => [pattern.exec(text), build] as const).find(
     ([match]) => match !== null,
   );
-  if (rule === undefined) return text;
+  if (rule === undefined) {
+    return text;
+  }
   const [match, build] = rule;
   return match === null ? text : build((index) => match[index] ?? '', inItalian);
 }
@@ -96,7 +102,9 @@ export const t = (text: string): string => (current === 'it' ? inItalian(text) :
 export function setLang(next: Lang): void {
   current = next;
   localStorage.setItem(STORAGE_KEY, next);
-  for (const listener of listeners) listener();
+  for (const listener of listeners) {
+    listener();
+  }
 }
 
 /** The active language; re-renders the caller (and so its children) when it changes. */

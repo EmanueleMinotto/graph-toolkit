@@ -7,8 +7,12 @@ const name = (index: number) => vertexId(String(index));
 
 const network = (count: number, arcs: readonly (readonly [number, number, number])[]): Graph => {
   const builder = new GraphBuilder({ directed: true });
-  for (let index = 0; index < count; index++) builder.addVertex(name(index));
-  for (const [from, to, capacity] of arcs) builder.addEdge(name(from), name(to), capacity);
+  for (let index = 0; index < count; index++) {
+    builder.addVertex(name(index));
+  }
+  for (const [from, to, capacity] of arcs) {
+    builder.addEdge(name(from), name(to), capacity);
+  }
   return builder.build();
 };
 

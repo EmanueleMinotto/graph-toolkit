@@ -11,8 +11,12 @@ const fromPairs = (
   directed = false,
 ): Graph => {
   const builder = new GraphBuilder({ directed });
-  for (let index = 0; index < count; index++) builder.addVertex(name(index));
-  for (const [from, to] of pairs) builder.addEdge(name(from), name(to));
+  for (let index = 0; index < count; index++) {
+    builder.addVertex(name(index));
+  }
+  for (const [from, to] of pairs) {
+    builder.addEdge(name(from), name(to));
+  }
   return builder.build();
 };
 

@@ -14,7 +14,9 @@ export interface Coloring {
 }
 
 function assertColorable(graph: Graph): void {
-  if (graph.directed) throw new GraphError('Coloring requires an undirected graph');
+  if (graph.directed) {
+    throw new GraphError('Coloring requires an undirected graph');
+  }
   if (graph.edges().some((edge) => edge.source === edge.target)) {
     throw new GraphError('A graph with self-loops has no proper coloring');
   }

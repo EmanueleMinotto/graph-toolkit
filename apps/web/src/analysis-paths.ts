@@ -45,7 +45,9 @@ const highlightPath = (
 
 function fromSource(solve: (graph: Graph, source: VertexId) => ShortestPathTree, name: string) {
   return (graph: Graph, { from }: Selection): Highlight => {
-    if (from === undefined) return { ...NONE, summary: 'Pick a start vertex.' };
+    if (from === undefined) {
+      return { ...NONE, summary: 'Pick a start vertex.' };
+    }
     const tree = solve(graph, from);
     const reached = graph.vertices().filter((id) => tree.distanceTo(id) !== Infinity);
     return {
@@ -82,14 +84,20 @@ function allPairs(graph: Graph): Highlight {
 /** Hop count from every vertex to `target`: unit-weight Dijkstra on the reversed graph. */
 function hopsTo(graph: Graph, target: VertexId): ShortestPathTree {
   const builder = new GraphBuilder({ directed: graph.directed, allowParallelEdges: true });
-  for (const id of graph.vertices()) builder.addVertex(id);
-  for (const edge of graph.edges()) builder.addEdge(edge.target, edge.source);
+  for (const id of graph.vertices()) {
+    builder.addVertex(id);
+  }
+  for (const edge of graph.edges()) {
+    builder.addEdge(edge.target, edge.source);
+  }
   return dijkstra(builder.build(), target);
 }
 
 /** Admissible and consistent: no edge is cheaper than the lightest one, so hops × min weight. */
 function aStarSearch(graph: Graph, { from, to }: Selection): Highlight {
-  if (from === undefined || to === undefined) return { ...NONE, summary: 'Pick two vertices.' };
+  if (from === undefined || to === undefined) {
+    return { ...NONE, summary: 'Pick two vertices.' };
+  }
   const lightest = graph
     .edges()
     .values()
@@ -101,7 +109,9 @@ function aStarSearch(graph: Graph, { from, to }: Selection): Highlight {
     target: to,
     heuristic: (id) => (Number.isFinite(hops.distanceTo(id)) ? hops.distanceTo(id) * lightest : 0),
   });
-  if (found === undefined) return { ...NONE, summary: 'Unreachable.' };
+  if (found === undefined) {
+    return { ...NONE, summary: 'Unreachable.' };
+  }
   return {
     ...highlightPath(graph, found.path),
     summary: `A* distance ${found.distance} via ${found.path.join(' → ')}`,
@@ -109,10 +119,14 @@ function aStarSearch(graph: Graph, { from, to }: Selection): Highlight {
 }
 
 function kShortest(graph: Graph, { from, to, count = DEFAULT_COUNT }: Selection): Highlight {
-  if (from === undefined || to === undefined) return { ...NONE, summary: 'Pick two vertices.' };
+  if (from === undefined || to === undefined) {
+    return { ...NONE, summary: 'Pick two vertices.' };
+  }
   const found = kShortestPaths(graph, { source: from, target: to, count });
   const [best] = found;
-  if (best === undefined) return { ...NONE, summary: 'Unreachable.' };
+  if (best === undefined) {
+    return { ...NONE, summary: 'Unreachable.' };
+  }
   return {
     ...highlightPath(graph, best.path),
     summary: `${found.length} loopless path${found.length === 1 ? '' : 's'}, best ${best.distance}`,

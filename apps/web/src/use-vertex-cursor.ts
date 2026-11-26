@@ -49,16 +49,25 @@ export function useVertexCursor(options: CursorOptions): VertexCursor {
     setCursor(nextInDirection(from, heading, others) ?? cursor);
   };
   const onKeyDown = (event: KeyboardEvent): void => {
-    if (!isActive) return;
+    if (!isActive) {
+      return;
+    }
     const heading = HEADINGS[event.key];
-    if (heading !== undefined) move(heading);
-    else if (event.key === 'Escape') setCursor(undefined);
-    else if (cursor !== undefined && ['Enter', ' '].includes(event.key)) onPick(cursor);
-    else return;
+    if (heading !== undefined) {
+      move(heading);
+    } else if (event.key === 'Escape') {
+      setCursor(undefined);
+    } else if (cursor !== undefined && ['Enter', ' '].includes(event.key)) {
+      onPick(cursor);
+    } else {
+      return;
+    }
     event.preventDefault();
   };
   const onPointerMove = (event: PointerEvent): void => {
-    if (isActive) setHovered(hit(event));
+    if (isActive) {
+      setHovered(hit(event));
+    }
   };
   return { cursor: isActive ? (hovered ?? cursor) : undefined, onPointerMove, onKeyDown };
 }

@@ -27,9 +27,13 @@ export function ImportPanel({ graph, onReplace, guarded }: Props) {
   const [text, setText] = useState('');
   const [isDirected, setDirected] = useState(false);
   const upload = async (file: File | null): Promise<void> => {
-    if (file === null) return;
+    if (file === null) {
+      return;
+    }
     const detected = formatFromFileName(file.name);
-    if (detected !== undefined) setFormat(detected);
+    if (detected !== undefined) {
+      setFormat(detected);
+    }
     setText(await file.text());
   };
   return (

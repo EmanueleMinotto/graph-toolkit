@@ -34,7 +34,9 @@ export function incidenceMatrix(graph: Graph): Matrix {
 
 /** Laplacian L = D − A of an undirected graph (rows sum to zero). */
 export function laplacianMatrix(graph: Graph, options: MatrixOptions = {}): Matrix {
-  if (graph.directed) throw new GraphError('laplacianMatrix requires an undirected graph');
+  if (graph.directed) {
+    throw new GraphError('laplacianMatrix requires an undirected graph');
+  }
   const adjacency = adjacencyMatrix(graph, options).toArray();
   return new Matrix(
     graph.vertexCount,
@@ -48,7 +50,9 @@ export interface FromMatrixOptions {
 }
 
 function assertAdjacency(matrix: Matrix, isDirected: boolean): void {
-  if (matrix.rows !== matrix.columns) throw new GraphError('adjacency matrix must be square');
+  if (matrix.rows !== matrix.columns) {
+    throw new GraphError('adjacency matrix must be square');
+  }
   if (!isDirected && !isSymmetric(matrix.toArray(), matrix.rows)) {
     throw new GraphError('undirected adjacency matrix must be symmetric');
   }
@@ -62,7 +66,9 @@ export function graphFromAdjacency(matrix: Matrix, options: FromMatrixOptions = 
   assertAdjacency(matrix, isDirected);
   const builder = new GraphBuilder({ directed: isDirected });
   const names = Array.from({ length: matrix.rows }, (_, index) => toVertexId(index));
-  for (const name of names) builder.addVertex(name);
+  for (const name of names) {
+    builder.addVertex(name);
+  }
   const entries = nonZeroEntries(matrix.toArray(), matrix.rows, !isDirected);
   for (const [row, column, value] of entries) {
     builder.addEdge(toVertexId(row), toVertexId(column), value);

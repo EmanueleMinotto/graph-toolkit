@@ -7,8 +7,12 @@ const name = (index: number) => vertexId(String(index));
 
 const fromPairs = (count: number, pairs: readonly (readonly [number, number])[]): Graph => {
   const builder = new GraphBuilder();
-  for (let index = 0; index < count; index++) builder.addVertex(name(index));
-  for (const [from, to] of pairs) builder.addEdge(name(from), name(to));
+  for (let index = 0; index < count; index++) {
+    builder.addVertex(name(index));
+  }
+  for (const [from, to] of pairs) {
+    builder.addEdge(name(from), name(to));
+  }
   return builder.build();
 };
 

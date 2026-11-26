@@ -11,7 +11,9 @@ interface Grid {
 function offDiagonal({ data, size }: Grid): number {
   let sum = 0;
   for (let row = 0; row < size; row++) {
-    for (let column = row + 1; column < size; column++) sum += data[row * size + column]! ** 2;
+    for (let column = row + 1; column < size; column++) {
+      sum += data[row * size + column]! ** 2;
+    }
   }
   return sum;
 }
@@ -44,7 +46,9 @@ function turnRows(cells: Float64Array, size: number, { p, q, cos, sin }: Turn): 
 /** Applies the Jacobi rotation that zeroes entry (p, q), in place on a symmetric matrix. */
 function rotate({ data, size, vectors }: Grid, p: number, q: number): void {
   const apq = data[p * size + q]!;
-  if (apq === 0) return;
+  if (apq === 0) {
+    return;
+  }
   const theta = (data[q * size + q]! - data[p * size + p]!) / (2 * apq);
   const t = Math.sign(theta || 1) / (Math.abs(theta) + Math.hypot(theta, 1));
   const cos = 1 / Math.hypot(t, 1);
@@ -69,7 +73,9 @@ export function jacobiEigen(matrix: Float64Array, size: number): Eigen {
   const grid: Grid = { data: Float64Array.from(matrix), size, vectors: identity };
   for (let sweep = 0; sweep < MAX_SWEEPS && offDiagonal(grid) > EPSILON; sweep++) {
     for (let p = 0; p < size; p++) {
-      for (let q = p + 1; q < size; q++) rotate(grid, p, q);
+      for (let q = p + 1; q < size; q++) {
+        rotate(grid, p, q);
+      }
     }
   }
   const order = Array.from({ length: size }, (_, index) => index).toSorted(

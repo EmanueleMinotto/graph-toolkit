@@ -16,7 +16,9 @@ export function fixedSizePairs(count: number, edges: number, seed: number): Pair
 
 function pickTargets(endpoints: readonly number[], wanted: number, next: () => number): number[] {
   const chosen = new Set<number>();
-  while (chosen.size < wanted) chosen.add(endpoints[Math.floor(next() * endpoints.length)]!);
+  while (chosen.size < wanted) {
+    chosen.add(endpoints[Math.floor(next() * endpoints.length)]!);
+  }
   return [...chosen];
 }
 
@@ -44,7 +46,9 @@ function ringLattice(count: number, reach: number): Pair[] {
   for (let from = 0; from < count; from++) {
     for (let step = 1; step <= reach; step++) {
       const to = (from + step) % count;
-      if (to === from || seen.has(key(from, to))) continue;
+      if (to === from || seen.has(key(from, to))) {
+        continue;
+      }
       seen.add(key(from, to));
       pairs.push([from, to]);
     }
@@ -70,7 +74,9 @@ export function smallWorldPairs(count: number, rewiring: Rewiring): Pair[] {
   return lattice.map(([from, to]): Pair => {
     const candidate = Math.floor(next() * count);
     const free = candidate !== from && !taken.has(key(from, candidate));
-    if (!free || next() >= beta) return [from, to];
+    if (!free || next() >= beta) {
+      return [from, to];
+    }
     taken.delete(key(from, to));
     taken.add(key(from, candidate));
     return [from, candidate];

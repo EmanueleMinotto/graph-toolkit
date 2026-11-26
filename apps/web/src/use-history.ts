@@ -34,12 +34,16 @@ export function useHistory<T>(initial: () => T): Timeline<T> {
     },
     undo: () => {
       const previous = past.at(-1);
-      if (previous === undefined) return;
+      if (previous === undefined) {
+        return;
+      }
       setHistory({ past: past.slice(0, -1), present: previous, future: [present, ...future] });
     },
     redo: () => {
       const [next, ...rest] = future;
-      if (next === undefined) return;
+      if (next === undefined) {
+        return;
+      }
       setHistory({ past: [...past, present], present: next, future: rest });
     },
   };

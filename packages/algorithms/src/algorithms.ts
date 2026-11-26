@@ -31,8 +31,12 @@ const DEFAULT_ITERATIONS = 100;
 const DEFAULT_TOLERANCE = 1e-10;
 
 function terminalsOf(graph: Graph, source: VertexId, sink: VertexId): Terminals {
-  if (!graph.directed) throw new GraphError('maxFlow requires a directed graph');
-  if (source === sink) throw new GraphError('source and sink must differ');
+  if (!graph.directed) {
+    throw new GraphError('maxFlow requires a directed graph');
+  }
+  if (source === sink) {
+    throw new GraphError('source and sink must differ');
+  }
   if (graph.csr.weights.some((capacity) => capacity < 0)) {
     throw new GraphError('capacities must be non-negative');
   }
@@ -63,7 +67,9 @@ export function pageRank(
   graph: Graph,
   options: PageRankOptions = {},
 ): ReadonlyMap<VertexId, number> {
-  if (graph.vertexCount === 0) return new Map();
+  if (graph.vertexCount === 0) {
+    return new Map();
+  }
   const {
     damping = DEFAULT_DAMPING,
     maxIterations = DEFAULT_ITERATIONS,

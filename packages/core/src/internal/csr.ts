@@ -13,7 +13,9 @@ function symmetrize(list: EdgeList): EdgeList {
   for (let index = 0; index < list.sources.length; index++) {
     const source = list.sources[index]!;
     const target = list.targets[index]!;
-    if (source === target) continue;
+    if (source === target) {
+      continue;
+    }
     sources.push(target);
     targets.push(source);
     weights.push(list.weights[index]!);
@@ -23,7 +25,9 @@ function symmetrize(list: EdgeList): EdgeList {
 
 function prefixSums(vertexCount: number, sources: readonly number[]): Uint32Array {
   const offsets = new Uint32Array(vertexCount + 1);
-  for (const source of sources) offsets[source + 1]!++;
+  for (const source of sources) {
+    offsets[source + 1]!++;
+  }
   for (let vertex = 0; vertex < vertexCount; vertex++) {
     offsets[vertex + 1]! += offsets[vertex]!;
   }
@@ -60,7 +64,9 @@ export function arcsOf(csr: Csr, vertex: number, keep: (target: number) => boole
   const arcs: Arc[] = [];
   for (let slot = csr.offsets[vertex]!; slot < csr.offsets[vertex + 1]!; slot++) {
     const target = csr.targets[slot]!;
-    if (keep(target)) arcs.push({ target, weight: csr.weights[slot]! });
+    if (keep(target)) {
+      arcs.push({ target, weight: csr.weights[slot]! });
+    }
   }
   return arcs;
 }

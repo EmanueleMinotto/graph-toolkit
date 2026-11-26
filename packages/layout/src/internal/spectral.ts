@@ -6,7 +6,9 @@ export function symmetricLaplacian(csr: Csr, count: number): Float64Array {
   for (let vertex = 0; vertex < count; vertex++) {
     const targets = csr.targets.subarray(csr.offsets[vertex], csr.offsets[vertex + 1]);
     for (const target of targets) {
-      if (target === vertex) continue;
+      if (target === vertex) {
+        continue;
+      }
       around[vertex]!.add(target);
       around[target]!.add(vertex);
     }
@@ -14,7 +16,9 @@ export function symmetricLaplacian(csr: Csr, count: number): Float64Array {
   const data = new Float64Array(count * count);
   for (const [vertex, neighbors] of around.entries()) {
     data[vertex * count + vertex] = neighbors.size;
-    for (const target of neighbors) data[vertex * count + target] = -1;
+    for (const target of neighbors) {
+      data[vertex * count + target] = -1;
+    }
   }
   return data;
 }

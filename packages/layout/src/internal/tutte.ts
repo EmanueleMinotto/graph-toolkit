@@ -13,7 +13,9 @@ function neighborLists(csr: Csr, count: number): number[][] {
   for (let vertex = 0; vertex < count; vertex++) {
     const targets = csr.targets.subarray(csr.offsets[vertex], csr.offsets[vertex + 1]);
     for (const target of targets) {
-      if (target === vertex) continue;
+      if (target === vertex) {
+        continue;
+      }
       lists[vertex]!.push(target);
       lists[target]!.push(vertex);
     }
@@ -77,13 +79,17 @@ function settle(position: Float64Array, vertex: number, around: readonly number[
 /** Barycentric relaxation: each free vertex moves to the mean of its neighbors until it settles. */
 function relax(lists: Lists, count: number, fixed: ReadonlyMap<number, Point>): Float64Array {
   const position = new Float64Array(2 * count);
-  for (const [vertex, [x, y]] of fixed) [position[2 * vertex], position[2 * vertex + 1]] = [x, y];
+  for (const [vertex, [x, y]] of fixed) {
+    [position[2 * vertex], position[2 * vertex + 1]] = [x, y];
+  }
   const free = [...lists.keys()].filter(
     (vertex) => !fixed.has(vertex) && lists[vertex]!.length > 0,
   );
   for (let sweep = 0; sweep < SWEEPS; sweep++) {
     const moved = free.map((vertex) => settle(position, vertex, lists[vertex]!));
-    if (Math.max(0, ...moved) < TOLERANCE) break;
+    if (Math.max(0, ...moved) < TOLERANCE) {
+      break;
+    }
   }
   return position;
 }

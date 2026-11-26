@@ -49,7 +49,9 @@ function agreesWithEarlier(search: Search, depth: number, candidate: number): bo
       left.matrix[vertex * left.size + other] === right.matrix[candidate * right.size + mapped];
     const backward =
       left.matrix[other * left.size + vertex] === right.matrix[mapped * right.size + candidate];
-    if (!forward || !backward) return false;
+    if (!forward || !backward) {
+      return false;
+    }
   }
   return true;
 }
@@ -62,12 +64,18 @@ function isConsistent(search: Search, depth: number, candidate: number): boolean
 }
 
 function step(search: Search, depth: number): boolean {
-  if (depth === search.order.length) return true;
+  if (depth === search.order.length) {
+    return true;
+  }
   for (let candidate = 0; candidate < search.right.size; candidate++) {
-    if (search.isUsed[candidate] === 1 || !isConsistent(search, depth, candidate)) continue;
+    if (search.isUsed[candidate] === 1 || !isConsistent(search, depth, candidate)) {
+      continue;
+    }
     search.image[search.order[depth]!] = candidate;
     search.isUsed[candidate] = 1;
-    if (extend(search, depth + 1)) return true;
+    if (extend(search, depth + 1)) {
+      return true;
+    }
     search.isUsed[candidate] = 0;
   }
   return false;

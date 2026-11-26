@@ -24,7 +24,9 @@ export function eigenDecomposition(matrix: Matrix): Eigen {
 
 /** Adjacency spectrum of an undirected graph, ascending. */
 export function adjacencySpectrum(graph: Graph, options: MatrixOptions = {}): readonly number[] {
-  if (graph.directed) throw new GraphError('adjacencySpectrum requires an undirected graph');
+  if (graph.directed) {
+    throw new GraphError('adjacencySpectrum requires an undirected graph');
+  }
   return eigenvalues(adjacencyMatrix(graph, options));
 }
 

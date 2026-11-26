@@ -23,7 +23,9 @@ export function usePlayback(result: Highlight): readonly [Highlight, Playback] {
   const [state, setState] = useState({ result, step: total, isPlaying: false });
   const current = state.result === result ? state : { result, step: total, isPlaying: false };
   useEffect(() => {
-    if (!current.isPlaying) return;
+    if (!current.isPlaying) {
+      return;
+    }
     const timer = setInterval(() => {
       setState((previous) => {
         const done = previous.step >= total;

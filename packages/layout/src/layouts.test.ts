@@ -47,14 +47,17 @@ const name = (index: number) => vertexId(String(index));
 describe('layeredLayout', () => {
   it('puts DAG levels on increasing y and centers each layer', () => {
     const builder = new GraphBuilder({ directed: true });
-    for (let index = 0; index < 4; index++) builder.addVertex(name(index));
+    for (let index = 0; index < 4; index++) {
+      builder.addVertex(name(index));
+    }
     for (const [from, to] of [
       [0, 1],
       [0, 2],
       [1, 3],
       [2, 3],
-    ] as const)
+    ] as const) {
       builder.addEdge(name(from), name(to));
+    }
     const layout = layeredLayout(builder.build(), { layerGap: 10, nodeGap: 4 });
     expect(layout.get(name(0))).toEqual({ x: 0, y: 0 });
     expect(layout.get(name(3))).toEqual({ x: 0, y: 20 });
@@ -66,14 +69,17 @@ describe('layeredLayout', () => {
     expect(cycle.get(vertexId('0'))!.y).toBe(0);
     expect(cycle.get(vertexId('2'))!.y).toBe(2);
     const crossing = new GraphBuilder({ directed: true });
-    for (let index = 0; index < 5; index++) crossing.addVertex(name(index));
+    for (let index = 0; index < 5; index++) {
+      crossing.addVertex(name(index));
+    }
     for (const [from, to] of [
       [0, 3],
       [1, 2],
       [2, 4],
       [3, 4],
-    ] as const)
+    ] as const) {
       crossing.addEdge(name(from), name(to));
+    }
     expect(layeredLayout(crossing.build()).size).toBe(5);
   });
 

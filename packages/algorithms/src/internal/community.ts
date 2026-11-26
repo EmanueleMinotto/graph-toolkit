@@ -17,7 +17,9 @@ function linksByCommunity({ csr, community }: Moving, vertex: number): Map<numbe
   const links = new Map<number, number>();
   for (let slot = csr.offsets[vertex]!; slot < csr.offsets[vertex + 1]!; slot++) {
     const target = csr.targets[slot]!;
-    if (target === vertex) continue;
+    if (target === vertex) {
+      continue;
+    }
     const group = community[target]!;
     links.set(group, (links.get(group) ?? 0) + 1);
   }
@@ -33,7 +35,9 @@ function bestCommunity(moving: Moving, vertex: number): number {
   let best = own;
   const candidates = [...links.keys()].toSorted((left, right) => left - right);
   for (const group of candidates) {
-    if (gain(group) > gain(best) + Number.EPSILON) best = group;
+    if (gain(group) > gain(best) + Number.EPSILON) {
+      best = group;
+    }
   }
   return best;
 }
@@ -58,7 +62,9 @@ export function localMoving(csr: Csr, vertexCount: number, maxRounds: number): I
     for (let vertex = 0; vertex < vertexCount; vertex++) {
       isMoved = moveVertex(moving, vertex) || isMoved;
     }
-    if (!isMoved) break;
+    if (!isMoved) {
+      break;
+    }
   }
   return community;
 }
@@ -67,7 +73,9 @@ export function localMoving(csr: Csr, vertexCount: number, maxRounds: number): I
 export function renumber(labels: Int32Array): number[] {
   const numbering = new Map<number, number>();
   return Array.from(labels, (label) => {
-    if (!numbering.has(label)) numbering.set(label, numbering.size);
+    if (!numbering.has(label)) {
+      numbering.set(label, numbering.size);
+    }
     return numbering.get(label)!;
   });
 }

@@ -18,7 +18,9 @@ export class MinPriorityQueue {
   /** Removes and returns the entry with the lowest priority, O(log n). */
   public pop(): QueueEntry | undefined {
     const last = this.#items.length - 1;
-    if (last < 0) return undefined;
+    if (last < 0) {
+      return undefined;
+    }
     this.#swap(0, last);
     const entry = { item: this.#items.pop()!, priority: this.#priorities.pop()! };
     this.#siftDown(0);
@@ -33,7 +35,9 @@ export class MinPriorityQueue {
     let index = start;
     while (index > 0) {
       const parent = (index - 1) >> 1;
-      if (this.#priorities[parent]! <= this.#priorities[index]!) return;
+      if (this.#priorities[parent]! <= this.#priorities[index]!) {
+        return;
+      }
       this.#swap(parent, index);
       index = parent;
     }
@@ -43,7 +47,9 @@ export class MinPriorityQueue {
     let index = start;
     for (;;) {
       const smallest = this.#smallestOfFamily(index);
-      if (smallest === index) return;
+      if (smallest === index) {
+        return;
+      }
       this.#swap(smallest, index);
       index = smallest;
     }

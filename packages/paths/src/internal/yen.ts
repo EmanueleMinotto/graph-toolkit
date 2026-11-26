@@ -35,7 +35,9 @@ function spurCandidate(
     blockedSlots: slotsToBlock(round, root),
     blockedVertices: new Set(root.slice(0, -1)),
   });
-  if (tail === undefined) return undefined;
+  if (tail === undefined) {
+    return undefined;
+  }
   const path = [...root.slice(0, -1), ...tail.path];
   return { path, cost: pathCost(round.csr, path) };
 }
@@ -57,7 +59,9 @@ export function yenKernel(csr: Csr, endpoints: Endpoints, count: number): IndexP
     blockedSlots: new Set(),
     blockedVertices: new Set(),
   });
-  if (first === undefined || count < 1) return [];
+  if (first === undefined || count < 1) {
+    return [];
+  }
   const accepted = [first];
   let pool: IndexPath[] = [];
   while (accepted.length < count) {
@@ -66,7 +70,9 @@ export function yenKernel(csr: Csr, endpoints: Endpoints, count: number): IndexP
     );
     pool = [...pool, ...fresh].toSorted((left, right) => left.cost - right.cost);
     const best = pool.shift();
-    if (best === undefined) break;
+    if (best === undefined) {
+      break;
+    }
     accepted.push(best);
   }
   return accepted;

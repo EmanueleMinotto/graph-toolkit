@@ -22,7 +22,9 @@ function takeBlock(walk: Walk, top: Pair): void {
   const block: Pair[] = [];
   for (let edge = walk.edges.pop()!; ; edge = walk.edges.pop()!) {
     block.push(edge);
-    if (edge[0] === top[0] && edge[1] === top[1]) break;
+    if (edge[0] === top[0] && edge[1] === top[1]) {
+      break;
+    }
   }
   walk.blocks.push(block);
 }
@@ -34,7 +36,9 @@ function descend(walk: Walk, calls: number[], [from, to]: Pair): void {
     calls.push(to);
     return;
   }
-  if (walk.discovery[to]! >= walk.discovery[from]!) return;
+  if (walk.discovery[to]! >= walk.discovery[from]!) {
+    return;
+  }
   walk.edges.push([from, to]);
   walk.low[from] = Math.min(walk.low[from]!, walk.discovery[to]!);
 }
@@ -42,9 +46,13 @@ function descend(walk: Walk, calls: number[], [from, to]: Pair): void {
 function retreat(walk: Walk, calls: number[], vertex: number): void {
   calls.pop();
   const parent = walk.parent[vertex]!;
-  if (parent === -1) return;
+  if (parent === -1) {
+    return;
+  }
   walk.low[parent] = Math.min(walk.low[parent]!, walk.low[vertex]!);
-  if (walk.low[vertex]! >= walk.discovery[parent]!) takeBlock(walk, [parent, vertex]);
+  if (walk.low[vertex]! >= walk.discovery[parent]!) {
+    takeBlock(walk, [parent, vertex]);
+  }
 }
 
 function advance(walk: Walk, calls: number[]): void {
@@ -55,7 +63,9 @@ function advance(walk: Walk, calls: number[]): void {
     return;
   }
   const next = neighbors[walk.cursor[vertex]!++]!;
-  if (next !== walk.parent[vertex]) descend(walk, calls, [vertex, next]);
+  if (next !== walk.parent[vertex]) {
+    descend(walk, calls, [vertex, next]);
+  }
 }
 
 /** Biconnected components as edge lists, iterative Tarjan, O(V + E). */
@@ -72,10 +82,14 @@ export function biconnectedBlocks(adjacency: readonly (readonly number[])[]): Pa
     time: 0,
   };
   for (let root = 0; root < count; root++) {
-    if (walk.discovery[root] !== -1) continue;
+    if (walk.discovery[root] !== -1) {
+      continue;
+    }
     open(walk, root, -1);
     const calls = [root];
-    while (calls.length > 0) advance(walk, calls);
+    while (calls.length > 0) {
+      advance(walk, calls);
+    }
   }
   return walk.blocks;
 }
@@ -84,7 +98,9 @@ export function biconnectedBlocks(adjacency: readonly (readonly number[])[]): Pa
 export function symmetricAdjacency(count: number, edges: readonly Pair[]): number[][] {
   const adjacency: number[][] = Array.from({ length: count }, () => []);
   for (const [source, target] of edges) {
-    if (source === target) continue;
+    if (source === target) {
+      continue;
+    }
     adjacency[source]!.push(target);
     adjacency[target]!.push(source);
   }

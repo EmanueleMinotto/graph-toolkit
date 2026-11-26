@@ -42,7 +42,9 @@ export class ShortestPathTree {
 
 /** Dijkstra, O((V + E) log V). Throws {@link GraphError} on negative weights. */
 export function dijkstra(graph: Graph, source: VertexId): ShortestPathTree {
-  if (hasNegativeWeight(graph.csr)) throw new GraphError('dijkstra requires non-negative weights');
+  if (hasNegativeWeight(graph.csr)) {
+    throw new GraphError('dijkstra requires non-negative weights');
+  }
   const result = dijkstraKernel(graph.csr, graph.vertexCount, graph.indexOf(source));
   return new ShortestPathTree(graph, result);
 }
@@ -50,7 +52,9 @@ export function dijkstra(graph: Graph, source: VertexId): ShortestPathTree {
 /** Bellman-Ford, O(V·E). Throws {@link NegativeCycleError} when a negative cycle is reachable. */
 export function bellmanFord(graph: Graph, source: VertexId): ShortestPathTree {
   const result = bellmanFordKernel(graph.csr, graph.vertexCount, graph.indexOf(source));
-  if (result === undefined) throw new NegativeCycleError('Negative cycle reachable from source');
+  if (result === undefined) {
+    throw new NegativeCycleError('Negative cycle reachable from source');
+  }
   return new ShortestPathTree(graph, result);
 }
 
@@ -86,7 +90,9 @@ export function floydWarshall(graph: Graph): DistanceMatrix {
  */
 export function johnson(graph: Graph): DistanceMatrix {
   const cells = johnsonKernel(graph.csr, graph.vertexCount);
-  if (cells === undefined) throw new NegativeCycleError('Graph contains a negative cycle');
+  if (cells === undefined) {
+    throw new NegativeCycleError('Graph contains a negative cycle');
+  }
   return new DistanceMatrix(graph, cells);
 }
 

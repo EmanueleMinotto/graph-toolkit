@@ -10,7 +10,9 @@ export function wheelPairs(count: number): Pair[] {
 export function completeBipartitePairs(left: number, right: number): Pair[] {
   const pairs: Pair[] = [];
   for (let from = 0; from < left; from++) {
-    for (let to = 0; to < right; to++) pairs.push([from, left + to]);
+    for (let to = 0; to < right; to++) {
+      pairs.push([from, left + to]);
+    }
   }
   return pairs;
 }
@@ -29,7 +31,9 @@ export function hypercubePairs(dimension: number): Pair[] {
   for (let vertex = 0; vertex < 2 ** dimension; vertex++) {
     for (let bit = 0; bit < dimension; bit++) {
       const other = vertex ^ (1 << bit);
-      if (vertex < other) pairs.push([vertex, other]);
+      if (vertex < other) {
+        pairs.push([vertex, other]);
+      }
     }
   }
   return pairs;

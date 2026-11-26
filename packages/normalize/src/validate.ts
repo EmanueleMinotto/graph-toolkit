@@ -48,7 +48,9 @@ const issue = (
 ): readonly ValidationIssue[] => [{ code, message, vertices }];
 
 const direction: Rule = (graph, { directed }) => {
-  if (directed === undefined || directed === graph.directed) return [];
+  if (directed === undefined || directed === graph.directed) {
+    return [];
+  }
   const expected = directed ? 'directed' : 'undirected';
   return issue('direction', `Expected a ${expected} graph`);
 };
@@ -73,10 +75,13 @@ const isolated: Rule = (graph, { allowIsolated = true }) => {
 };
 
 const connected: Rule = (graph, { connected: isRequired }) => {
-  if (isRequired !== true || graph.vertexCount < 2) return [];
+  if (isRequired !== true || graph.vertexCount < 2) {
+    return [];
+  }
   const sets = new DisjointSet(graph.vertexCount);
-  for (const edge of graph.edges())
+  for (const edge of graph.edges()) {
     sets.union(graph.indexOf(edge.source), graph.indexOf(edge.target));
+  }
   return sets.setCount() === 1 ? [] : issue('disconnected', `${sets.setCount()} components`);
 };
 
@@ -141,5 +146,7 @@ export class ValidationError extends GraphError {
 
 export function assertValidGraph(graph: Graph, schema: GraphSchema): void {
   const issues = validateGraph(graph, schema);
-  if (issues.length > 0) throw new ValidationError(issues);
+  if (issues.length > 0) {
+    throw new ValidationError(issues);
+  }
 }

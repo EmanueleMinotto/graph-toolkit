@@ -18,11 +18,15 @@ export function shortestPaths(csr: Csr, source: number): Paths {
   const queue = new MinPriorityQueue();
   queue.push(source, 0);
   for (let entry = queue.pop(); entry !== undefined; entry = queue.pop()) {
-    if (entry.priority > distance[entry.item]!) continue;
+    if (entry.priority > distance[entry.item]!) {
+      continue;
+    }
     for (let slot = csr.offsets[entry.item]!; slot < csr.offsets[entry.item + 1]!; slot++) {
       const target = csr.targets[slot]!;
       const candidate = entry.priority + csr.weights[slot]!;
-      if (candidate >= distance[target]!) continue;
+      if (candidate >= distance[target]!) {
+        continue;
+      }
       distance[target] = candidate;
       previous[target] = entry.item;
       queue.push(target, candidate);
@@ -42,7 +46,9 @@ function cheapestLink(
   for (const from of joined) {
     for (const [to, vertex] of terminals.entries()) {
       const length = distances[from]!.distance[vertex]!;
-      if (!joined.has(to) && length < cost) [best, cost] = [[from, to], length];
+      if (!joined.has(to) && length < cost) {
+        [best, cost] = [[from, to], length];
+      }
     }
   }
   return best;
@@ -57,7 +63,9 @@ export function terminalTree(
   const pairs: Pair[] = [];
   while (joined.size < terminals.length) {
     const link = cheapestLink(distances, terminals, joined);
-    if (link === undefined) return undefined;
+    if (link === undefined) {
+      return undefined;
+    }
     joined.add(link[1]);
     pairs.push(link);
   }
@@ -96,7 +104,9 @@ export function prune(edges: readonly Edge[], terminals: ReadonlySet<VertexId>):
     const isDangling = (id: VertexId): boolean =>
       degree.get(id)!.length === 1 && !terminals.has(id);
     const leaf = kept.findIndex((edge) => isDangling(edge.source) || isDangling(edge.target));
-    if (leaf === -1) return kept;
+    if (leaf === -1) {
+      return kept;
+    }
     kept.splice(leaf, 1);
   }
 }

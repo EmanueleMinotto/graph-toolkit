@@ -26,8 +26,12 @@ interface AnalysisProps {
 
 function selectionHint(tool: Tool, from = '–', to = '–'): string {
   const { needs } = tool;
-  if (tool.usesOther === true) return 'Compares with the second graph (Operations panel).';
-  if (needs === 0) return '';
+  if (tool.usesOther === true) {
+    return 'Compares with the second graph (Operations panel).';
+  }
+  if (needs === 0) {
+    return '';
+  }
   const target = needs === 2 ? ` and target (${to})` : '';
   return `Click vertices to choose start (${from})${target}.`;
 }

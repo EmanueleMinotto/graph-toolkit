@@ -17,7 +17,9 @@ export function ExportBar({ svg, onReset }: Props) {
         size="xs"
         variant="default"
         onClick={() => {
-          if (svg.current === null) return;
+          if (svg.current === null) {
+            return;
+          }
           downloadBlob('graph.svg', new Blob([svgMarkup(svg.current)], { type: 'image/svg+xml' }));
         }}
       >
@@ -27,7 +29,9 @@ export function ExportBar({ svg, onReset }: Props) {
         size="xs"
         variant="default"
         onClick={() => {
-          if (svg.current === null) return;
+          if (svg.current === null) {
+            return;
+          }
           void pngBlob(svg.current).then((blob) => {
             downloadBlob('graph.png', blob);
           });

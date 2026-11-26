@@ -7,8 +7,12 @@ export function assemble(
   edges: readonly Edge[],
 ): Graph {
   const builder = new GraphBuilder({ directed });
-  for (const vertex of vertices) builder.addVertex(vertex);
-  for (const edge of edges) builder.addEdge(edge.source, edge.target, edge.weight);
+  for (const vertex of vertices) {
+    builder.addVertex(vertex);
+  }
+  for (const edge of edges) {
+    builder.addEdge(edge.source, edge.target, edge.weight);
+  }
   return builder.build();
 }
 

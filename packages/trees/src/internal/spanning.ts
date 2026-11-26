@@ -27,13 +27,17 @@ function growTree({ csr, visited, sources }: Growth, start: number): IndexEdge[]
   const enqueueArcs = (vertex: number): void => {
     visited[vertex] = 1;
     for (let slot = csr.offsets[vertex]!; slot < csr.offsets[vertex + 1]!; slot++) {
-      if (visited[csr.targets[slot]!] === 0) queue.push(slot, csr.weights[slot]!);
+      if (visited[csr.targets[slot]!] === 0) {
+        queue.push(slot, csr.weights[slot]!);
+      }
     }
   };
   enqueueArcs(start);
   for (let entry = queue.pop(); entry !== undefined; entry = queue.pop()) {
     const target = csr.targets[entry.item]!;
-    if (visited[target] === 1) continue;
+    if (visited[target] === 1) {
+      continue;
+    }
     edges.push({ source: sources[entry.item]!, target, weight: entry.priority });
     enqueueArcs(target);
   }
@@ -46,7 +50,9 @@ export function primKernel(csr: Csr, vertexCount: number): IndexEdge[] {
   const sources = sourcesOfSlots(csr);
   const edges: IndexEdge[] = [];
   for (let start = 0; start < vertexCount; start++) {
-    if (visited[start] === 0) edges.push(...growTree({ csr, visited, sources }, start));
+    if (visited[start] === 0) {
+      edges.push(...growTree({ csr, visited, sources }, start));
+    }
   }
   return edges;
 }
@@ -55,10 +61,14 @@ function cheapestPerComponent(edges: readonly IndexEdge[], sets: DisjointSet): M
   const cheapest = new Map<number, number>();
   for (const [id, edge] of edges.entries()) {
     const [left, right] = [sets.find(edge.source), sets.find(edge.target)];
-    if (left === right) continue;
+    if (left === right) {
+      continue;
+    }
     for (const root of [left, right]) {
       const current = cheapest.get(root);
-      if (current === undefined || edge.weight < edges[current]!.weight) cheapest.set(root, id);
+      if (current === undefined || edge.weight < edges[current]!.weight) {
+        cheapest.set(root, id);
+      }
     }
   }
   return cheapest;

@@ -18,14 +18,18 @@ function commonBase(forest: Forest, left: number, right: number): number {
     vertex = forest.base[forest.parent[forest.mate[vertex]!]!]!
   ) {
     seen[vertex] = 1;
-    if (forest.mate[vertex] === -1) break;
+    if (forest.mate[vertex] === -1) {
+      break;
+    }
   }
   for (
     let vertex = forest.base[right]!;
     ;
     vertex = forest.base[forest.parent[forest.mate[vertex]!]!]!
   ) {
-    if (seen[vertex] === 1) return vertex;
+    if (seen[vertex] === 1) {
+      return vertex;
+    }
   }
 }
 
@@ -53,9 +57,13 @@ function contract(forest: Forest, vertex: number, other: number): void {
   markPath(forest, { start: vertex, top, child: other });
   markPath(forest, { start: other, top, child: vertex });
   for (let index = 0; index < forest.base.length; index++) {
-    if (forest.inBlossom[forest.base[index]!] === 0) continue;
+    if (forest.inBlossom[forest.base[index]!] === 0) {
+      continue;
+    }
     forest.base[index] = top;
-    if (forest.inTree[index] === 1) continue;
+    if (forest.inTree[index] === 1) {
+      continue;
+    }
     forest.inTree[index] = 1;
     forest.queue.push(index);
   }
@@ -65,7 +73,9 @@ function contract(forest: Forest, vertex: number, other: number): void {
 function grow(forest: Forest, vertex: number, other: number): number {
   forest.parent[other] = vertex;
   const mate = forest.mate[other]!;
-  if (mate === -1) return other;
+  if (mate === -1) {
+    return other;
+  }
   forest.inTree[mate] = 1;
   forest.queue.push(mate);
   return -1;
@@ -78,7 +88,9 @@ function isOddInTree(forest: Forest, vertex: number): boolean {
 
 /** Handles edge vertex→other; returns the free vertex ending an augmenting path, or -1. */
 function explore(forest: Forest, [vertex, other]: readonly [number, number], root: number): number {
-  if (forest.base[vertex] === forest.base[other] || forest.mate[vertex] === other) return -1;
+  if (forest.base[vertex] === forest.base[other] || forest.mate[vertex] === other) {
+    return -1;
+  }
   if (other === root || isOddInTree(forest, other)) {
     contract(forest, vertex, other);
     return -1;
@@ -90,7 +102,9 @@ function visit(forest: Forest, vertex: number, root: number): number {
   const { csr } = forest;
   for (let slot = csr.offsets[vertex]!; slot < csr.offsets[vertex + 1]!; slot++) {
     const end = explore(forest, [vertex, csr.targets[slot]!], root);
-    if (end !== -1) return end;
+    if (end !== -1) {
+      return end;
+    }
   }
   return -1;
 }
@@ -104,7 +118,9 @@ function findPath(forest: Forest, root: number): number {
   forest.queue.push(root);
   for (let head = 0; head < forest.queue.length; head++) {
     const end = visit(forest, forest.queue[head]!, root);
-    if (end !== -1) return end;
+    if (end !== -1) {
+      return end;
+    }
   }
   return -1;
 }
@@ -131,9 +147,13 @@ export function blossomMatching(csr: Csr, count: number): Int32Array {
     queue: [],
   };
   for (let root = 0; root < count; root++) {
-    if (forest.mate[root] !== -1) continue;
+    if (forest.mate[root] !== -1) {
+      continue;
+    }
     const end = findPath(forest, root);
-    if (end !== -1) augment(forest, end);
+    if (end !== -1) {
+      augment(forest, end);
+    }
   }
   return forest.mate;
 }

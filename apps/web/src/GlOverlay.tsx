@@ -18,7 +18,9 @@ interface OverlayProps {
 
 /** The WebGL canvas behind the SVG, when the graph is big enough to need it. */
 export function GlOverlay({ mode, scene, view, box }: OverlayProps) {
-  if (mode !== 'webgl') return null;
+  if (mode !== 'webgl') {
+    return null;
+  }
   const labels = visibleLabels({
     vertices: scene.graph.vertices(),
     position: scene.position,

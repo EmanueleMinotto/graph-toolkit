@@ -9,7 +9,9 @@ export class Matrix {
 
   /** Copies `data`; its length must equal `rows * columns`. */
   public constructor(rows: number, columns: number, data: ArrayLike<number>) {
-    if (data.length !== rows * columns) throw new RangeError('data length must be rows * columns');
+    if (data.length !== rows * columns) {
+      throw new RangeError('data length must be rows * columns');
+    }
     this.rows = rows;
     this.columns = columns;
     this.#data = Float64Array.from(data);
@@ -21,7 +23,9 @@ export class Matrix {
 
   public get(row: number, column: number): number {
     const isInside = row >= 0 && row < this.rows && column >= 0 && column < this.columns;
-    if (!isInside) throw new RangeError('index out of bounds');
+    if (!isInside) {
+      throw new RangeError('index out of bounds');
+    }
     return cellAt(this.#data, row * this.columns + column);
   }
 
@@ -32,14 +36,18 @@ export class Matrix {
   }
 
   public multiply(other: Matrix): Matrix {
-    if (this.columns !== other.rows) throw new RangeError('incompatible shapes');
+    if (this.columns !== other.rows) {
+      throw new RangeError('incompatible shapes');
+    }
     const shape = [this.rows, this.columns, other.columns] as const;
     return new Matrix(this.rows, other.columns, multiplyData(this.#data, other.#data, shape));
   }
 
   /** `exponent` ≥ 0 on a square matrix; entry (i, j) of A^k counts k-walks i → j. */
   public power(exponent: number): Matrix {
-    if (this.rows !== this.columns) throw new GraphError('power requires a square matrix');
+    if (this.rows !== this.columns) {
+      throw new GraphError('power requires a square matrix');
+    }
     return new Matrix(this.rows, this.columns, powerData(this.#data, this.rows, exponent));
   }
 

@@ -18,6 +18,8 @@ describe('graph-toolkit facade', () => {
       'toDot',
       'forceLayout',
     ];
-    for (const name of names) expect(toolkit).toHaveProperty(name);
+    for (const name of names) {
+      expect(toolkit).toHaveProperty(name);
+    }
   });
 });

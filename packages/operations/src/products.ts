@@ -47,7 +47,9 @@ function tensorEdges(first: Edge, second: Edge, isDirected: boolean): readonly E
     target: pairId(first.target, second.target),
     weight,
   };
-  if (isDirected) return [forward];
+  if (isDirected) {
+    return [forward];
+  }
   const crossed = {
     source: pairId(first.source, second.target),
     target: pairId(first.target, second.source),

@@ -56,7 +56,9 @@ const singular = (word: string): string =>
 
 function counted(count: string, word: string): string {
   const forms = WORDS[singular(word)];
-  if (forms === undefined) return `${count} ${word}`;
+  if (forms === undefined) {
+    return `${count} ${word}`;
+  }
   return `${count} ${count === '1' ? forms[0] : forms[1]}`;
 }
 

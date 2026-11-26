@@ -21,8 +21,12 @@ const name = (index: number) => vertexId(String(index));
 
 const network = (count: number, arcs: readonly (readonly [number, number, number])[]): Graph => {
   const builder = new GraphBuilder({ directed: true });
-  for (let index = 0; index < count; index++) builder.addVertex(name(index));
-  for (const [from, to, capacity] of arcs) builder.addEdge(name(from), name(to), capacity);
+  for (let index = 0; index < count; index++) {
+    builder.addVertex(name(index));
+  }
+  for (const [from, to, capacity] of arcs) {
+    builder.addEdge(name(from), name(to), capacity);
+  }
   return builder.build();
 };
 
@@ -51,7 +55,9 @@ describe('centrality', () => {
 describe('communities', () => {
   it('separates two cliques joined by a bridge', () => {
     const builder = new GraphBuilder();
-    for (let index = 0; index < 8; index++) builder.addVertex(name(index));
+    for (let index = 0; index < 8; index++) {
+      builder.addVertex(name(index));
+    }
     for (const [first, second] of [
       [0, 1],
       [0, 2],

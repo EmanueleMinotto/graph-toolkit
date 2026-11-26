@@ -16,22 +16,28 @@ function scan(state: State, step: Step, column: number): readonly [delta: number
   const row = state.matchOfColumn[column]!;
   let [delta, next] = [Infinity, 0];
   for (let candidate = 1; candidate < step.used.length; candidate++) {
-    if (step.used[candidate] === 1) continue;
+    if (step.used[candidate] === 1) {
+      continue;
+    }
     const reduced =
       state.costs[row - 1]![candidate - 1]! -
       state.rowPotential[row]! -
       state.columnPotential[candidate]!;
-    if (reduced < step.slack[candidate]!)
+    if (reduced < step.slack[candidate]!) {
       [step.slack[candidate], state.way[candidate]] = [reduced, column];
-    if (step.slack[candidate]! < delta) [delta, next] = [step.slack[candidate]!, candidate];
+    }
+    if (step.slack[candidate]! < delta) {
+      [delta, next] = [step.slack[candidate]!, candidate];
+    }
   }
   return [delta, next];
 }
 
 function shift(state: State, step: Step, delta: number): void {
   for (let index = 0; index < step.used.length; index++) {
-    if (step.used[index] === 0) step.slack[index]! -= delta;
-    else {
+    if (step.used[index] === 0) {
+      step.slack[index]! -= delta;
+    } else {
       state.rowPotential[state.matchOfColumn[index]!]! += delta;
       state.columnPotential[index]! -= delta;
     }
@@ -69,11 +75,14 @@ export function hungarian(costs: readonly (readonly number[])[]): number[] {
     matchOfColumn: new Int32Array(columns + 1),
     way: new Int32Array(columns + 1),
   };
-  for (let row = 1; row <= costs.length; row++) flip(state, freeColumn(state, row));
+  for (let row = 1; row <= costs.length; row++) {
+    flip(state, freeColumn(state, row));
+  }
   const assignment = Array.from({ length: costs.length }, () => -1);
   for (let column = 1; column <= columns; column++) {
-    if (state.matchOfColumn[column] !== 0)
+    if (state.matchOfColumn[column] !== 0) {
       assignment[state.matchOfColumn[column]! - 1] = column - 1;
+    }
   }
   return assignment;
 }

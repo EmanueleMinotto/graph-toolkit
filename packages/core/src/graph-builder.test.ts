@@ -62,8 +62,12 @@ describe('GraphBuilder', () => {
         }),
         (pairs) => {
           const builder = new GraphBuilder();
-          for (let index = 0; index < 8; index++) builder.addVertex(vertexId(String(index)));
-          for (const [x, y] of pairs) builder.addEdge(vertexId(String(x)), vertexId(String(y)));
+          for (let index = 0; index < 8; index++) {
+            builder.addVertex(vertexId(String(index)));
+          }
+          for (const [x, y] of pairs) {
+            builder.addEdge(vertexId(String(x)), vertexId(String(y)));
+          }
           const graph = builder.build();
           const loops = pairs.filter(([x, y]) => x === y).length;
           const total = graph.vertices().reduce((sum, id) => sum + graph.degree(id), 0);

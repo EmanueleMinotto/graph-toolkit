@@ -10,7 +10,9 @@ function levelGraph(residual: Residual, terminals: Terminals): Int32Array {
     const edges = residual.adjacency[vertex]!;
     for (const edge of edges) {
       const next = residual.to[edge]!;
-      if (level[next] !== -1 || residual.capacity[edge]! <= 0) continue;
+      if (level[next] !== -1 || residual.capacity[edge]! <= 0) {
+        continue;
+      }
       level[next] = level[vertex]! + 1;
       queue.push(next);
     }
@@ -53,14 +55,18 @@ function saturate(residual: Residual, path: readonly number[]): number {
 function findAndPush(blocking: Blocking, terminals: Terminals, path: number[]): number {
   const { residual, level } = blocking;
   for (let vertex = terminals.source; ;) {
-    if (vertex === terminals.sink) return saturate(residual, path.splice(0));
+    if (vertex === terminals.sink) {
+      return saturate(residual, path.splice(0));
+    }
     const edge = admissibleEdge(blocking, vertex);
     if (edge !== -1) {
       path.push(edge);
       vertex = residual.to[edge]!;
       continue;
     }
-    if (vertex === terminals.source) return -1;
+    if (vertex === terminals.source) {
+      return -1;
+    }
     level[vertex] = -1;
     vertex = residual.to[path.pop()! ^ 1]!;
   }

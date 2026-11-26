@@ -12,8 +12,12 @@ function build(
 ): Graph {
   const builder = new GraphBuilder({ directed: false });
   const names = new Set([...links.flatMap(([a, b]) => [a, b]), ...extra]);
-  for (const name of names) builder.addVertex(v(name));
-  for (const [a, b, w] of links) builder.addEdge(v(a), v(b), w);
+  for (const name of names) {
+    builder.addVertex(v(name));
+  }
+  for (const [a, b, w] of links) {
+    builder.addEdge(v(a), v(b), w);
+  }
   return builder.build();
 }
 

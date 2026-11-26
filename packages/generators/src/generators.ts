@@ -25,8 +25,12 @@ export interface GeneratorOptions {
 function assemble(count: number, pairs: readonly Pair[], options: GeneratorOptions): Graph {
   const builder = new GraphBuilder({ directed: options.directed ?? false });
   const names = Array.from({ length: count }, (_, index) => String(index));
-  for (const name of names) builder.addVertex(vertexId(name));
-  for (const [from, to] of pairs) builder.addEdge(vertexId(String(from)), vertexId(String(to)));
+  for (const name of names) {
+    builder.addVertex(vertexId(name));
+  }
+  for (const [from, to] of pairs) {
+    builder.addEdge(vertexId(String(from)), vertexId(String(to)));
+  }
   return builder.build();
 }
 

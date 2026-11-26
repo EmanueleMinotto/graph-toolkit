@@ -32,7 +32,9 @@ describe('formats', () => {
 
 describe('samples', () => {
   it('builds every sample kind', () => {
-    for (const kind of SAMPLES) expect(makeSample(kind, 4).vertexCount).toBeGreaterThan(0);
+    for (const kind of SAMPLES) {
+      expect(makeSample(kind, 4).vertexCount).toBeGreaterThan(0);
+    }
   });
 });
 

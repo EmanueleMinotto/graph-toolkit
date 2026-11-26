@@ -81,7 +81,9 @@ export function useGraphInteraction({
 
   useEffect(() => {
     const element = svg.current;
-    if (element === null) return;
+    if (element === null) {
+      return;
+    }
     const onWheel = (event: WheelEvent): void => {
       event.preventDefault();
       const rect = element.getBoundingClientRect();
@@ -105,7 +107,9 @@ export function useGraphInteraction({
 
   const moveDrag = (event: PointerEvent): void => {
     const { current } = drag;
-    if (current === undefined) return;
+    if (current === undefined) {
+      return;
+    }
     const point = toSvg(event);
     const [dx, dy] = [point.x - current.last.x, point.y - current.last.y];
     drag.current = { ...current, last: point, travelled: current.travelled + Math.hypot(dx, dy) };
@@ -135,14 +139,18 @@ export function useGraphInteraction({
 
   const finishLink = (source: VertexId, point: Pt): void => {
     const hit = vertexAt(point);
-    if (hit !== undefined && hit !== source) edit?.onLink(source, hit);
+    if (hit !== undefined && hit !== source) {
+      edit?.onLink(source, hit);
+    }
   };
 
   const release = ({ target, last, travelled, isAdditive }: Drag): void => {
     const isClick = travelled < CLICK_SLOP;
     const point = toContent(view, last);
     if (target === undefined) {
-      if (isClick) edit?.onAdd(point);
+      if (isClick) {
+        edit?.onAdd(point);
+      }
     } else if (isClick) {
       (isAdditive ? onToggle : onPick)(target);
     } else {
@@ -154,7 +162,9 @@ export function useGraphInteraction({
     const { current } = drag;
     drag.current = undefined;
     setLink(undefined);
-    if (current !== undefined) release(current);
+    if (current !== undefined) {
+      release(current);
+    }
   };
 
   const reset = (): void => {

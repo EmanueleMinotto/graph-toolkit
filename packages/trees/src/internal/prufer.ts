@@ -16,7 +16,9 @@ function degreesOf(vertexCount: number, edges: readonly IndexEdge[]) {
 function leavesOf(degree: Int32Array): MinPriorityQueue {
   const leaves = new MinPriorityQueue();
   for (const [vertex, count] of degree.entries()) {
-    if (count === 1) leaves.push(vertex, vertex);
+    if (count === 1) {
+      leaves.push(vertex, vertex);
+    }
   }
   return leaves;
 }
@@ -32,7 +34,9 @@ export function encodePrufer(vertexCount: number, edges: readonly IndexEdge[]): 
     code.push(neighbor);
     neighborXor[neighbor]! ^= leaf;
     degree[neighbor]!--;
-    if (degree[neighbor] === 1) leaves.push(neighbor, neighbor);
+    if (degree[neighbor] === 1) {
+      leaves.push(neighbor, neighbor);
+    }
   }
   return code;
 }
@@ -41,13 +45,17 @@ export function encodePrufer(vertexCount: number, edges: readonly IndexEdge[]): 
 export function decodePrufer(code: readonly number[]): [number, number][] {
   const count = code.length + 2;
   const degree = new Int32Array(count).fill(1);
-  for (const vertex of code) degree[vertex]!++;
+  for (const vertex of code) {
+    degree[vertex]!++;
+  }
   const leaves = leavesOf(degree);
   const edges: [number, number][] = [];
   for (const vertex of code) {
     edges.push([leaves.pop()!.item, vertex]);
     degree[vertex]!--;
-    if (degree[vertex] === 1) leaves.push(vertex, vertex);
+    if (degree[vertex] === 1) {
+      leaves.push(vertex, vertex);
+    }
   }
   edges.push([leaves.pop()!.item, leaves.pop()!.item]);
   return edges;

@@ -87,7 +87,9 @@ describe('eigenDecomposition', () => {
       const product = matrix
         .toRows()
         .map((row) => row.reduce((sum, cell, k) => sum + cell * vector[k]!, 0));
-      for (const [k, entry] of product.entries()) expect(entry).toBeCloseTo(value * vector[k]!);
+      for (const [k, entry] of product.entries()) {
+        expect(entry).toBeCloseTo(value * vector[k]!);
+      }
     }
     expect(Math.hypot(...vectors[0]!)).toBeCloseTo(1);
   });

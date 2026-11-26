@@ -15,7 +15,9 @@ export function LabelLayer({ labels, box }: Props) {
   useLayoutEffect(() => {
     const element = canvas.current;
     const context = element?.getContext('2d');
-    if (element === null || !context) return;
+    if (element === null || !context) {
+      return;
+    }
     const ratio = globalThis.devicePixelRatio;
     const pixels = Math.round(element.clientWidth * ratio);
     element.width = pixels;

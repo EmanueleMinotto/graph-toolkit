@@ -53,7 +53,9 @@ function walkToCycle(
 function numberRest(component: Int32Array, firstFree: number): void {
   let next = firstFree;
   for (let vertex = 0; vertex < component.length; vertex++) {
-    if (component[vertex] === -1) component[vertex] = next++;
+    if (component[vertex] === -1) {
+      component[vertex] = next++;
+    }
   }
 }
 
@@ -64,9 +66,12 @@ function contract(best: readonly (Linked | undefined)[]): Contraction {
   let cycles = 0;
   for (let start = 0; start < best.length; start++) {
     const meet = walkToCycle(best, seen, start);
-    if (meet === -1 || component[meet] !== -1) continue;
-    for (let vertex = meet; component[vertex] === -1; vertex = best[vertex]!.from)
+    if (meet === -1 || component[meet] !== -1) {
+      continue;
+    }
+    for (let vertex = meet; component[vertex] === -1; vertex = best[vertex]!.from) {
       component[vertex] = cycles;
+    }
     cycles++;
   }
   numberRest(component, cycles);
@@ -108,9 +113,13 @@ function expand(
 
 function solve(count: number, arcs: readonly Linked[], root: number): Linked[] | undefined {
   const best = cheapestIncoming(count, arcs, root);
-  if (best.some((arc, vertex) => arc === undefined && vertex !== root)) return undefined;
+  if (best.some((arc, vertex) => arc === undefined && vertex !== root)) {
+    return undefined;
+  }
   const contraction = contract(best);
-  if (contraction.cycles === 0) return best.filter((arc) => arc !== undefined);
+  if (contraction.cycles === 0) {
+    return best.filter((arc) => arc !== undefined);
+  }
   const { component } = contraction;
   const reduced = reduceArcs(arcs, best, component);
   const inner = solve(Math.max(...component) + 1, reduced, component[root]!);

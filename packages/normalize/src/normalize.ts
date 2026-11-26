@@ -12,15 +12,21 @@ const compare = (left: string, right: string): number =>
 
 function assemble(graph: Graph, vertices: readonly VertexId[], edges: readonly Edge[]): Graph {
   const builder = new GraphBuilder({ directed: graph.directed });
-  for (const vertex of vertices) builder.addVertex(vertex);
-  for (const edge of edges) builder.addEdge(edge.source, edge.target, edge.weight);
+  for (const vertex of vertices) {
+    builder.addVertex(vertex);
+  }
+  for (const edge of edges) {
+    builder.addEdge(edge.source, edge.target, edge.weight);
+  }
   return builder.build();
 }
 
 /** Applies `rename` to every vertex id. Throws {@link GraphError} if two ids collide. */
 export function relabel(graph: Graph, rename: (id: VertexId) => VertexId): Graph {
   const names = graph.vertices().map((id) => rename(id));
-  if (new Set(names).size !== names.length) throw new GraphError('relabel produced duplicate ids');
+  if (new Set(names).size !== names.length) {
+    throw new GraphError('relabel produced duplicate ids');
+  }
   const edges = graph.edges().map((edge): Edge => ({
     source: rename(edge.source),
     target: rename(edge.target),

@@ -19,10 +19,14 @@ function step(search: Search): boolean {
   }
   for (let slot = csr.offsets[last]!; slot < csr.offsets[last + 1]!; slot++) {
     const next = csr.targets[slot]!;
-    if (visited[next] === 1) continue;
+    if (visited[next] === 1) {
+      continue;
+    }
     visited[next] = 1;
     path.push(next);
-    if (extend(search)) return true;
+    if (extend(search)) {
+      return true;
+    }
     path.pop();
     visited[next] = 0;
   }
@@ -47,7 +51,9 @@ export function hamiltonian(csr: Csr, vertexCount: number, mode: Mode): number[]
     const visited = new Uint8Array(vertexCount);
     visited[start] = 1;
     const search: Search = { csr, visited, path: [start], mustClose, signal };
-    if (extend(search)) return search.path;
+    if (extend(search)) {
+      return search.path;
+    }
   }
   return undefined;
 }

@@ -22,8 +22,12 @@ const [a, b, c, d, isolated] = ids as [
 
 const build = (directed: boolean, edges: readonly (readonly [number, number])[]): Graph => {
   const builder = new GraphBuilder({ directed });
-  for (const id of ids) builder.addVertex(id);
-  for (const [from, to] of edges) builder.addEdge(ids[from]!, ids[to]!);
+  for (const id of ids) {
+    builder.addVertex(id);
+  }
+  for (const [from, to] of edges) {
+    builder.addEdge(ids[from]!, ids[to]!);
+  }
   return builder.build();
 };
 
@@ -130,7 +134,9 @@ describe('lazy iterators', () => {
     const firstTwo = [];
     for (const vertex of bfsIterator(graph, start)) {
       firstTwo.push(vertex);
-      if (firstTwo.length === 2) break;
+      if (firstTwo.length === 2) {
+        break;
+      }
     }
     expect(firstTwo).toHaveLength(2);
   });

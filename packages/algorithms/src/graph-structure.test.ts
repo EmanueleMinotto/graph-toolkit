@@ -23,7 +23,9 @@ const v = (index: number) => vertexId(String(index));
 /** Two triangles {0,1,2} and {2,3,4} sharing vertex 2, plus a pendant 4-5. */
 function bowtie(): Graph {
   const builder = new GraphBuilder({ directed: false });
-  for (let index = 0; index < 6; index++) builder.addVertex(v(index));
+  for (let index = 0; index < 6; index++) {
+    builder.addVertex(v(index));
+  }
   for (const [from, to] of [
     [0, 1],
     [1, 2],
@@ -113,7 +115,9 @@ describe('transitiveClosure', () => {
 describe('minCut', () => {
   it('finds the bottleneck edges and their total capacity', () => {
     const builder = new GraphBuilder({ directed: true });
-    for (let index = 0; index < 4; index++) builder.addVertex(v(index));
+    for (let index = 0; index < 4; index++) {
+      builder.addVertex(v(index));
+    }
     builder.addEdge(v(0), v(1), 10).addEdge(v(0), v(2), 10);
     builder.addEdge(v(1), v(3), 4).addEdge(v(2), v(3), 5).addEdge(v(1), v(2), 2);
     const cut = minCut(builder.build(), v(0), v(3));

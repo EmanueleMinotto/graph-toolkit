@@ -29,7 +29,9 @@ describe('spectralLayout', () => {
 
   it('ignores self-loops', () => {
     const builder = new GraphBuilder({ directed: false });
-    for (const name of ['a', 'b', 'c']) builder.addVertex(vertexId(name));
+    for (const name of ['a', 'b', 'c']) {
+      builder.addVertex(vertexId(name));
+    }
     builder
       .addEdge(vertexId('a'), vertexId('a'))
       .addEdge(vertexId('a'), vertexId('b'))
@@ -70,7 +72,9 @@ describe('tutteLayout', () => {
   it('scans only a bounded number of edges and ignores self-loops', () => {
     expect(tutteLayout(completeGraph(25)).size).toBe(25);
     const loop = new GraphBuilder({ directed: false });
-    for (const name of ['a', 'b', 'c']) loop.addVertex(vertexId(name));
+    for (const name of ['a', 'b', 'c']) {
+      loop.addVertex(vertexId(name));
+    }
     loop
       .addEdge(vertexId('a'), vertexId('a'))
       .addEdge(vertexId('a'), vertexId('b'))
@@ -82,7 +86,9 @@ describe('tutteLayout', () => {
   it('falls back to a radial layout for forests and parks cut-off components outside', () => {
     expect(tutteLayout(pathGraph(4)).size).toBe(4);
     const builder = new GraphBuilder({ directed: false });
-    for (const name of ['a', 'b', 'c', 'x', 'y']) builder.addVertex(vertexId(name));
+    for (const name of ['a', 'b', 'c', 'x', 'y']) {
+      builder.addVertex(vertexId(name));
+    }
     builder
       .addEdge(vertexId('a'), vertexId('b'))
       .addEdge(vertexId('b'), vertexId('c'))

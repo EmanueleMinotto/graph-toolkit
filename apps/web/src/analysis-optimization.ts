@@ -21,7 +21,9 @@ const show = (distance: number): string => (Number.isFinite(distance) ? String(d
 const pick = (message: string): Highlight => ({ ...NONE, summary: message });
 
 function minimumCut(graph: Graph, { from, to }: Selection): Highlight {
-  if (from === undefined || to === undefined) return pick('Pick source and sink.');
+  if (from === undefined || to === undefined) {
+    return pick('Pick source and sink.');
+  }
   const cut = minCut(graph, from, to);
   return {
     ...NONE,
@@ -64,7 +66,9 @@ function allPairsJohnson(graph: Graph): Highlight {
 }
 
 function dagDistances(graph: Graph, { from }: Selection): Highlight {
-  if (from === undefined) return pick('Pick a start vertex.');
+  if (from === undefined) {
+    return pick('Pick a start vertex.');
+  }
   const tree = dagShortestPaths(graph, from);
   const rows = graph
     .vertices()
@@ -74,9 +78,13 @@ function dagDistances(graph: Graph, { from }: Selection): Highlight {
 }
 
 function arborescence(graph: Graph, { from }: Selection): Highlight {
-  if (from === undefined) return pick('Pick a root vertex.');
+  if (from === undefined) {
+    return pick('Pick a root vertex.');
+  }
   const tree = minimumSpanningArborescence(graph, from);
-  if (tree === undefined) return pick(`Some vertices are unreachable from ${from}.`);
+  if (tree === undefined) {
+    return pick(`Some vertices are unreachable from ${from}.`);
+  }
   return {
     ...NONE,
     colors: new Map([[from, FIRST_COLOR]]),
@@ -92,7 +100,9 @@ const MIN_TERMINALS = 2;
 function steiner(graph: Graph, { count = MIN_TERMINALS }: Selection): Highlight {
   const terminals = graph.vertices().slice(0, count);
   const tree = steinerTree(graph, terminals);
-  if (tree === undefined) return pick('The terminals are not all connected.');
+  if (tree === undefined) {
+    return pick('The terminals are not all connected.');
+  }
   return {
     ...NONE,
     colors: new Map(terminals.map((id) => [id, FIRST_COLOR])),

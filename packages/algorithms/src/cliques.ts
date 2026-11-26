@@ -6,7 +6,9 @@ export function maximalCliques(
   graph: Graph,
   options: AbortOptions = {},
 ): readonly (readonly VertexId[])[] {
-  if (graph.directed) throw new GraphError('maximalCliques requires an undirected graph');
+  if (graph.directed) {
+    throw new GraphError('maximalCliques requires an undirected graph');
+  }
   return maximalCliqueKernel(graph.csr, graph.vertexCount, options.signal).map((clique) =>
     clique.map((index) => graph.vertexAt(index)),
   );

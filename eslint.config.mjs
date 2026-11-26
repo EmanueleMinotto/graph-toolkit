@@ -93,6 +93,8 @@ const internalKernels = {
   'no-magic-numbers': 'off',
   'no-plusplus': 'off',
   'no-continue': 'off',
+  // Braces on every `if` add lines; kernels get more room than the public API.
+  'max-lines-per-function': ['error', { max: 30, skipBlankLines: true, skipComments: true }],
 };
 
 export default tseslint.config(
@@ -154,6 +156,7 @@ export default tseslint.config(
     rules: {
       ...vitest.configs.recommended.rules,
       'max-lines-per-function': 'off',
+      'max-lines': 'off',
       'no-plusplus': 'off',
       'no-continue': 'off',
       'require-unicode-regexp': 'off',
@@ -176,6 +179,7 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'max-lines-per-function': 'off',
+      'max-lines': ['error', { max: 200, skipBlankLines: true, skipComments: true }],
       'no-magic-numbers': 'off',
       'unicorn/filename-case': ['error', { cases: { kebabCase: true, pascalCase: true } }],
       'unicorn/name-replacements': 'off',
@@ -198,6 +202,7 @@ export default tseslint.config(
     rules: {
       'functional/no-let': 'off',
       'functional/immutable-data': 'off',
+      'max-lines-per-function': 'off',
       'no-plusplus': 'off',
       'no-magic-numbers': 'off',
       'unicorn/consistent-function-scoping': 'off',
@@ -218,4 +223,5 @@ export default tseslint.config(
     rules: { ...tseslint.configs.disableTypeChecked.rules, 'no-magic-numbers': 'off' },
   },
   prettier,
+  { rules: { curly: 'error' } }, // after prettier, which would turn it off
 );

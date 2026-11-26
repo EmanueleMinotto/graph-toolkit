@@ -98,7 +98,9 @@ export interface RadialLayoutOptions {
  */
 export function radialLayout(graph: Graph, options: RadialLayoutOptions = {}): Layout {
   const { root = graph.vertices()[0], ringGap = 1 } = options;
-  if (root === undefined) return new Map();
+  if (root === undefined) {
+    return new Map();
+  }
   const { ring, rank, sizes } = ringsAround(graph.csr, graph.vertexCount, graph.indexOf(root));
   return new Map(
     graph.vertices().map((id, index) => {
@@ -136,7 +138,9 @@ export function spectralLayout(graph: Graph): Layout {
 export function tutteLayout(graph: Graph): Layout {
   const count = graph.vertexCount;
   const cycle = outerCycle(graph.csr, count);
-  if (cycle.length === 0) return radialLayout(graph);
+  if (cycle.length === 0) {
+    return radialLayout(graph);
+  }
   const position = tutteEmbedding(graph.csr, count, cycle);
   return new Map(
     graph

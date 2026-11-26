@@ -19,7 +19,9 @@ function nodeClass(color: number | undefined, isSelected: boolean, isGrouped: bo
 
 function edgeClass(highlight: Highlight, key: string): string {
   const color = highlight.edgeColors?.get(key);
-  if (color !== undefined) return `edge e${color % PALETTE_SIZE}`;
+  if (color !== undefined) {
+    return `edge e${color % PALETTE_SIZE}`;
+  }
   return highlight.edges.has(key) ? 'edge on' : 'edge';
 }
 
@@ -27,7 +29,9 @@ function edgeClass(highlight: Highlight, key: string): string {
 export type RenderMode = 'full' | 'culled' | 'webgl';
 
 export function renderMode(graph: Graph, canUseWebgl: boolean): RenderMode {
-  if (graph.vertexCount <= CULL_ABOVE) return 'full';
+  if (graph.vertexCount <= CULL_ABOVE) {
+    return 'full';
+  }
   return canUseWebgl ? 'webgl' : 'culled';
 }
 
@@ -53,7 +57,9 @@ interface Drawn {
 
 /** Edges as lines; on big graphs the plain ones near the screen become a single path. */
 export function Edges({ graph, mode, view, position, highlight }: Common) {
-  if (mode === 'webgl') return null;
+  if (mode === 'webgl') {
+    return null;
+  }
   const drawn = graph
     .edges()
     .map((edge) => ({

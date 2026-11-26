@@ -49,7 +49,9 @@ function expand(frame: Frame, clique: readonly number[], sets: Sets): void {
   }
   const pivot = pivotOf(frame, sets.candidates, sets.excluded);
   const branching = sets.candidates.difference(frame.adjacency[pivot]!);
-  for (const vertex of branching) branch(frame, { clique, sets }, vertex);
+  for (const vertex of branching) {
+    branch(frame, { clique, sets }, vertex);
+  }
 }
 
 /** Bron–Kerbosch with pivoting; loops are ignored. Output size can be exponential. */
@@ -59,9 +61,13 @@ export function maximalCliqueKernel(
   signal?: AbortSignalLike,
 ): number[][] {
   const adjacency = Array.from({ length: vertexCount }, (_, vertex) => neighborsOf(csr, vertex));
-  for (const [vertex, around] of adjacency.entries()) around.delete(vertex);
+  for (const [vertex, around] of adjacency.entries()) {
+    around.delete(vertex);
+  }
   const frame: Frame = { adjacency, found: [], signal };
   const all = new Set(Array.from({ length: vertexCount }, (_, vertex) => vertex));
-  if (vertexCount > 0) expand(frame, [], { candidates: all, excluded: new Set() });
+  if (vertexCount > 0) {
+    expand(frame, [], { candidates: all, excluded: new Set() });
+  }
   return frame.found;
 }

@@ -18,7 +18,9 @@ export function laplacianData(adjacency: Float64Array, size: number): Float64Arr
   const data = new Float64Array(size * size);
   for (let row = 0; row < size; row++) {
     for (let column = 0; column < size; column++) {
-      if (row === column) continue;
+      if (row === column) {
+        continue;
+      }
       const value = adjacency[row * size + column]!;
       data[row * size + column] = 0 - value; // avoids -0
       data[row * size + row]! += value;
@@ -48,7 +50,9 @@ export function multiplyData(
 
 export function identityData(size: number): Float64Array {
   const data = new Float64Array(size * size);
-  for (let index = 0; index < size; index++) data[index * size + index] = 1;
+  for (let index = 0; index < size; index++) {
+    data[index * size + index] = 1;
+  }
   return data;
 }
 
@@ -57,7 +61,9 @@ export function powerData(base: Float64Array, size: number, exponent: number): F
   let result = identityData(size);
   let square = base;
   for (let remaining = exponent; remaining > 0; remaining = Math.floor(remaining / 2)) {
-    if (remaining % 2 === 1) result = multiplyData(result, square, [size, size, size]);
+    if (remaining % 2 === 1) {
+      result = multiplyData(result, square, [size, size, size]);
+    }
     square = multiplyData(square, square, [size, size, size]);
   }
   return result;
@@ -66,7 +72,9 @@ export function powerData(base: Float64Array, size: number, exponent: number): F
 export function isSymmetric(data: Float64Array, size: number): boolean {
   for (let row = 0; row < size; row++) {
     for (let column = row + 1; column < size; column++) {
-      if (data[row * size + column] !== data[column * size + row]) return false;
+      if (data[row * size + column] !== data[column * size + row]) {
+        return false;
+      }
     }
   }
   return true;
@@ -78,7 +86,9 @@ export function nonZeroEntries(data: Float64Array, size: number, isUpperOnly: bo
   for (let row = 0; row < size; row++) {
     for (let column = isUpperOnly ? row : 0; column < size; column++) {
       const value = data[row * size + column]!;
-      if (value !== 0) entries.push([row, column, value]);
+      if (value !== 0) {
+        entries.push([row, column, value]);
+      }
     }
   }
   return entries;

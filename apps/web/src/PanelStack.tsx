@@ -98,7 +98,9 @@ export function PanelStack({ panels }: Props) {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
   const onDragEnd = ({ active, over }: DragEndEvent): void => {
-    if (over === null || active.id === over.id) return;
+    if (over === null || active.id === over.id) {
+      return;
+    }
     const ids: readonly string[] = order;
     const [from, to] = [String(active.id), String(over.id)];
     setSaved(arrayMove(order, ids.indexOf(from), ids.indexOf(to)));

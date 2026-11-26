@@ -10,8 +10,9 @@ export interface KShortestRequest {
 
 /** Up to `count` shortest loopless paths from `source` to `target`, cheapest first (Yen). */
 export function kShortestPaths(graph: Graph, request: KShortestRequest): readonly PathResult[] {
-  if (graph.csr.weights.some((weight) => weight < 0))
+  if (graph.csr.weights.some((weight) => weight < 0)) {
     throw new GraphError('kShortestPaths requires non-negative weights');
+  }
   const endpoints = {
     source: graph.indexOf(request.source),
     target: graph.indexOf(request.target),

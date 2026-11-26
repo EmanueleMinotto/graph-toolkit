@@ -6,7 +6,9 @@ import { assembleUnique } from './assemble.js';
  * Loops are dropped and parallel edges keep the first weight. Throws if the edge is absent.
  */
 export function contractEdge(graph: Graph, keep: VertexId, merge: VertexId): Graph {
-  if (!graph.hasEdge(keep, merge)) throw new GraphError(`No edge ${keep} — ${merge} to contract`);
+  if (!graph.hasEdge(keep, merge)) {
+    throw new GraphError(`No edge ${keep} — ${merge} to contract`);
+  }
   const rename = (id: VertexId): VertexId => (id === merge ? keep : id);
   const edges = graph
     .edges()

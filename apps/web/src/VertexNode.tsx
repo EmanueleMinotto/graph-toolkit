@@ -24,7 +24,9 @@ export function VertexNode(props: Props) {
       aria-label={`Vertex ${id}`}
       aria-pressed={isPressed}
       onKeyDown={(event) => {
-        if (event.key !== 'Enter' && event.key !== ' ') return;
+        if (event.key !== 'Enter' && event.key !== ' ') {
+          return;
+        }
         event.preventDefault();
         props.onActivate();
       }}

@@ -9,7 +9,9 @@ export interface SpanningForest {
 
 /** Kruskal's minimum spanning forest of an undirected graph, O(E log E). */
 export function minimumSpanningForest(graph: Graph): SpanningForest {
-  if (graph.directed) throw new GraphError('minimumSpanningForest requires an undirected graph');
+  if (graph.directed) {
+    throw new GraphError('minimumSpanningForest requires an undirected graph');
+  }
   const sets = new DisjointSet(graph.vertexCount);
   const edges = graph
     .edges()

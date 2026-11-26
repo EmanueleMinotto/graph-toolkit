@@ -19,7 +19,9 @@ const keyOf = (left: number, right: number): string =>
 function embedPath(state: Embedding, path: readonly number[]): void {
   for (const [index, vertex] of path.entries()) {
     state.vertices.add(vertex);
-    if (index > 0) state.edges.add(keyOf(path[index - 1]!, vertex));
+    if (index > 0) {
+      state.edges.add(keyOf(path[index - 1]!, vertex));
+    }
   }
 }
 
@@ -53,8 +55,9 @@ function collectComponent(state: Embedding, start: number, seen: Set<number>): C
   seen.add(start);
   for (const member of members) {
     for (const next of state.adjacency.get(member)!) {
-      if (state.vertices.has(next)) attachments.add(next);
-      else if (!seen.has(next)) {
+      if (state.vertices.has(next)) {
+        attachments.add(next);
+      } else if (!seen.has(next)) {
         seen.add(next);
         members.add(next);
       }
@@ -76,7 +79,9 @@ function fragmentsOf(state: Embedding): Fragment[] {
   const seen = new Set<number>();
   const fragments = chordFragments(state);
   for (const start of state.adjacency.keys()) {
-    if (state.vertices.has(start) || seen.has(start)) continue;
+    if (state.vertices.has(start) || seen.has(start)) {
+      continue;
+    }
     fragments.push(componentFragment(state, collectComponent(state, start, seen)));
   }
   return fragments;
@@ -111,7 +116,9 @@ function step(state: Embedding): boolean {
   }));
   const [pick] = options.toSorted((left, right) => left.faces.length - right.faces.length);
   const face = pick?.faces[0];
-  if (pick === undefined || face === undefined) return false;
+  if (pick === undefined || face === undefined) {
+    return false;
+  }
   embedPath(state, pick.fragment.path);
   const rest = state.faces.filter((other) => other !== face);
   state.faces = [...rest, ...splitFace(face, pick.fragment.path)];
@@ -137,7 +144,9 @@ export function isBlockPlanar(blockEdges: readonly Pair[]): boolean {
   const state: Embedding = { adjacency, vertices: new Set(), edges: new Set(), faces };
   embedPath(state, [...cycle, cycle[0]!]);
   while (state.edges.size < blockEdges.length) {
-    if (!step(state)) return false;
+    if (!step(state)) {
+      return false;
+    }
   }
   return true;
 }
