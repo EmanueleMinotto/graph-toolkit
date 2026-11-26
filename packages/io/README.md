@@ -27,6 +27,7 @@ toJson(graph); // { directed, vertices, edges }
 | Pajek `.net`  | `toPajek`        | `fromPajek`                              | `*Vertices`, `*Edges` / `*Arcs`, weights; other sections ignored.                                                         |
 | DIMACS        | `toDimacs`       | `fromDimacs`                             | `p edge` + `e` lines, or `p sp` + `a` lines; vertices numbered from 1.                                                    |
 | Mermaid       | `toMermaid`      | `fromMermaid`                            | Flowcharts: `-->`, `---`, `\|w\|` weights, node labels; no subgraphs.                                                     |
+| Binary        | `toBinary`       | `fromBinary`                             | Compact `Uint8Array` (varints, UTF-8, 1-byte unit weights); order kept, attributes not stored.                            |
 | Adjacency CSV | `toAdjacencyCsv` | `fromAdjacencyCsv(text, { isDirected })` | Vertex ids become `"0"`..`"n-1"`.                                                                                         |
 
 Invalid input throws `ParseError`; duplicate edges throw `DuplicateError` from `core`. XML and DOT parsing is regex-based and intentionally limited to the shapes these exporters write plus common hand-written files; nested/namespaced documents are out of scope.

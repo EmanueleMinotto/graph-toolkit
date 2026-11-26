@@ -1,4 +1,5 @@
 export { fromAdjacencyCsv, toAdjacencyCsv, type AdjacencyCsvOptions } from './adjacency-csv.js';
+export { fromBinary, toBinary } from './binary.js';
 export { fromDimacs, toDimacs } from './dimacs.js';
 export { fromDot, toDot } from './dot.js';
 export { fromEdgeList, toEdgeList, type EdgeListOptions } from './edge-list.js';
