@@ -1,6 +1,6 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { DisjointSet, MinPriorityQueue } from '../index.js';
+import { DisjointSet, MinPriorityQueue, mulberry32 } from '../index.js';
 
 describe('MinPriorityQueue', () => {
   it('returns undefined when empty', () => {
@@ -54,5 +54,17 @@ describe('DisjointSet', () => {
     }
 
     expect(new Set(Array.from({ length: 64 }, (_, index) => sets.find(index))).size).toBe(1);
+  });
+});
+
+describe('mulberry32', () => {
+  it('is deterministic per seed and stays in [0, 1)', () => {
+    const first = mulberry32(42);
+    const second = mulberry32(42);
+    const draws = Array.from({ length: 1000 }, () => first());
+
+    expect(draws).toEqual(Array.from({ length: 1000 }, () => second()));
+    expect(draws.every((value) => value >= 0 && value < 1)).toBe(true);
+    expect(mulberry32(43)()).not.toBe(mulberry32(42)());
   });
 });

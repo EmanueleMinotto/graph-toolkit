@@ -3,18 +3,19 @@
 ## Dependency graph (acyclic)
 
 ```text
-math (no deps: heap, union-find)
+math (no deps: heap, union-find, seeded PRNG)
 core (no deps)
-core ─┬─ matrix · operations · coloring · generators · layout · traversal
+core ─┬─ matrix · operations · coloring · layout · traversal
+      ├─ generators (core, math)
       ├─ io (core, matrix)
       ├─ normalize (core, math)
       ├─ cli (core, io, generators, traversal)
       ├─ dynamic (core)
-      ├─ embedding (core, matrix)
+      ├─ embedding (core, math, matrix)
       ├─ query (core)
       ├─ paths (core, math, traversal)
       ├─ trees (core, math, traversal)
-      └─ algorithms (core, coloring)
+      └─ algorithms (core, math, coloring)
 graph-toolkit = facade re-exporting everything
 ```
 

@@ -1,4 +1,5 @@
-import { completePairs, mulberry32, type Pair } from './edge-lists.js';
+import { mulberry32 } from '@graph-sdk/math';
+import { completePairs, type Pair } from './edge-lists.js';
 
 const key = (from: number, to: number): string =>
   `${String(Math.min(from, to))}:${String(Math.max(from, to))}`;

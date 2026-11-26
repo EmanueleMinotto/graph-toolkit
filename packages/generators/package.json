@@ -41,6 +41,7 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-sdk/core": "workspace:*"
+    "@graph-sdk/core": "workspace:*",
+    "@graph-sdk/math": "workspace:*"
   }
 }

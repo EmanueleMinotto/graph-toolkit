@@ -172,6 +172,9 @@ importers:
       '@graph-sdk/core':
         specifier: workspace:*
         version: link:../core
+      '@graph-sdk/math':
+        specifier: workspace:*
+        version: link:../math
     devDependencies:
       '@graph-sdk/generators':
         specifier: workspace:*
@@ -218,6 +221,9 @@ importers:
       '@graph-sdk/core':
         specifier: workspace:*
         version: link:../core
+      '@graph-sdk/math':
+        specifier: workspace:*
+        version: link:../math
       '@graph-sdk/matrix':
         specifier: workspace:*
         version: link:../matrix
@@ -231,6 +237,9 @@ importers:
       '@graph-sdk/core':
         specifier: workspace:*
         version: link:../core
+      '@graph-sdk/math':
+        specifier: workspace:*
+        version: link:../math
 
   packages/graph-toolkit:
     dependencies:

@@ -24,3 +24,4 @@ sets.setCount(); // 3
 | ------------------ | -------------------------------------------------------------------------- |
 | `MinPriorityQueue` | Binary heap; `push`, `pop` $O(\log n)$, `size` $O(1)$. Duplicates allowed. |
 | `DisjointSet`      | Union-find, union by rank + path compression; `find`, `union`, `setCount`. |
+| `mulberry32`       | `mulberry32(seed)` returns a seeded generator of floats in [0, 1).         |

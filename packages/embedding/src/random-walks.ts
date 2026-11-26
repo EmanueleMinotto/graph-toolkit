@@ -1,5 +1,6 @@
 import { GraphError, type Graph, type VertexId } from '@graph-sdk/core';
-import { mulberry32, walk } from './internal/walk.js';
+import { mulberry32 } from '@graph-sdk/math';
+import { walk } from './internal/walk.js';
 
 const DEFAULT_WALKS_PER_VERTEX = 10;
 const DEFAULT_LENGTH = 40;

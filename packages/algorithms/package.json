@@ -42,7 +42,8 @@
   },
   "dependencies": {
     "@graph-sdk/coloring": "workspace:*",
-    "@graph-sdk/core": "workspace:*"
+    "@graph-sdk/core": "workspace:*",
+    "@graph-sdk/math": "workspace:*"
   },
   "devDependencies": {
     "@graph-sdk/generators": "workspace:*"

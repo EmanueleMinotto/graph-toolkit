@@ -42,7 +42,8 @@
   },
   "dependencies": {
     "@graph-sdk/core": "workspace:*",
-    "@graph-sdk/matrix": "workspace:*"
+    "@graph-sdk/matrix": "workspace:*",
+    "@graph-sdk/math": "workspace:*"
   },
   "devDependencies": {
     "@graph-sdk/generators": "workspace:*"
