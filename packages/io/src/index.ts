@@ -2,6 +2,7 @@ export { fromAdjacencyCsv, toAdjacencyCsv, type AdjacencyCsvOptions } from './ad
 export { fromDimacs, toDimacs } from './dimacs.js';
 export { fromDot, toDot } from './dot.js';
 export { fromEdgeList, toEdgeList, type EdgeListOptions } from './edge-list.js';
+export { fromEdgeListStream, toEdgeListLines } from './edge-list-stream.js';
 export { ParseError } from './errors.js';
 export { fromGexf, toGexf } from './gexf.js';
 export { fromGml, toGml } from './gml.js';

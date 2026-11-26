@@ -1,6 +1,6 @@
 import type { Graph } from '@graph-sdk/core';
-import { ParseError } from './errors.js';
 import { assembleGraph, type ParsedEdge } from './internal/assemble.js';
+import { parseEdgeLine } from './internal/edge-line.js';
 
 export interface EdgeListOptions {
   readonly isDirected?: boolean;
@@ -14,29 +14,13 @@ export function toEdgeList(graph: Graph): string {
     .join('\n');
 }
 
-function parseLine(line: string): ParsedEdge {
-  const [source, target, weight, ...extra] = line.split(/[\s,]+/u);
-  const parsedWeight = weight === undefined ? 1 : Number(weight);
-
-  if (
-    source === undefined ||
-    target === undefined ||
-    extra.length > 0 ||
-    !Number.isFinite(parsedWeight)
-  ) {
-    throw new ParseError(`Invalid edge line: ${line}`);
-  }
-
-  return { source, target, weight: parsedWeight };
-}
-
 /** Parses `source target [weight]` lines separated by commas or whitespace; `#` starts a comment. */
 export function fromEdgeList(text: string, options: EdgeListOptions = {}): Graph {
-  const edges = text
-    .split('\n')
-    .map((line) => line.replace(/#.*/u, '').trim())
-    .filter((line) => line !== '')
-    .map((line) => parseLine(line));
+  const edges = text.split('\n').flatMap((line): readonly ParsedEdge[] => {
+    const edge = parseEdgeLine(line);
+
+    return edge === undefined ? [] : [edge];
+  });
 
   return assembleGraph({ directed: options.isDirected ?? false, vertices: [], edges });
 }
