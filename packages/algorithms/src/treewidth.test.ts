@@ -104,5 +104,6 @@ describe('treewidth', () => {
     };
 
     expect(() => treewidth(cycleGraph(5), { signal: aborted })).toThrow('stopped');
-  });
+    // the 17-vertex exact run takes ~5s on slow CI runners
+  }, 30_000);
 });
