@@ -9,5 +9,8 @@ export class GraphError extends Error {
 /** A vertex id was referenced that does not exist in the graph. */
 export class UnknownVertexError extends GraphError {}
 
+/** An edge was referenced that does not exist in the graph. */
+export class UnknownEdgeError extends GraphError {}
+
 /** The same vertex or edge was added twice. */
 export class DuplicateError extends GraphError {}

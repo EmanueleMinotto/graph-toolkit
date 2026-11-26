@@ -1,5 +1,5 @@
 export { CsrGraph, type GraphAttributes, type GraphShape } from './csr-graph.js';
-export { DuplicateError, GraphError, UnknownVertexError } from './errors.js';
+export { DuplicateError, GraphError, UnknownEdgeError, UnknownVertexError } from './errors.js';
 export { GraphBuilder, type EdgeDetails, type GraphBuilderOptions } from './graph-builder.js';
 export { DEFAULT_WEIGHT, vertexId } from './types.js';
 export type {

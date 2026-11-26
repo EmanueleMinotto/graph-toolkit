@@ -23,13 +23,13 @@ graph.neighbors(a); // [{ source: a, target: b, weight: 2 }]
 
 ## API
 
-| Export                                               | Notes                                                                                                                                 |
-| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `GraphBuilder`                                       | Mutable accumulator; `build()` returns an immutable `Graph`.                                                                          |
-| `Graph`                                              | `vertices`, `edges`, `hasVertex`, `hasEdge`, `neighbors`, `edgesBetween`, `vertexAttributes`, `degree`, `indexOf`, `vertexAt`, `csr`. |
-| `Attributes`, `EdgeDetails`                          | Immutable key–value data on vertices (`addVertex(id, attributes)`) and edges (`addEdge(a, b, { weight, attributes })`).               |
-| `vertexId`, `VertexId`, `Weight`, `Edge`, `Csr`      | Branded ids and plain data types.                                                                                                     |
-| `GraphError`, `UnknownVertexError`, `DuplicateError` | Typed errors.                                                                                                                         |
+| Export                                                                   | Notes                                                                                                                                                           |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GraphBuilder`                                                           | Mutable accumulator; `build()` returns an immutable `Graph`. `GraphBuilder.from(graph)` reopens a graph; `removeEdge` and `removeVertex` edit it ($O(E)$ each). |
+| `Graph`                                                                  | `vertices`, `edges`, `hasVertex`, `hasEdge`, `neighbors`, `edgesBetween`, `vertexAttributes`, `degree`, `indexOf`, `vertexAt`, `csr`.                           |
+| `Attributes`, `EdgeDetails`                                              | Immutable key–value data on vertices (`addVertex(id, attributes)`) and edges (`addEdge(a, b, { weight, attributes })`).                                         |
+| `vertexId`, `VertexId`, `Weight`, `Edge`, `Csr`                          | Branded ids and plain data types.                                                                                                                               |
+| `GraphError`, `UnknownVertexError`, `UnknownEdgeError`, `DuplicateError` | Typed errors.                                                                                                                                                   |
 
 ## Complexity
 
