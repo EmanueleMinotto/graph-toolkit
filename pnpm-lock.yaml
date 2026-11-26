@@ -198,6 +198,19 @@ importers:
         specifier: workspace:*
         version: link:../core
 
+  packages/embedding:
+    dependencies:
+      '@graph-sdk/core':
+        specifier: workspace:*
+        version: link:../core
+      '@graph-sdk/matrix':
+        specifier: workspace:*
+        version: link:../matrix
+    devDependencies:
+      '@graph-sdk/generators':
+        specifier: workspace:*
+        version: link:../generators
+
   packages/generators:
     dependencies:
       '@graph-sdk/core':
@@ -218,6 +231,9 @@ importers:
       '@graph-sdk/dynamic':
         specifier: workspace:*
         version: link:../dynamic
+      '@graph-sdk/embedding':
+        specifier: workspace:*
+        version: link:../embedding
       '@graph-sdk/generators':
         specifier: workspace:*
         version: link:../generators

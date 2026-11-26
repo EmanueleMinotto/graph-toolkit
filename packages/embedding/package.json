@@ -1,0 +1,50 @@
+{
+  "name": "@graph-sdk/embedding",
+  "version": "0.0.0",
+  "description": "Vertex embeddings: seeded random walks and spectral embedding",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmanueleMinotto/graph-toolkit.git",
+    "directory": "packages/embedding"
+  },
+  "homepage": "https://emanueleminotto.github.io/graph-toolkit/",
+  "bugs": {
+    "url": "https://github.com/EmanueleMinotto/graph-toolkit/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@graph-sdk/core": "workspace:*",
+    "@graph-sdk/matrix": "workspace:*"
+  },
+  "devDependencies": {
+    "@graph-sdk/generators": "workspace:*"
+  }
+}

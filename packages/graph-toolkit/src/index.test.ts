@@ -15,6 +15,7 @@ describe('graph-toolkit facade', () => {
       'cycleGraph',
       'canonicalize',
       'diffGraphs',
+      'randomWalks',
       'selectVertices',
       'complement',
       'toDot',

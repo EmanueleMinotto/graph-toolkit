@@ -2,6 +2,7 @@ export * from '@graph-sdk/algorithms';
 export * from '@graph-sdk/coloring';
 export * from '@graph-sdk/core';
 export * from '@graph-sdk/dynamic';
+export * from '@graph-sdk/embedding';
 export * from '@graph-sdk/generators';
 export * from '@graph-sdk/io';
 export * from '@graph-sdk/layout';

@@ -5,6 +5,7 @@
     "packages/coloring/src/index.ts",
     "packages/core/src/index.ts",
     "packages/dynamic/src/index.ts",
+    "packages/embedding/src/index.ts",
     "packages/generators/src/index.ts",
     "packages/io/src/index.ts",
     "packages/layout/src/index.ts",

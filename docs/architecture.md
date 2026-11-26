@@ -9,6 +9,7 @@ core ─┬─ matrix · operations · coloring · generators · layout · trave
       ├─ io (core, matrix)
       ├─ normalize (core, math)
       ├─ dynamic (core)
+      ├─ embedding (core, matrix)
       ├─ query (core)
       ├─ paths (core, math, traversal)
       ├─ trees (core, math, traversal)
