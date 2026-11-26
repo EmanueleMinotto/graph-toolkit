@@ -14,6 +14,7 @@ describe('graph-toolkit facade', () => {
       'maxFlow',
       'cycleGraph',
       'canonicalize',
+      'diffGraphs',
       'complement',
       'toDot',
       'forceLayout',

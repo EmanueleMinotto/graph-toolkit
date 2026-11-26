@@ -192,6 +192,12 @@ importers:
 
   packages/core: {}
 
+  packages/dynamic:
+    dependencies:
+      '@graph-sdk/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/generators:
     dependencies:
       '@graph-sdk/core':
@@ -209,6 +215,9 @@ importers:
       '@graph-sdk/core':
         specifier: workspace:*
         version: link:../core
+      '@graph-sdk/dynamic':
+        specifier: workspace:*
+        version: link:../dynamic
       '@graph-sdk/generators':
         specifier: workspace:*
         version: link:../generators

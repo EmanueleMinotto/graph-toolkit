@@ -1,0 +1,46 @@
+{
+  "name": "@graph-sdk/dynamic",
+  "version": "0.0.0",
+  "description": "Graph diffs, patches and undo/redo history for evolving immutable graphs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmanueleMinotto/graph-toolkit.git",
+    "directory": "packages/dynamic"
+  },
+  "homepage": "https://emanueleminotto.github.io/graph-toolkit/",
+  "bugs": {
+    "url": "https://github.com/EmanueleMinotto/graph-toolkit/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@graph-sdk/core": "workspace:*"
+  }
+}

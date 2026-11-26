@@ -52,6 +52,7 @@
     "@graph-sdk/algorithms": "workspace:*",
     "@graph-sdk/generators": "workspace:*",
     "@graph-sdk/normalize": "workspace:*",
+    "@graph-sdk/dynamic": "workspace:*",
     "@graph-sdk/io": "workspace:*",
     "@graph-sdk/layout": "workspace:*"
   }

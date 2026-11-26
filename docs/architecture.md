@@ -8,6 +8,7 @@ core (no deps)
 core ─┬─ matrix · operations · coloring · generators · layout · traversal
       ├─ io (core, matrix)
       ├─ normalize (core, math)
+      ├─ dynamic (core)
       ├─ paths (core, math, traversal)
       ├─ trees (core, math, traversal)
       └─ algorithms (core, coloring)
