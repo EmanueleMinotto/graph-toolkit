@@ -43,11 +43,16 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     needs: verify
-    # One runner per browser: they run in parallel and each installs only its own binary.
+    # One runner per browser, the slow ones split in two shards: all run in parallel.
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, firefox, webkit]
+        include:
+          - { browser: chromium, shard: 1/1 }
+          - { browser: firefox, shard: 1/2 }
+          - { browser: firefox, shard: 2/2 }
+          - { browser: webkit, shard: 1/2 }
+          - { browser: webkit, shard: 2/2 }
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -57,10 +62,19 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm turbo run build
-      - run: pnpm --filter @graph-sdk/web exec playwright install --with-deps ${{ matrix.browser }}
+      - uses: actions/cache@v4
+        id: playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - if: steps.playwright.outputs.cache-hit != 'true'
+        run: pnpm --filter @graph-sdk/web exec playwright install --with-deps ${{ matrix.browser }}
+      # The cache holds the binaries only: the system libraries still need installing.
+      - if: steps.playwright.outputs.cache-hit == 'true'
+        run: pnpm --filter @graph-sdk/web exec playwright install-deps ${{ matrix.browser }}
       # Software OpenGL so headless Firefox can create a WebGL context.
       - run: sudo apt-get install -y --no-install-recommends libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers xvfb
-      - run: xvfb-run --auto-servernum pnpm --filter @graph-sdk/web e2e --project=${{ matrix.browser }}
+      - run: xvfb-run --auto-servernum pnpm --filter @graph-sdk/web e2e --project=${{ matrix.browser }} --shard=${{ matrix.shard }}
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
 
