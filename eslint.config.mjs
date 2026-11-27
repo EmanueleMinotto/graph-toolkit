@@ -172,6 +172,7 @@ export default tseslint.config(
       'no-continue': 'off',
       'require-unicode-regexp': 'off',
       'sonarjs/no-duplicate-string': 'off',
+      'sonarjs/arguments-order': 'off', // tests swap arguments on purpose (symmetry, inversion)
       'import-x/no-namespace': 'off',
       'no-magic-numbers': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',

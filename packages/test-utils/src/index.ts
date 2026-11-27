@@ -11,4 +11,11 @@ export {
   type WeightedPair,
 } from './arbitraries.js';
 export { BRUTE_FORCE, UNDER_STRYKER } from './runs.js';
-export { arbConnectedGraph, arbDag, arbPermutation, arbTree, relabel } from './structured.js';
+export {
+  arbConnectedGraph,
+  arbDag,
+  arbPermutation,
+  arbTree,
+  canonical,
+  relabel,
+} from './structured.js';

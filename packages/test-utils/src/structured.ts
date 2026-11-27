@@ -95,3 +95,24 @@ export function relabel(graph: Graph, permutation: readonly number[]): Graph {
 
   return described(builder.build());
 }
+
+const byText = (left: string, right: string): number => left.localeCompare(right);
+
+/** Order-independent description of a graph: direction, vertex set and weighted edge set. */
+export function canonical(graph: Graph): {
+  readonly directed: boolean;
+  readonly vertices: readonly string[];
+  readonly edges: readonly string[];
+} {
+  const edges = graph.edges().map(({ source, target, weight }) => {
+    const ends = graph.directed ? [source, target] : [source, target].toSorted(byText);
+
+    return `${ends.join('>')}:${String(weight)}`;
+  });
+
+  return {
+    directed: graph.directed,
+    vertices: graph.vertices().toSorted(byText),
+    edges: edges.toSorted(byText),
+  };
+}
