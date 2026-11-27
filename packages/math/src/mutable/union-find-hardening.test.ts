@@ -34,4 +34,17 @@ describe('DisjointSet representatives', () => {
     expect(sets.find(4)).toBe(root);
     expect(sets.union(root, 4)).toBe(false);
   });
+
+  it('lets a rank-2 tree absorb a rank-1 tree', () => {
+    const sets = new DisjointSet(6);
+
+    sets.union(0, 1);
+    sets.union(2, 3);
+    sets.union(4, 5);
+    sets.union(3, 5);
+    sets.union(1, 5);
+
+    expect(sets.find(0)).toBe(5);
+    expect(sets.find(1)).toBe(5);
+  });
 });
