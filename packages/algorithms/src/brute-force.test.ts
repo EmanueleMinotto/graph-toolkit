@@ -53,7 +53,9 @@ function bestMatching(pairs: readonly Pair[], used: ReadonlySet<number> = new Se
 
   const skipped = bestMatching(rest, used);
 
-  return used.has(first[0]) || used.has(first[1]) || first[0] === first[1] ? skipped : Math.max(skipped, 1 + bestMatching(rest, new Set([...used, first[0], first[1]])));
+  return used.has(first[0]) || used.has(first[1]) || first[0] === first[1]
+    ? skipped
+    : Math.max(skipped, 1 + bestMatching(rest, new Set([...used, first[0], first[1]])));
 }
 
 const COUNT = 9;
