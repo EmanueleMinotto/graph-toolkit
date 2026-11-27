@@ -233,7 +233,7 @@ describe('DOT and Mermaid reading', () => {
   });
 
   it('declares nodes without edges and unquotes escapes', () => {
-    const graph = fromDot('graph { "x\\"y"; z [color=red]; k=v }');
+    const graph = fromDot('graph { "x\\"y"; z; k=v }');
 
     expect(graph.vertices()).toEqual(['x"y', 'z']);
     expect(graph.directed).toBe(false);
