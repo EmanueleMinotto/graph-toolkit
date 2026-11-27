@@ -137,3 +137,38 @@ describe('GraphBuilder.removeVertex', () => {
     expect(builder.build().edgeCount).toBe(0);
   });
 });
+
+describe('mutation-hardening', () => {
+  it('words every error', () => {
+    const builder = new GraphBuilder().addVertex(a).addVertex(b).addEdge(a, b);
+    const graph = builder.build();
+
+    expect(() => builder.addVertex(a)).toThrow('Duplicate vertex: a');
+    expect(() => builder.addEdge(b, a)).toThrow('Duplicate edge: b -> a');
+    expect(() => builder.addEdge(a, c)).toThrow('Unknown vertex: c');
+    expect(() => builder.removeEdge(a, a)).toThrow('Unknown edge: a -> a');
+    expect(() => graph.indexOf(c)).toThrow('Unknown vertex: c');
+    expect(() => graph.vertexAt(9)).toThrow('Unknown vertex index: 9');
+  });
+
+  it('keeps rejecting the edges that remain after a removal', () => {
+    const edge = (builder: GraphBuilder) => () => builder.addEdge(b, c);
+    const afterEdge = GraphBuilder.from(sample()).removeEdge(a, b);
+    const afterVertex = GraphBuilder.from(sample()).removeVertex(a);
+
+    expect(edge(afterEdge)).toThrow(DuplicateError);
+    expect(edge(afterVertex)).toThrow(DuplicateError);
+  });
+
+  it('forgets the attributes of a removed last vertex', () => {
+    const builder = GraphBuilder.from(sample()).removeVertex(c).addVertex(d);
+
+    expect(builder.build().vertexAttributes(d)).toEqual({});
+  });
+
+  it('lists a neighbour that is the first vertex', () => {
+    const graph = new GraphBuilder().addVertex(a).addVertex(b).addEdge(a, b).build();
+
+    expect(graph.neighbors(b).map((edge) => edge.target)).toEqual([a]);
+  });
+});
