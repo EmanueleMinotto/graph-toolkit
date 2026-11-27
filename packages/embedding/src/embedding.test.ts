@@ -142,9 +142,9 @@ describe('mutation-hardening', () => {
     .addEdge(vertexId('h'), vertexId('z'), 3)
     .build();
 
-  const secondSteps = (isWeighted?: boolean) => {
+  const secondSteps = (options: { isWeighted?: boolean } = {}) => {
     const hub = vertexId('h');
-    const walks = randomWalks(fan, { walksPerVertex: 3000, length: 2, seed: 11, isWeighted });
+    const walks = randomWalks(fan, { walksPerVertex: 3000, length: 2, seed: 11, ...options });
     const seconds = walks.filter(([start]) => start === hub).map(([, next]) => next);
 
     return (id: string): number => seconds.filter((next) => next === vertexId(id)).length;
@@ -159,7 +159,7 @@ describe('mutation-hardening', () => {
   });
 
   it('picks neighbours in proportion to their weights', () => {
-    const count = secondSteps(true);
+    const count = secondSteps({ isWeighted: true });
 
     expect(Math.abs(count('x') - 500)).toBeLessThan(150);
     expect(Math.abs(count('y') - 1000)).toBeLessThan(150);
