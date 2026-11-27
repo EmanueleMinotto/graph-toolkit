@@ -82,8 +82,16 @@ const hasStructure = (value: Record<string, unknown>): boolean =>
 const isGraphDocument = (value: unknown): value is JsonGraph =>
   isRecord(value) && hasStructure(value) && isVertexAttributes(value['vertexAttributes']);
 
+function parseJson(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new ParseError('Invalid JSON');
+  }
+}
+
 function parseDocument(text: string): JsonGraph {
-  const value: unknown = JSON.parse(text);
+  const value = parseJson(text);
 
   if (!isGraphDocument(value)) {
     throw new ParseError('Invalid graph JSON document');
