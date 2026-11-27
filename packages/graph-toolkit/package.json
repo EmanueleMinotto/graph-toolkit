@@ -38,8 +38,7 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run --coverage",
-    "test:mutation": "stryker run"
+    "test": "vitest run --coverage"
   },
   "dependencies": {
     "@graph-sdk/core": "workspace:*",
