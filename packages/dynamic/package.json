@@ -43,5 +43,9 @@
   },
   "dependencies": {
     "@graph-sdk/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@graph-sdk/test-utils": "workspace:*",
+    "fast-check": "^4.11.0"
   }
 }
