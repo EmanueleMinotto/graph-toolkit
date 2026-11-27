@@ -67,9 +67,8 @@ const lossless = [
   format('gml', toGml, fromGml),
 ];
 
-// toPajek writes an empty graph as "*Vertices 0" but fromPajek rejects it: covered by a known-bug test below.
 const renumbering = [
-  { ...format('pajek', toPajek, fromPajek), minN: 1 },
+  { ...format('pajek', toPajek, fromPajek), minN: 0 },
   { ...format('dimacs', toDimacs, fromDimacs), minN: 0 },
 ];
 
@@ -243,7 +242,7 @@ describe('io properties', () => {
     );
   });
 
-  describe.each(lossless.filter(({ name }) => name !== 'dot'))('$name names', ({ write, read }) => {
+  describe.each(lossless)('$name names', ({ write, read }) => {
     it('keeps awkward vertex names intact', () => {
       fc.assert(
         fc.property(arbNamedGraph, (graph) => {
@@ -251,15 +250,6 @@ describe('io properties', () => {
         }),
       );
     });
-  });
-
-  // Known bug (fixed separately): fromDot is not quote-aware, so `#`, `//`, `;`, `=`, `[` in a name corrupt the graph.
-  it.fails('dot keeps awkward vertex names intact', () => {
-    fc.assert(
-      fc.property(arbNamedGraph, (graph) => {
-        expect(shape(fromDot(toDot(graph)))).toEqual(shape(graph));
-      }),
-    );
   });
 
   describe.each([
@@ -345,6 +335,7 @@ describe('io properties', () => {
 
   describe('parsers only ever fail with ParseError', () => {
     const parsers: readonly (readonly [string, (text: string) => Graph])[] = [
+      ['json', fromJson],
       ['graphml', fromGraphMl],
       ['gexf', fromGexf],
       ['dot', fromDot],
@@ -363,13 +354,6 @@ describe('io properties', () => {
       }).not.toThrow();
     });
 
-    // fromJson lets JSON.parse's SyntaxError escape: known bug, fixed separately (move to the list above then).
-    it.fails('json on arbitrary text', () => {
-      expect(() => {
-        fc.assert(onlyParseErrors(fromJson));
-      }).not.toThrow();
-    });
-
     it('binary on arbitrary bytes', () => {
       fc.assert(
         fc.property(fc.uint8Array({ maxLength: 40 }), (bytes) => {
@@ -377,12 +361,5 @@ describe('io properties', () => {
         }),
       );
     });
-  });
-
-  // Known bug (fixed separately): the document toPajek writes for an empty graph is rejected by fromPajek.
-  it.fails('pajek round-trips the empty graph', () => {
-    const empty = new GraphBuilder().build();
-
-    expect(fromPajek(toPajek(empty)).vertexCount).toBe(0);
   });
 });
