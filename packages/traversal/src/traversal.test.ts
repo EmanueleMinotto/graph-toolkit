@@ -155,3 +155,18 @@ describe('lazy iterators', () => {
     expect(firstTwo).toHaveLength(2);
   });
 });
+
+describe('mutation-hardening', () => {
+  it('explains which direction a component search needs', () => {
+    const undirected = new GraphBuilder().addVertex(a).build();
+    const directed = new GraphBuilder({ directed: true }).addVertex(a).build();
+
+    expect(() => connectedComponents(directed)).toThrow(
+      'connectedComponents requires an undirected graph',
+    );
+
+    expect(() => stronglyConnectedComponents(undirected)).toThrow(
+      'stronglyConnectedComponents requires a directed graph',
+    );
+  });
+});
