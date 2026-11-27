@@ -1,6 +1,6 @@
 import { GraphBuilder, vertexId, type Graph } from '@graph-sdk/core';
 import { describe, expect, it } from 'vitest';
-import { fromBinary, fromDot, fromEdgeList, toBinary } from './index.js';
+import { fromBinary, fromDot, fromEdgeList, fromJson, ParseError, toBinary } from './index.js';
 
 const edgesOf = (graph: Graph): string[] =>
   graph.edges().map((edge) => `${edge.source}>${edge.target}:${edge.weight}`);
@@ -74,4 +74,14 @@ describe('binary buffer growth', () => {
     expect(back.vertices()).toEqual(graph.vertices());
     expect(edgesOf(back)).toEqual(edgesOf(graph));
   });
+});
+
+describe('JSON parsing', () => {
+  it.each(['', '{', 'not json', '{"directed": false,'])(
+    'reports malformed JSON %j as a ParseError',
+    (text) => {
+      expect(() => fromJson(text)).toThrow(ParseError);
+      expect(() => fromJson(text)).toThrow('Invalid JSON');
+    },
+  );
 });
