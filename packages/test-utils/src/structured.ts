@@ -5,6 +5,7 @@ import {
   arbWeight,
   buildGraph,
   candidatePairs,
+  described,
   name,
   range,
   type GraphOptions,
@@ -92,5 +93,5 @@ export function relabel(graph: Graph, permutation: readonly number[]): Graph {
     builder.addEdge(rename(source), rename(target), weight);
   }
 
-  return builder.build();
+  return described(builder.build());
 }

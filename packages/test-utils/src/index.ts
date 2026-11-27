@@ -3,6 +3,7 @@ export {
   arbGraph,
   buildGraph,
   candidatePairs,
+  described,
   name,
   range,
   type GraphOptions,

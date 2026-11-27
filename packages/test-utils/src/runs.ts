@@ -1,9 +1,14 @@
 import fc from 'fast-check';
 
+// Read through globalThis so packages type-checking this file need no Node typings.
+const environment = (
+  globalThis as { process?: { env: Readonly<Record<string, string | undefined>> } }
+).process?.env;
+
 /** Stryker sets `STRYKER_MUTATOR_WORKER` in its test-runner processes. */
 export const UNDER_STRYKER: boolean =
-  process.env['STRYKER_MUTATOR_WORKER'] !== undefined ||
-  process.env['STRYKER_MUTATOR_RUNNER'] !== undefined;
+  environment?.['STRYKER_MUTATOR_WORKER'] !== undefined ||
+  environment?.['STRYKER_MUTATOR_RUNNER'] !== undefined;
 
 const MUTATION_RUNS = 20;
 const MUTATION_SEED = 1;

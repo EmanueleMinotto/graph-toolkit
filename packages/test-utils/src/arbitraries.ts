@@ -5,7 +5,8 @@ export interface GraphOptions {
   readonly directed?: boolean;
   /** Edge weights in 1..9 instead of the default weight. */
   readonly weighted?: boolean;
-  /** Vertex count is drawn from 0..maxN. Default 8. */
+  /** Vertex count is drawn from minN..maxN. Defaults 0 and 8. */
+  readonly minN?: number;
   readonly maxN?: number;
   /** Several edges between the same endpoints. Default false. */
   readonly allowParallelEdges?: boolean;
@@ -24,6 +25,16 @@ const MAX_COPIES = 2;
 export const name = (index: number): VertexId => vertexId(String(index));
 
 export const range = (n: number): number[] => Array.from({ length: n }, (_, index) => index);
+
+/** Makes fast-check print a graph as `directed n=3 [0>1:1, ...]` instead of its raw CSR arrays. */
+export function described(graph: Graph): Graph {
+  const edges = graph
+    .edges()
+    .map(({ source, target, weight }) => `${source}>${target}:${String(weight)}`);
+  const text = `${graph.directed ? 'directed' : 'undirected'} n=${String(graph.vertexCount)} [${edges.join(', ')}]`;
+
+  return Object.defineProperty(graph, fc.toStringMethod, { value: () => text });
+}
 
 /** Builds a graph on vertices "0".."n-1" through `GraphBuilder`. */
 export function buildGraph(
@@ -44,7 +55,7 @@ export function buildGraph(
     builder.addEdge(name(from), name(to), weight);
   }
 
-  return builder.build();
+  return described(builder.build());
 }
 
 export const arbWeight = (options: GraphOptions): fc.Arbitrary<number> =>
@@ -83,7 +94,7 @@ export function arbEdgesAmong(
 /** Small random graph (0 to `maxN` vertices) built through `GraphBuilder`. */
 export function arbGraph(options: GraphOptions = {}): fc.Arbitrary<Graph> {
   return fc
-    .integer({ min: 0, max: options.maxN ?? DEFAULT_MAX_N })
+    .integer({ min: options.minN ?? 0, max: options.maxN ?? DEFAULT_MAX_N })
     .chain((n) =>
       arbEdgesAmong(candidatePairs(n, options), options).map((edges) =>
         buildGraph(n, edges, options),
