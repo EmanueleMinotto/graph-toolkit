@@ -81,6 +81,63 @@ const buildCases = () => {
 
 describe('pinned results', () => {
   it('keeps the seeded results of the path kernels', () => {
-    expect(buildCases()).toEqual({});
+    expect(buildCases()).toEqual({
+      aStar: [[6, '0>8>5>6>9']],
+      bellman: [0, null, 1, 3, 5, 8, 10, 12, 2, 8],
+      dag: [0, null, 1, 3, 5, 8, 10, 12, 2, 8],
+      dagPath: ['0', null, '0>2', '0>3', '0>4', '0>4>5', '0>4>6', '0>4>5>7', '0>8', '0>3>9'],
+      dijkstraPath: ['0', null, '0>2', '0>3', '0>4', '0>4>5', '0>4>6', '0>4>5>7', '0>8', '0>3>9'],
+      dijkstraU: [0, 8, 1, 3, 4, 3, 5, 7, 2, 6],
+      euler: [
+        ['0', '6', '5', '4', '6', '3', '5', '1', '6', '2', '4', '3', '2', '1', '3', '0', '2'],
+        null,
+      ],
+      floyd: [
+        [0, null, 1, 3, 5, 8, 10, 12, 2, 8],
+        [null, 0, null, 5, null, null, null, 2, 8, 10],
+        [null, null, 0, null, 5, 8, 10, 12, 7, 9],
+        [null, null, null, 0, null, null, null, null, 3, 5],
+        [null, null, null, null, 0, 3, 5, 7, 2, 4],
+        [null, null, null, null, null, 0, 2, 4, 1, 3],
+        [null, null, null, null, null, null, 0, 4, null, 1],
+        [null, null, null, null, null, null, null, 0, null, null],
+        [null, null, null, null, null, null, null, null, 0, null],
+        [null, null, null, null, null, null, null, null, null, 0],
+      ],
+      hamCycle: [
+        ['0', '2', '3', '4', '5', '1', '6'],
+        ['0', '3', '5', '7', '1', '2', '6', '4'],
+      ],
+      hamPath: [
+        ['0', '2', '3', '4', '5', '6', '1'],
+        ['0', '2', '4', '5', '8', '3', '9', '6', '7', '1'],
+      ],
+      johnson: [
+        [0, 8, 1, 3, 4, 3, 5, 7, 2, 6],
+        [8, 0, 9, 5, 9, 6, 6, 2, 7, 7],
+        [1, 9, 0, 4, 5, 4, 6, 8, 3, 7],
+        [3, 5, 4, 0, 5, 4, 6, 7, 3, 5],
+        [4, 9, 5, 5, 0, 3, 5, 7, 2, 4],
+        [3, 6, 4, 4, 3, 0, 2, 4, 1, 3],
+        [5, 6, 6, 6, 5, 2, 0, 4, 3, 1],
+        [7, 2, 8, 7, 7, 4, 4, 0, 5, 5],
+        [2, 7, 3, 3, 2, 1, 3, 5, 0, 4],
+        [6, 7, 7, 5, 4, 3, 1, 5, 4, 0],
+      ],
+      kShortest: [
+        [6, '0>8>5>6>9'],
+        [8, '0>3>9'],
+        [8, '0>8>4>9'],
+        [9, '0>4>9'],
+        [10, '0>8>5>4>9'],
+        [10, '0>3>8>5>6>9'],
+      ],
+      kShortestDirected: [
+        [8, '0>3>9'],
+        [9, '0>4>9'],
+        [10, '0>2>4>9'],
+        [11, '0>4>6>9'],
+      ],
+    });
   });
 });
