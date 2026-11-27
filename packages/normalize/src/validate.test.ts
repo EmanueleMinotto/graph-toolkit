@@ -88,3 +88,62 @@ describe('assertValidGraph', () => {
     }).not.toThrow();
   });
 });
+
+const messages = (graph: Graph, schema: GraphSchema) =>
+  validateGraph(graph, schema).map((found) => found.message);
+
+const thrown = (graph: Graph, schema: GraphSchema): Error => {
+  try {
+    assertValidGraph(graph, schema);
+  } catch (error) {
+    return error as Error;
+  }
+
+  return new Error('did not throw');
+};
+
+describe('mutation-hardening', () => {
+  const lonely = new GraphBuilder()
+    .addVertex(vertexId('a'))
+    .addVertex(vertexId('b'))
+    .addEdge(vertexId('a'), vertexId('a'))
+    .build();
+
+  it('words every issue', () => {
+    expect(messages(pathGraph(3), { directed: true })).toEqual(['Expected a directed graph']);
+
+    expect(messages(pathGraph(3, { directed: true }), { directed: false })).toEqual([
+      'Expected a undirected graph',
+    ]);
+
+    expect(messages(lonely, { allowSelfLoops: false })).toEqual(['1 self-loop(s)']);
+    expect(messages(lonely, { allowIsolated: false })).toEqual(['1 isolated vertex(es)']);
+    expect(messages(lonely, { connected: true })).toEqual(['2 components']);
+
+    expect(messages(completeGraph(4), { maxVertices: 3, maxEdges: 5 })).toEqual([
+      '4 vertices exceed 3',
+      '6 edges exceed 5',
+    ]);
+
+    expect(messages(lonely, { vertexIdPattern: /^x$/ })).toEqual([
+      '2 id(s) do not match the pattern',
+    ]);
+
+    expect(messages(lonely, { weight: { min: 2 } })).toEqual(['1 edge weight(s) out of range']);
+  });
+
+  it('only checks connectivity when it is required', () => {
+    expect(codes(lonely, {})).toEqual([]);
+    expect(codes(lonely, { connected: false })).toEqual([]);
+  });
+
+  it('accepts a weight equal to its bounds', () => {
+    expect(codes(pathGraph(2), { weight: { min: 1, max: 1 } })).toEqual([]);
+  });
+
+  it('joins every message in the error', () => {
+    expect(thrown(completeGraph(3), { directed: true, maxEdges: 1 }).message).toBe(
+      'Expected a directed graph; 3 edges exceed 1',
+    );
+  });
+});
