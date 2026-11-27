@@ -240,7 +240,7 @@ describe('minimum-cost flow', () => {
     expect(minCostFlow(graph, ends, { capacity: () => 5, amount: 3 }).cost).toBe(2 * 3);
   });
 
-  it('reroutes through reverse arcs when that is cheaper', () => {
+  it('finds the cheapest maximum flow on a network with a cross arc', () => {
     const cross = new GraphBuilder({ directed: true });
 
     for (const label of ['s', 'a', 'b', 't']) {
