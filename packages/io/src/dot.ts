@@ -1,7 +1,15 @@
 import type { Graph } from '@graph-sdk/core';
 import { ParseError } from './errors.js';
 import { assembleGraph, type ParsedEdge } from './internal/assemble.js';
-import { chainEdges, idsOf, splitAttributes, weightOf } from './internal/dot-tokens.js';
+import {
+  chainEdges,
+  idsOf,
+  maskStrings,
+  nameOf,
+  splitAttributes,
+  unmask,
+  weightOf,
+} from './internal/dot-tokens.js';
 
 const quote = (name: string): string => `"${name.replaceAll('\\', '\\\\').replaceAll('"', '\\"')}"`;
 
@@ -19,9 +27,6 @@ export function toDot(graph: Graph): string {
   return `${graph.directed ? 'digraph' : 'graph'} {\n${[...nodes, ...edges].join('\n')}\n}\n`;
 }
 
-const stripComments = (text: string): string =>
-  text.replaceAll(/\/\*[\s\S]*?\*\//gu, '').replaceAll(/(?:\/\/|#).*/gu, '');
-
 function splitHeader(text: string): { readonly directed: boolean; readonly body: string } {
   const open = text.indexOf('{');
   const close = text.lastIndexOf('}');
@@ -35,11 +40,15 @@ function splitHeader(text: string): { readonly directed: boolean; readonly body:
   return { directed: kind === 'digraph', body: text.slice(open + 1, close) };
 }
 
-function parseStatement(statement: string, operator: string): readonly ParsedEdge[] {
+function parseStatement(
+  statement: string,
+  operator: string,
+  strings: readonly string[],
+): readonly ParsedEdge[] {
   const [head, attributes] = splitAttributes(statement);
   const isEdge = !head.includes('=') && head.includes(operator);
 
-  return isEdge ? chainEdges(idsOf(head), weightOf(attributes)) : [];
+  return isEdge ? chainEdges(idsOf(head), weightOf(unmask(attributes, strings))) : [];
 }
 
 function parseNodes(statements: readonly string[], operator: string): readonly string[] {
@@ -48,20 +57,30 @@ function parseNodes(statements: readonly string[], operator: string): readonly s
     .flatMap((statement) => idsOf(splitAttributes(statement)[0]));
 }
 
+const statementsOf = (body: string): readonly string[] =>
+  body
+    .split(/[;\n]/u)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
 /** Parses simple DOT (nodes, edges, `weight` attribute). Subgraphs are not supported. */
 export function fromDot(text: string): Graph {
-  const { directed, body } = splitHeader(stripComments(text));
+  const { text: masked, strings } = maskStrings(text);
+  const { directed, body } = splitHeader(masked);
 
   if (/\bsubgraph\b|\{/u.test(body)) {
     throw new ParseError('DOT subgraphs are not supported');
   }
 
   const operator = directed ? '->' : '--';
-  const statements = body
-    .split(/[;\n]/u)
-    .map((part) => part.trim())
-    .filter(Boolean);
-  const edges = statements.flatMap((statement) => parseStatement(statement, operator));
+  const statements = statementsOf(body);
+  const name = (id: string): string => nameOf(id, strings);
 
-  return assembleGraph({ directed, vertices: parseNodes(statements, operator), edges });
+  return assembleGraph({
+    directed,
+    vertices: parseNodes(statements, operator).map((id) => name(id)),
+    edges: statements
+      .flatMap((statement) => parseStatement(statement, operator, strings))
+      .map((edge) => ({ ...edge, source: name(edge.source), target: name(edge.target) })),
+  });
 }

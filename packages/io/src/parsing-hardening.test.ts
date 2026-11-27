@@ -1,6 +1,14 @@
 import { GraphBuilder, vertexId, type Graph } from '@graph-sdk/core';
 import { describe, expect, it } from 'vitest';
-import { fromBinary, fromDot, fromEdgeList, toBinary } from './index.js';
+import {
+  fromBinary,
+  fromDot,
+  fromEdgeList,
+  fromJson,
+  ParseError,
+  toBinary,
+  toDot,
+} from './index.js';
 
 const edgesOf = (graph: Graph): string[] =>
   graph.edges().map((edge) => `${edge.source}>${edge.target}:${edge.weight}`);
@@ -74,4 +82,49 @@ describe('binary buffer growth', () => {
     expect(back.vertices()).toEqual(graph.vertices());
     expect(edgesOf(back)).toEqual(edgesOf(graph));
   });
+});
+
+describe('DOT quoted names', () => {
+  it.each([
+    'a#b',
+    'a//b',
+    'a/*b*/c',
+    'a;b',
+    'a=b',
+    'a[b]',
+    'a{b',
+    'a}b',
+    'a--b',
+    'a\nb',
+    'a"b',
+    'a\\',
+  ])('round-trips the name %j', (name) => {
+    const graph = new GraphBuilder()
+      .addVertex(vertexId(name))
+      .addVertex(vertexId('z'))
+      .addEdge(vertexId(name), vertexId('z'), 2)
+      .build();
+    const back = fromDot(toDot(graph));
+
+    expect(back.vertices()).toEqual([name, 'z']);
+    expect(edgesOf(back)).toEqual([`${name}>z:2`]);
+  });
+
+  it('keeps comment markers inside quotes and unbalanced quotes inside comments', () => {
+    const graph = fromDot(
+      'graph {\n  "x // y" -- "# z"; // it\'s "unbalanced\n  /* " */ "p" -- "q" [weight="3"]\n}',
+    );
+
+    expect(edgesOf(graph)).toEqual(['x // y># z:1', 'p>q:3']);
+  });
+});
+
+describe('JSON parsing', () => {
+  it.each(['', '{', 'not json', '{"directed": false,'])(
+    'reports malformed JSON %j as a ParseError',
+    (text) => {
+      expect(() => fromJson(text)).toThrow(ParseError);
+      expect(() => fromJson(text)).toThrow('Invalid JSON');
+    },
+  );
 });

@@ -43,7 +43,6 @@ const pair = (found: { distance: number; path: readonly string[] }) => [
   found.path.join('>'),
 ];
 
-// eslint-disable-next-line complexity -- one flat table of seeded probes
 const buildCases = () => {
   const base = randomGraph(10, { probability: 0.35, seed: 21 });
   const undirected = reweighted(base, false, () => true);

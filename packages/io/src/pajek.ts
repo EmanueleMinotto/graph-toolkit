@@ -53,9 +53,9 @@ function parseEdge(names: ReadonlyMap<number, string>, line: string): ParsedEdge
 
 /** Reads `*Vertices`, `*Edges` and `*Arcs` sections; `%` starts a comment, other sections are ignored. */
 export function fromPajek(text: string): Graph {
-  const { directed, vertices, rows } = splitSections(text);
+  const { directed, hasVertexSection, vertices, rows } = splitSections(text);
 
-  if (vertices.length === 0 && rows.length === 0) {
+  if (!hasVertexSection && rows.length === 0) {
     throw new ParseError('Pajek document has no vertices');
   }
 
