@@ -118,3 +118,72 @@ describe('history', () => {
     expect(canRedo(commit(back, before))).toBe(false);
   });
 });
+
+describe('mutation-hardening', () => {
+  const empty: GraphDiff = {
+    directed: false,
+    addedVertices: [],
+    removedVertices: [],
+    addedEdges: [],
+    removedEdges: [],
+    reweightedEdges: [],
+  };
+  const edge = { source: a, target: b, weight: 1 };
+
+  it('is non-empty when any two parts of a diff are filled', () => {
+    expect(isEmptyDiff(empty)).toBe(true);
+    expect(isEmptyDiff({ ...empty, addedVertices: [a], removedVertices: [b] })).toBe(false);
+    expect(isEmptyDiff({ ...empty, removedVertices: [a], addedEdges: [edge] })).toBe(false);
+    expect(isEmptyDiff({ ...empty, addedEdges: [edge], removedEdges: [edge] })).toBe(false);
+
+    expect(
+      isEmptyDiff({
+        ...empty,
+        removedEdges: [edge],
+        reweightedEdges: [{ source: a, target: b, before: 1, after: 2 }],
+      }),
+    ).toBe(false);
+  });
+
+  it('matches undirected edges whatever their orientation or id order', () => {
+    const [x, y, z] = [vertexId('10'), vertexId('9'), vertexId('b')] as const;
+    const build = (flip: boolean) => {
+      const builder = new GraphBuilder().addVertex(x).addVertex(y).addVertex(z);
+
+      return (
+        flip
+          ? builder.addEdge(y, x).addEdge(z, y).addEdge(z, x)
+          : builder.addEdge(x, y).addEdge(y, z).addEdge(x, z)
+      ).build();
+    };
+
+    expect(isEmptyDiff(diffGraphs(build(false), build(true)))).toBe(true);
+  });
+
+  it('explains why a direction mismatch is rejected', () => {
+    const directed = new GraphBuilder({ directed: true }).build();
+
+    expect(() => diffGraphs(before, directed)).toThrow('Cannot diff a directed graph');
+
+    expect(() => applyDiff(before, { ...empty, directed: true })).toThrow(
+      'Cannot apply a directed diff',
+    );
+  });
+
+  it('undoes and redoes the latest of several commits', () => {
+    const third = new GraphBuilder().addVertex(a).build();
+    const full = commit(commit(createHistory(before), after), third);
+    const back = undo(full);
+
+    expect(shape(back.current)).toEqual(shape(after));
+    expect(back.undoable).toHaveLength(1);
+    expect(back.redoable).toHaveLength(1);
+
+    const back2 = undo(back);
+
+    expect(shape(back2.current)).toEqual(shape(before));
+    expect(shape(redo(back2).current)).toEqual(shape(after));
+    expect(shape(redo(redo(back2)).current)).toEqual(shape(third));
+    expect(redo(redo(back2)).redoable).toEqual([]);
+  });
+});
