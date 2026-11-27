@@ -186,4 +186,15 @@ describe('mutation-hardening', () => {
     expect(shape(redo(redo(back2)).current)).toEqual(shape(third));
     expect(redo(redo(back2)).redoable).toEqual([]);
   });
+
+  it('keeps every earlier diff on undo and the undo stack after a redo', () => {
+    const second = new GraphBuilder().addVertex(a).build();
+    const third = new GraphBuilder().addVertex(b).build();
+    const full = commit(commit(commit(createHistory(before), after), second), third);
+    const back = undo(full);
+
+    expect(back.undoable).toEqual(full.undoable.slice(0, 2));
+    expect(redo(back).undoable).toEqual(full.undoable);
+    expect(canUndo(redo(undo(commit(createHistory(before), after))))).toBe(true);
+  });
 });
