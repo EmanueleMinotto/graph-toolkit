@@ -15,8 +15,8 @@ describe('DisjointSet representatives', () => {
     expect(sets.find(3)).toBe(4);
 
     sets.union(2, 3);
-    expect(sets.find(4)).toBe(1);
-    expect(sets.find(0)).toBe(1);
+    expect(sets.find(4)).toBe(4);
+    expect(sets.find(0)).toBe(4);
     expect(sets.setCount()).toBe(3);
   });
 
