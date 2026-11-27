@@ -54,7 +54,7 @@ describe('edge-list parsing', () => {
 
 describe('binary buffer growth', () => {
   it('round-trips many floating-point weights that outgrow the initial buffer', () => {
-    const builder = new GraphBuilder({ directed: true, allowParallelEdges: true });
+    const builder = new GraphBuilder({ directed: true });
 
     for (let index = 0; index < 60; index++) {
       builder.addVertex(vertexId(`node-${index}`));
@@ -63,7 +63,7 @@ describe('binary buffer growth', () => {
     for (let index = 0; index < 400; index++) {
       builder.addEdge(
         vertexId(`node-${index % 60}`),
-        vertexId(`node-${(index * 7 + 1) % 60}`),
+        vertexId(`node-${((index % 60) + 1 + Math.floor(index / 60)) % 60}`),
         1.5 + index / 8,
       );
     }
