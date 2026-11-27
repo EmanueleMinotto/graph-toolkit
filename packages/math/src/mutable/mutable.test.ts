@@ -68,3 +68,53 @@ describe('mulberry32', () => {
     expect(mulberry32(43)()).not.toBe(mulberry32(42)());
   });
 });
+
+describe('mutation-hardening', () => {
+  it('pins the mulberry32 stream', () => {
+    const next = mulberry32(1);
+
+    expect([next(), next(), next()]).toEqual([
+      0.6270739405881613, 0.002735721180215478, 0.5274470399599522,
+    ]);
+
+    expect(mulberry32(0xde_ad_be_ef)()).toBeCloseTo(0.9413696140982211, 12);
+  });
+
+  it('pops equal priorities in a stable, heap-defined order', () => {
+    const queue = new MinPriorityQueue();
+
+    for (const [item, priority] of [
+      [0, 2],
+      [1, 1],
+      [2, 2],
+      [3, 1],
+      [4, 2],
+      [5, 1],
+      [6, 3],
+    ] as const) {
+      queue.push(item, priority);
+    }
+
+    const order: string[] = [];
+
+    for (let entry = queue.pop(); entry !== undefined; entry = queue.pop()) {
+      order.push(`${entry.item}:${entry.priority}`);
+    }
+
+    expect(order.join(' ')).toBe('1:1 3:1 5:1 4:2 0:2 2:2 6:3');
+  });
+
+  it('tracks set count and membership across unions', () => {
+    const sets = new DisjointSet(6);
+
+    expect(sets.setCount()).toBe(6);
+    expect(sets.union(0, 1)).toBe(true);
+    expect(sets.union(2, 3)).toBe(true);
+    expect(sets.union(1, 3)).toBe(true);
+    expect(sets.union(0, 2)).toBe(false);
+    expect(sets.setCount()).toBe(3);
+    expect(sets.find(0)).toBe(sets.find(3));
+    expect(sets.find(4)).toBe(4);
+    expect(sets.find(5)).not.toBe(sets.find(4));
+  });
+});
