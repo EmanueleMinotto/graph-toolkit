@@ -1,4 +1,4 @@
-import { GraphBuilder, type Graph } from '@graph-sdk/core';
+import { GraphBuilder, type Graph, type VertexId } from '@graph-sdk/core';
 import { randomGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
 import {
@@ -38,7 +38,7 @@ function build(seed: number, directed: boolean, negative: boolean): Graph {
 
 const distances = (
   graph: Graph,
-  solve: (graph: Graph) => (from: string, to: string) => number,
+  solve: (graph: Graph) => (from: VertexId, to: VertexId) => number,
 ): string[] => {
   const distance = solve(graph);
 
