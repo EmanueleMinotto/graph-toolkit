@@ -58,9 +58,7 @@ const cases: Record<string, Layout> = {
 describe('pinned coordinates', () => {
   it('prints them', () => {
     expect(
-      JSON.stringify(
-        Object.fromEntries(Object.entries(cases).map(([key, layout]) => [key, round(layout)])),
-      ),
-    ).toBe('PIN');
+      Object.fromEntries(Object.entries(cases).map(([key, layout]) => [key, round(layout)])),
+    ).toEqual({});
   });
 });
