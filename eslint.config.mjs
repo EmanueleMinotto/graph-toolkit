@@ -162,7 +162,7 @@ export default tseslint.config(
     rules: { 'functional/immutable-data': 'off', 'functional/prefer-readonly-type': 'off' },
   },
   {
-    files: ['**/*.test.ts', '**/*.bench.ts', '**/*.spec.ts'],
+    files: ['**/*.test.ts', '**/*.bench.ts', '**/*.spec.ts', 'packages/test-utils/**/*.ts'],
     plugins: { vitest },
     rules: {
       ...vitest.configs.recommended.rules,
@@ -172,6 +172,9 @@ export default tseslint.config(
       'no-continue': 'off',
       'require-unicode-regexp': 'off',
       'sonarjs/no-duplicate-string': 'off',
+      'sonarjs/arguments-order': 'off', // tests swap arguments on purpose (symmetry, inversion)
+      complexity: 'off', // oracles and property bodies are long boolean statements
+      'max-params': 'off', // fc.property callbacks take one parameter per arbitrary
       'import-x/no-namespace': 'off',
       'no-magic-numbers': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',

@@ -17,6 +17,7 @@ core ─┬─ matrix · operations · coloring · layout · traversal
       ├─ trees (core, math, traversal)
       └─ algorithms (core, math, coloring)
 graph-toolkit = facade re-exporting everything
+test-utils (private, core + fast-check: shared arbitraries for tests; never published)
 ```
 
 ## Graph representation

@@ -31,8 +31,8 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm turbo run typecheck test build
-      - run: pnpm -r --filter "./packages/*" exec publint
-      - run: pnpm -r --filter "./packages/*" exec attw --pack .
+      - run: pnpm -r --filter "./packages/*" --filter "!@graph-sdk/test-utils" exec publint
+      - run: pnpm -r --filter "./packages/*" --filter "!@graph-sdk/test-utils" exec attw --pack .
       - uses: actions/upload-artifact@v4
         with:
           name: coverage

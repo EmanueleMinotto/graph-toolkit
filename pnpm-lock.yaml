@@ -23,6 +23,9 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.15.0(jiti@2.7.0))
+      '@graph-sdk/test-utils':
+        specifier: workspace:*
+        version: link:packages/test-utils
       '@stryker-mutator/core':
         specifier: ^10.1.1
         version: 10.1.1(@types/node@26.6.9)
@@ -188,6 +191,9 @@ importers:
       '@graph-sdk/generators':
         specifier: workspace:*
         version: link:../generators
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/cli:
     dependencies:
@@ -217,7 +223,11 @@ importers:
         specifier: ^4.11.0
         version: 4.11.0
 
-  packages/core: {}
+  packages/core:
+    devDependencies:
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/dynamic:
     dependencies:
@@ -300,6 +310,10 @@ importers:
       '@graph-sdk/trees':
         specifier: workspace:*
         version: link:../trees
+    devDependencies:
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/io:
     dependencies:
@@ -313,6 +327,12 @@ importers:
       '@graph-sdk/generators':
         specifier: workspace:*
         version: link:../generators
+      '@graph-sdk/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/layout:
     dependencies:
@@ -327,7 +347,11 @@ importers:
         specifier: workspace:*
         version: link:../generators
 
-  packages/math: {}
+  packages/math:
+    devDependencies:
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/matrix:
     dependencies:
@@ -361,6 +385,9 @@ importers:
       '@graph-sdk/generators':
         specifier: workspace:*
         version: link:../generators
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/paths:
     dependencies:
@@ -386,6 +413,15 @@ importers:
       '@graph-sdk/core':
         specifier: workspace:*
         version: link:../core
+
+  packages/test-utils:
+    dependencies:
+      '@graph-sdk/core':
+        specifier: workspace:*
+        version: link:../core
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/traversal:
     dependencies:

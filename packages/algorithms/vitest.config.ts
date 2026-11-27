@@ -7,6 +7,7 @@ const STRYKER_TIMEOUT = 60_000;
 export default defineConfig({
   test: {
     include: ['src/**/*.test.ts'],
+    setupFiles: ['@graph-sdk/test-utils/setup'],
     // Stryker's instrumentation and parallel packages make slow tests slower.
     // the 17-vertex exact treewidth run is too slow once Stryker instruments it
     testNamePattern: underStryker ? '^(?!.*too large)' : undefined,
