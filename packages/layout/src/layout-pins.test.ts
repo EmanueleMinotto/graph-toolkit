@@ -20,7 +20,7 @@ const build = (names: readonly string[], arcs: readonly (readonly [string, strin
 const round = (layout: Layout): number[][] =>
   [...layout.values()].map(({ x, y }) => [Math.round(x * 1e5) / 1e5, Math.round(y * 1e5) / 1e5]);
 
-const cases: Record<string, Layout> = {
+const buildCases = (): Record<string, Layout> => ({
   forcePath: forceLayout(pathGraph(5), { seed: 1, iterations: 40 }),
   forceStar: forceLayout(starGraph(5), { seed: 2, iterations: 25 }),
   forceCycle: forceLayout(cycleGraph(6), { seed: 3, iterations: 60 }),
@@ -53,7 +53,7 @@ const cases: Record<string, Layout> = {
       ],
     ),
   ),
-};
+});
 
 const pinned: Record<string, readonly (readonly [number, number])[]> = {
   forceClique: [
@@ -110,7 +110,7 @@ const pinned: Record<string, readonly (readonly [number, number])[]> = {
 
 describe('pinned coordinates', () => {
   it.each(Object.keys(pinned))('keeps %s exactly where it was', (key) => {
-    const actual = round(cases[key]!);
+    const actual = round(buildCases()[key]!);
 
     expect(actual).toHaveLength(pinned[key]!.length);
 
