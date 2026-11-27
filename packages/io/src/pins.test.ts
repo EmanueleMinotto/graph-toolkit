@@ -108,6 +108,10 @@ const buildCases = () => {
 
 describe('pinned results', () => {
   it('keeps the output of the writers and the round trips', () => {
-    expect(buildCases()).toEqual({});
+    expect(
+      Object.fromEntries(
+        Object.entries(buildCases()).map(([key, value]) => [key, JSON.stringify(value)]),
+      ),
+    ).toEqual({});
   });
 });
