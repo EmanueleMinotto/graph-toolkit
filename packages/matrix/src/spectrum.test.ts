@@ -112,3 +112,27 @@ describe('eigenDecomposition', () => {
     ).toThrow(GraphError);
   });
 });
+
+describe('mutation-hardening', () => {
+  it('refuses directed graphs even when their adjacency matrix is symmetric', () => {
+    const graph = new GraphBuilder({ directed: true })
+      .addVertex(vertexId('a'))
+      .addVertex(vertexId('b'))
+      .addEdge(vertexId('a'), vertexId('b'))
+      .addEdge(vertexId('b'), vertexId('a'))
+      .build();
+
+    expect(() => adjacencySpectrum(graph)).toThrow(
+      'adjacencySpectrum requires an undirected graph',
+    );
+  });
+
+  it('refuses non-symmetric matrices', () => {
+    const skew = Matrix.fromRows([
+      [0, 1],
+      [0, 0],
+    ]);
+
+    expect(() => eigenvalues(skew)).toThrow('eigenvalues requires a symmetric matrix');
+  });
+});

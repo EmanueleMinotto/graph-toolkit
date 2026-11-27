@@ -114,3 +114,48 @@ describe('graph matrices', () => {
     ).toThrow(GraphError);
   });
 });
+
+describe('mutation-hardening', () => {
+  const square = Matrix.fromRows([
+    [1, 2],
+    [3, 4],
+  ]);
+  const wide = Matrix.fromRows([[1, 2, 3]]);
+
+  it('words every error', () => {
+    expect(() => new Matrix(2, 2, [1])).toThrow('data length must be rows * columns');
+    expect(() => square.get(2, 0)).toThrow('index out of bounds');
+    expect(() => square.multiply(wide)).toThrow('incompatible shapes');
+    expect(() => wide.power(2)).toThrow('power requires a square matrix');
+
+    expect(() => laplacianMatrix(cycleGraph(3, { directed: true }))).toThrow(
+      'laplacianMatrix requires an undirected graph',
+    );
+
+    expect(() => graphFromAdjacency(wide)).toThrow('adjacency matrix must be square');
+
+    expect(() => graphFromAdjacency(square)).toThrow(
+      'undirected adjacency matrix must be symmetric',
+    );
+  });
+
+  it('rejects every out-of-range index', () => {
+    for (const [row, column] of [
+      [-1, 0],
+      [0, -1],
+      [2, 0],
+      [0, 2],
+    ] as const) {
+      expect(() => square.get(row, column)).toThrow(RangeError);
+    }
+
+    expect(wide.get(0, 2)).toBe(3);
+  });
+
+  it('builds a directed graph from an asymmetric matrix when asked', () => {
+    const graph = graphFromAdjacency(square, { isDirected: true });
+
+    expect(graph.directed).toBe(true);
+    expect(graph.edgeCount).toBe(4);
+  });
+});
