@@ -111,3 +111,50 @@ describe('structured and random families', () => {
     expect(wattsStrogatzGraph(1, options).edgeCount).toBe(0);
   });
 });
+
+const edgeSet = (graph: ReturnType<typeof randomGraph>) =>
+  graph.edges().map(({ source, target }) => `${source}-${target}`);
+
+describe('mutation-hardening', () => {
+  it('closes a cycle from 3 vertices on', () => {
+    expect(cycleGraph(3).edgeCount).toBe(3);
+  });
+
+  it('orients hypercube edges from the lower to the higher vertex', () => {
+    const edges = hypercubeGraph(3, { directed: true }).edges();
+
+    expect(edges.every(({ source, target }) => Number(source) < Number(target))).toBe(true);
+  });
+
+  it('never makes loops or out-of-range vertices in G(n, p)', () => {
+    const graph = randomGraph(50, { probability: 0.2, seed: 9 });
+
+    expect(graph.edges().every(({ source, target }) => source !== target)).toBe(true);
+    expect(graph.vertexCount).toBe(50);
+  });
+
+  it('shuffles G(n, m) with the seed instead of taking the first pairs', () => {
+    const first = edgeSet(randomGraphWithEdges(20, { edges: 10, seed: 1 }));
+
+    expect(first).not.toEqual(edgeSet(completeGraph(20)).slice(0, 10));
+    expect(edgeSet(randomGraphWithEdges(20, { edges: 10, seed: 2 }))).not.toEqual(first);
+    expect(new Set(first).size).toBe(10);
+  });
+
+  it('attaches Barabási–Albert vertices to hubs without starving later ones', () => {
+    const graph = barabasiAlbertGraph(300, { attach: 1, seed: 4 });
+    const maxDegree = Math.max(...degrees(graph));
+
+    // Without the new vertices joining the endpoint pool, two seed vertices would collect ~all links.
+    expect(maxDegree).toBeLessThan(100);
+  });
+
+  it('rewires nothing at beta 0 and something at beta 1, never to a loop', () => {
+    const lattice = edgeSet(wattsStrogatzGraph(30, { neighbors: 4, beta: 0, seed: 5 }));
+    const rewired = wattsStrogatzGraph(30, { neighbors: 4, beta: 1, seed: 5 });
+
+    expect(edgeSet(wattsStrogatzGraph(30, { neighbors: 4, beta: 0, seed: 6 }))).toEqual(lattice);
+    expect(edgeSet(rewired)).not.toEqual(lattice);
+    expect(rewired.edges().every(({ source, target }) => source !== target)).toBe(true);
+  });
+});
