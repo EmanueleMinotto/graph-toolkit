@@ -95,3 +95,88 @@ describe('spectralEmbedding', () => {
     );
   });
 });
+
+const pivotOf = (values: readonly number[]): number =>
+  values.toSorted((left, right) => Math.abs(right) - Math.abs(left))[0]!;
+
+describe('mutation-hardening', () => {
+  const [a, sink, c] = [vertexId('a'), vertexId('s'), vertexId('c')] as const;
+
+  const sinkInTheMiddle = new GraphBuilder({ directed: true })
+    .addVertex(a)
+    .addVertex(sink)
+    .addVertex(c)
+    .addEdge(a, c)
+    .addEdge(c, a)
+    .build();
+
+  it('stops at a sink that is not the last vertex, weighted or not', () => {
+    for (const isWeighted of [false, true]) {
+      const walks = randomWalks(sinkInTheMiddle, { walksPerVertex: 1, length: 4, isWeighted });
+
+      expect(walks[1]).toEqual([sink]);
+    }
+  });
+
+  it('explains invalid options', () => {
+    expect(() => randomWalks(pathGraph(3), { walksPerVertex: 0 })).toThrow(
+      'walksPerVertex must be a positive integer, got 0',
+    );
+
+    expect(() => randomWalks(pathGraph(3), { length: 1.5 })).toThrow(
+      'length must be a positive integer, got 1.5',
+    );
+
+    expect(() => spectralEmbedding(pathGraph(3), { dimensions: 3 })).toThrow(
+      'dimensions must be an integer in [1, 2], got 3',
+    );
+  });
+
+  const fan = new GraphBuilder({ directed: true })
+    .addVertex(vertexId('h'))
+    .addVertex(vertexId('x'))
+    .addVertex(vertexId('y'))
+    .addVertex(vertexId('z'))
+    .addEdge(vertexId('h'), vertexId('x'), 1)
+    .addEdge(vertexId('h'), vertexId('y'), 2)
+    .addEdge(vertexId('h'), vertexId('z'), 3)
+    .build();
+
+  const secondSteps = (isWeighted?: boolean) => {
+    const hub = vertexId('h');
+    const walks = randomWalks(fan, { walksPerVertex: 3000, length: 2, seed: 11, isWeighted });
+    const seconds = walks.filter(([start]) => start === hub).map(([, next]) => next);
+
+    return (id: string): number => seconds.filter((next) => next === vertexId(id)).length;
+  };
+
+  it('is unweighted by default: every neighbour is about equally likely', () => {
+    const count = secondSteps();
+
+    for (const id of ['x', 'y', 'z']) {
+      expect(Math.abs(count(id) - 1000)).toBeLessThan(150);
+    }
+  });
+
+  it('picks neighbours in proportion to their weights', () => {
+    const count = secondSteps(true);
+
+    expect(Math.abs(count('x') - 500)).toBeLessThan(150);
+    expect(Math.abs(count('y') - 1000)).toBeLessThan(150);
+    expect(Math.abs(count('z') - 1500)).toBeLessThan(150);
+  });
+
+  it('orients every spectral axis so its largest entry is positive', () => {
+    const embeddings = [pathGraph(6), starGraph(6)].map((graph) =>
+      spectralEmbedding(graph, { dimensions: 3 }),
+    );
+
+    for (const embedding of embeddings) {
+      const vectors = [...embedding.values()];
+
+      for (const axis of [0, 1, 2]) {
+        expect(pivotOf(vectors.map((vector) => vector[axis]!))).toBeGreaterThan(0);
+      }
+    }
+  });
+});
