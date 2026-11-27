@@ -118,4 +118,47 @@ describe('graph-toolkit cli', () => {
 
     expect(stats).toMatchObject({ vertices: 4, edges: 4 });
   });
+
+  it.each(['path', 'cycle', 'complete', 'star', 'wheel', 'binary-tree', 'hypercube'])(
+    'passes --directed to the %s generator',
+    (kind) => {
+      expect(parsed(exec(['generate', kind, '4', '--directed', '--to', 'json']).out)).toMatchObject(
+        {
+          directed: true,
+        },
+      );
+    },
+  );
+
+  it('defaults the random graph to probability 0.5', () => {
+    const { out } = exec(['generate', 'random', '10', '--to', 'json']);
+
+    expect((parsed(out) as { edges: unknown[] }).edges.length).toBeGreaterThan(0);
+  });
+
+  it('lists the formats in the usage and in format errors, naming the failing flag', () => {
+    const formats = Object.keys(FORMATS).join(', ');
+
+    expect(exec([]).err).toContain(`Formats: ${formats}`);
+    expect(exec(['convert', '--from', 'nope', '--to', 'dot']).err).toContain(`one of: ${formats}`);
+    expect(exec(['generate', 'path', '3']).err).toContain('--to must be one of');
+    expect(exec(['info']).err).toContain('--from must be one of');
+  });
+
+  it('ends every output with exactly one newline', () => {
+    for (const format of Object.keys(FORMATS)) {
+      const { out } = exec(['generate', 'path', '3', '--to', format]);
+
+      expect(out.endsWith('\n')).toBe(true);
+      expect(out.endsWith('\n\n')).toBe(false);
+    }
+  });
+
+  it('computes the density of a directed graph with more than two vertices', () => {
+    const directed = parsed(
+      exec(['info', '--from', 'dot'], 'digraph { a -> b; b -> c; c -> a; }').out,
+    );
+
+    expect(directed).toMatchObject({ vertices: 3, edges: 3, density: 0.5 });
+  });
 });
