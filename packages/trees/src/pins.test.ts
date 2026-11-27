@@ -39,7 +39,7 @@ const buildCases = () => {
   const prim = primMinimumSpanningForest(undirected);
   const boruvka = boruvkaMinimumSpanningForest(undirected);
   const arborescences = [41, 42, 43].map((seed) => {
-    const directed = reweighted(randomGraph(9, { probability: 0.45, seed }), true);
+    const directed = reweighted(randomGraph(9, { probability: 0.8, seed }), true);
     const found = minimumSpanningArborescence(directed, directed.vertices()[0]!);
 
     return found === undefined ? null : [r(found.totalWeight), listed(found.edges)];
