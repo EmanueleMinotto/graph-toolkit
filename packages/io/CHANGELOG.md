@@ -1,5 +1,13 @@
 # @graph-sdk/io
 
+## 0.2.1
+
+### Patch Changes
+
+- 926ed52: `fromDot` now reads quoted vertex names as opaque strings: `#`, `//`, `/*`, `;`, `=`, `[`, `{` or a line break inside quotes no longer corrupt the graph or drop edges.
+- dccc4c7: `fromJson` now throws `ParseError` on malformed JSON instead of letting `SyntaxError` escape.
+- ac0d83e: `fromPajek` now reads the `*Vertices 0` document that `toPajek` writes for an empty graph.
+
 ## 0.2.0
 
 ### Minor Changes

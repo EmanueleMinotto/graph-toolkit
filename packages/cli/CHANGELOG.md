@@ -1,5 +1,14 @@
 # @graph-sdk/cli
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [926ed52]
+- Updated dependencies [dccc4c7]
+- Updated dependencies [ac0d83e]
+  - @graph-sdk/io@0.2.1
+
 ## 0.1.0
 
 ### Minor Changes
