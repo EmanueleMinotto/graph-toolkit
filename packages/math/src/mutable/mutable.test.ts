@@ -17,9 +17,13 @@ describe('MinPriorityQueue', () => {
         }
 
         expect(queue.size()).toBe(priorities.length);
-        const popped = priorities.map(() => queue.pop()!.priority);
+        // `+ 0` folds -0 into 0: the two compare equal, so the heap may return them in either order
+        const popped = priorities.map(() => queue.pop()!.priority + 0);
 
-        expect(popped).toEqual(priorities.toSorted((a, b) => a - b));
+        expect(popped).toEqual(
+          priorities.toSorted((a, b) => a - b).map((priority) => priority + 0),
+        );
+
         expect(queue.size()).toBe(0);
       }),
     );
