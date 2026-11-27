@@ -162,7 +162,7 @@ export default tseslint.config(
     rules: { 'functional/immutable-data': 'off', 'functional/prefer-readonly-type': 'off' },
   },
   {
-    files: ['**/*.test.ts', '**/*.bench.ts', '**/*.spec.ts'],
+    files: ['**/*.test.ts', '**/*.bench.ts', '**/*.spec.ts', 'packages/test-utils/**/*.ts'],
     plugins: { vitest },
     rules: {
       ...vitest.configs.recommended.rules,

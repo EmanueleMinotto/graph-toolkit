@@ -41,21 +41,24 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
-    "@graph-sdk/core": "workspace:*",
-    "@graph-sdk/math": "workspace:*",
-    "@graph-sdk/matrix": "workspace:*",
-    "@graph-sdk/operations": "workspace:*",
-    "@graph-sdk/traversal": "workspace:*",
-    "@graph-sdk/paths": "workspace:*",
-    "@graph-sdk/trees": "workspace:*",
-    "@graph-sdk/coloring": "workspace:*",
     "@graph-sdk/algorithms": "workspace:*",
-    "@graph-sdk/generators": "workspace:*",
-    "@graph-sdk/normalize": "workspace:*",
+    "@graph-sdk/coloring": "workspace:*",
+    "@graph-sdk/core": "workspace:*",
     "@graph-sdk/dynamic": "workspace:*",
     "@graph-sdk/embedding": "workspace:*",
-    "@graph-sdk/query": "workspace:*",
+    "@graph-sdk/generators": "workspace:*",
     "@graph-sdk/io": "workspace:*",
-    "@graph-sdk/layout": "workspace:*"
+    "@graph-sdk/layout": "workspace:*",
+    "@graph-sdk/math": "workspace:*",
+    "@graph-sdk/matrix": "workspace:*",
+    "@graph-sdk/normalize": "workspace:*",
+    "@graph-sdk/operations": "workspace:*",
+    "@graph-sdk/paths": "workspace:*",
+    "@graph-sdk/query": "workspace:*",
+    "@graph-sdk/traversal": "workspace:*",
+    "@graph-sdk/trees": "workspace:*"
+  },
+  "devDependencies": {
+    "fast-check": "^4.11.0"
   }
 }

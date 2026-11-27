@@ -188,6 +188,9 @@ importers:
       '@graph-sdk/generators':
         specifier: workspace:*
         version: link:../generators
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/cli:
     dependencies:
@@ -217,7 +220,11 @@ importers:
         specifier: ^4.11.0
         version: 4.11.0
 
-  packages/core: {}
+  packages/core:
+    devDependencies:
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/dynamic:
     dependencies:
@@ -300,6 +307,10 @@ importers:
       '@graph-sdk/trees':
         specifier: workspace:*
         version: link:../trees
+    devDependencies:
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/io:
     dependencies:
@@ -313,6 +324,9 @@ importers:
       '@graph-sdk/generators':
         specifier: workspace:*
         version: link:../generators
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/layout:
     dependencies:
@@ -327,7 +341,11 @@ importers:
         specifier: workspace:*
         version: link:../generators
 
-  packages/math: {}
+  packages/math:
+    devDependencies:
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/matrix:
     dependencies:
@@ -361,6 +379,9 @@ importers:
       '@graph-sdk/generators':
         specifier: workspace:*
         version: link:../generators
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/paths:
     dependencies:
@@ -386,6 +407,15 @@ importers:
       '@graph-sdk/core':
         specifier: workspace:*
         version: link:../core
+
+  packages/test-utils:
+    dependencies:
+      '@graph-sdk/core':
+        specifier: workspace:*
+        version: link:../core
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/traversal:
     dependencies:

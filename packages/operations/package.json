@@ -45,6 +45,7 @@
     "@graph-sdk/core": "workspace:*"
   },
   "devDependencies": {
-    "@graph-sdk/generators": "workspace:*"
+    "@graph-sdk/generators": "workspace:*",
+    "fast-check": "^4.11.0"
   }
 }
