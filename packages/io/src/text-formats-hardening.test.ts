@@ -176,6 +176,7 @@ describe('parse errors', () => {
 
   it('words Pajek and CSV problems', () => {
     expect(() => fromPajek('')).toThrow('Pajek document has no vertices');
+    expect(() => fromPajek('% only a comment\n')).toThrow('Pajek document has no vertices');
     expect(() => fromPajek('*Vertices 1\nfoo\n*Edges\n')).toThrow('Invalid Pajek vertex line: foo');
 
     expect(() => fromPajek('*Vertices 1\n1 "a"\n*Edges\n1 9\n')).toThrow(
@@ -246,5 +247,14 @@ describe('DOT and Mermaid reading', () => {
     expect(graph.vertices()).toEqual(['a', 'b', 'c', 'Dee']);
     expect(graph.edgesBetween(b, c)[0]?.weight).toBe(3);
     expect(fromMermaid('flowchart LR\n a --- b').directed).toBe(false);
+  });
+});
+
+describe('Pajek empty graphs', () => {
+  it.each([false, true])('round-trips the empty graph (directed=%s)', (directed) => {
+    const back = fromPajek(toPajek(new GraphBuilder({ directed }).build()));
+
+    expect(back.vertexCount).toBe(0);
+    expect(back.directed).toBe(directed);
   });
 });
