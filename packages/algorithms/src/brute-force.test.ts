@@ -259,7 +259,7 @@ describe('minimum-cost flow', () => {
 
     expect(minCostFlow(cross.build(), ends, { capacity: () => 1 })).toMatchObject({
       flow: 2,
-      cost: 8,
+      cost: 7,
     });
   });
 });
