@@ -56,3 +56,40 @@ describe('normalize', () => {
     expect(reindex(graph).vertices()).toEqual(['0', '1']);
   });
 });
+
+describe('mutation-hardening', () => {
+  it('explains a relabel collision', () => {
+    expect(() => relabel(cycleGraph(3), () => a)).toThrow('relabel produced duplicate ids');
+  });
+
+  it('keeps the edges that are not loops', () => {
+    const graph = new GraphBuilder().addVertex(a).addVertex(b).addEdge(a, a).addEdge(a, b).build();
+
+    expect(removeSelfLoops(graph).edges()).toEqual([{ source: a, target: b, weight: 1 }]);
+  });
+
+  it('sorts many vertices and edges in ascending order', () => {
+    const builder = new GraphBuilder({ directed: true });
+
+    for (const id of ['d', 'c', 'b', 'a', 'e']) {
+      builder.addVertex(vertexId(id));
+    }
+
+    const graph = builder
+      .addEdge(vertexId('e'), vertexId('a'))
+      .addEdge(vertexId('c'), vertexId('b'))
+      .addEdge(vertexId('c'), vertexId('a'))
+      .addEdge(vertexId('a'), vertexId('d'))
+      .build();
+    const canonical = canonicalize(graph);
+
+    expect(canonical.vertices()).toEqual(['a', 'b', 'c', 'd', 'e']);
+
+    expect(canonical.edges().map(({ source, target }) => `${source}${target}`)).toEqual([
+      'ad',
+      'ca',
+      'cb',
+      'ea',
+    ]);
+  });
+});
