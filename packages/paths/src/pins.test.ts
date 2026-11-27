@@ -43,6 +43,7 @@ const pair = (found: { distance: number; path: readonly string[] }) => [
   found.path.join('>'),
 ];
 
+// eslint-disable-next-line complexity -- one flat table of seeded probes
 const buildCases = () => {
   const base = randomGraph(10, { probability: 0.35, seed: 21 });
   const undirected = reweighted(base, false, () => true);
@@ -70,11 +71,14 @@ const buildCases = () => {
     aStar: [aStar(undirected, { source: first, target: last, heuristic: () => 0 })].map((found) =>
       found ? pair(found) : null,
     ),
-    euler: [eulerianTrail(small), eulerianTrail(randomGraph(6, { probability: 0.9, seed: 3 }))],
-    hamPath: [hamiltonianPath(small), hamiltonianPath(base)],
+    euler: [
+      eulerianTrail(small) ?? null,
+      eulerianTrail(randomGraph(6, { probability: 0.9, seed: 3 })) ?? null,
+    ],
+    hamPath: [hamiltonianPath(small) ?? null, hamiltonianPath(base) ?? null],
     hamCycle: [
-      hamiltonianCycle(small),
-      hamiltonianCycle(randomGraph(8, { probability: 0.7, seed: 4 })),
+      hamiltonianCycle(small) ?? null,
+      hamiltonianCycle(randomGraph(8, { probability: 0.7, seed: 4 })) ?? null,
     ],
   };
 };
@@ -83,8 +87,8 @@ describe('pinned results', () => {
   it('keeps the seeded results of the path kernels', () => {
     expect(buildCases()).toEqual({
       aStar: [[6, '0>8>5>6>9']],
-      bellman: [0, null, 1, 3, 5, 8, 10, 12, 2, 8],
-      dag: [0, null, 1, 3, 5, 8, 10, 12, 2, 8],
+      bellman: [0, Infinity, 1, 3, 5, 8, 10, 12, 2, 8],
+      dag: [0, Infinity, 1, 3, 5, 8, 10, 12, 2, 8],
       dagPath: ['0', null, '0>2', '0>3', '0>4', '0>4>5', '0>4>6', '0>4>5>7', '0>8', '0>3>9'],
       dijkstraPath: ['0', null, '0>2', '0>3', '0>4', '0>4>5', '0>4>6', '0>4>5>7', '0>8', '0>3>9'],
       dijkstraU: [0, 8, 1, 3, 4, 3, 5, 7, 2, 6],
@@ -93,16 +97,49 @@ describe('pinned results', () => {
         null,
       ],
       floyd: [
-        [0, null, 1, 3, 5, 8, 10, 12, 2, 8],
-        [null, 0, null, 5, null, null, null, 2, 8, 10],
-        [null, null, 0, null, 5, 8, 10, 12, 7, 9],
-        [null, null, null, 0, null, null, null, null, 3, 5],
-        [null, null, null, null, 0, 3, 5, 7, 2, 4],
-        [null, null, null, null, null, 0, 2, 4, 1, 3],
-        [null, null, null, null, null, null, 0, 4, null, 1],
-        [null, null, null, null, null, null, null, 0, null, null],
-        [null, null, null, null, null, null, null, null, 0, null],
-        [null, null, null, null, null, null, null, null, null, 0],
+        [0, Infinity, 1, 3, 5, 8, 10, 12, 2, 8],
+        [Infinity, 0, Infinity, 5, Infinity, Infinity, Infinity, 2, 8, 10],
+        [Infinity, Infinity, 0, Infinity, 5, 8, 10, 12, 7, 9],
+        [Infinity, Infinity, Infinity, 0, Infinity, Infinity, Infinity, Infinity, 3, 5],
+        [Infinity, Infinity, Infinity, Infinity, 0, 3, 5, 7, 2, 4],
+        [Infinity, Infinity, Infinity, Infinity, Infinity, 0, 2, 4, 1, 3],
+        [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 0, 4, Infinity, 1],
+        [
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          0,
+          Infinity,
+          Infinity,
+        ],
+        [
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          0,
+          Infinity,
+        ],
+        [
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          Infinity,
+          0,
+        ],
       ],
       hamCycle: [
         ['0', '2', '3', '4', '5', '1', '6'],
