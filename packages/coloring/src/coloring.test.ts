@@ -96,3 +96,128 @@ describe('edgeColoring', () => {
     expect(edgeColoring(new GraphBuilder().build())).toEqual({ edges: [], colorCount: 0 });
   });
 });
+
+const build = (ids: string[], edges: [string, string][]) => {
+  const builder = new GraphBuilder();
+
+  for (const id of ids) {
+    builder.addVertex(vertexId(id));
+  }
+
+  for (const [from, to] of edges) {
+    builder.addEdge(vertexId(from), vertexId(to));
+  }
+
+  return builder.build();
+};
+
+describe('mutation-hardening', () => {
+  it('explains why a graph cannot be colored, in every entry point', () => {
+    const directed = completeGraph(3, { directed: true });
+    const loop = build(['a'], [['a', 'a']]);
+
+    for (const color of [
+      greedyColoring,
+      dsaturColoring,
+      bipartition,
+      exactColoring,
+      edgeColoring,
+    ]) {
+      expect(() => color(directed)).toThrow('Coloring requires an undirected graph');
+      expect(() => color(loop)).toThrow('A graph with self-loops has no proper coloring');
+    }
+  });
+
+  it('flags an improper coloring', () => {
+    const graph = completeGraph(3);
+    const same = new Map(graph.vertices().map((id) => [id, 0] as const));
+
+    expect(isProperColoring(graph, { colors: same, colorCount: 1 })).toBe(false);
+  });
+
+  it('colors the highest-degree vertex first by default (Welsh–Powell)', () => {
+    const star = build(
+      ['l1', 'l2', 'hub', 'l3', 'l4'],
+      [
+        ['hub', 'l1'],
+        ['hub', 'l2'],
+        ['hub', 'l3'],
+        ['hub', 'l4'],
+      ],
+    );
+    const { colors, colorCount } = greedyColoring(star);
+
+    expect(colors.get(vertexId('hub'))).toBe(0);
+    expect(colorCount).toBe(2);
+  });
+
+  it('does not count uncolored neighbours as used colors', () => {
+    const path = build(
+      ['a', 'b', 'c'],
+      [
+        ['a', 'b'],
+        ['b', 'c'],
+      ],
+    );
+
+    expect(greedyColoring(path, path.vertices()).colorCount).toBe(2);
+    expect(dsaturColoring(path).colorCount).toBe(2);
+  });
+
+  it('colors isolated vertices with color 0', () => {
+    const lonely = build(['a', 'b', 'c'], []);
+
+    for (const coloring of [
+      dsaturColoring(lonely),
+      greedyColoring(lonely),
+      exactColoring(lonely),
+    ]) {
+      expect([...coloring.colors.values()]).toEqual([0, 0, 0]);
+      expect(coloring.colorCount).toBe(1);
+    }
+  });
+
+  it('dsatur two-colors a crown graph that defeats the natural greedy order', () => {
+    const crown = build(
+      ['a1', 'b1', 'a2', 'b2', 'a3', 'b3'],
+      [
+        ['a1', 'b2'],
+        ['a1', 'b3'],
+        ['a2', 'b1'],
+        ['a2', 'b3'],
+        ['a3', 'b1'],
+        ['a3', 'b2'],
+      ],
+    );
+
+    expect(greedyColoring(crown, crown.vertices()).colorCount).toBe(3);
+    expect(dsaturColoring(crown).colorCount).toBe(2);
+    expect(exactColoring(crown).colorCount).toBe(2);
+  });
+
+  it('bipartition keeps every component, isolated vertices included', () => {
+    const graph = build(
+      ['a', 'b', 'c', 'd', 'e'],
+      [
+        ['a', 'b'],
+        ['c', 'd'],
+      ],
+    );
+    const parts = bipartition(graph)!;
+
+    expect(parts.colors.size).toBe(5);
+    expect(parts.colors.get(vertexId('a'))).not.toBe(parts.colors.get(vertexId('b')));
+    expect(parts.colors.get(vertexId('c'))).not.toBe(parts.colors.get(vertexId('d')));
+    expect(parts.colors.get(vertexId('e'))).toBe(0);
+  });
+
+  it('counts edge colors exactly', () => {
+    const single = build(['a', 'b'], [['a', 'b']]);
+    const triangle = completeGraph(3);
+    const noEdges = build(['a', 'b'], []);
+
+    expect(edgeColoring(single).colorCount).toBe(1);
+    expect(edgeColoring(triangle).colorCount).toBe(3);
+    expect(edgeColoring(noEdges)).toEqual({ edges: [], colorCount: 0 });
+  });
+});
