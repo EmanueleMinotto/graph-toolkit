@@ -84,8 +84,8 @@ const trailCases = () =>
   seeds.map((seed) => {
     const graph = randomGraph(8, { probability: 0.55, seed });
 
-    return [eulerianTrail(graph), hamiltonianPath(graph), hamiltonianCycle(graph)].map((found) =>
-      found?.join('>'),
+    return [eulerianTrail(graph), hamiltonianPath(graph), hamiltonianCycle(graph)].map(
+      (found) => found?.join('>') ?? 'none',
     );
   });
 
