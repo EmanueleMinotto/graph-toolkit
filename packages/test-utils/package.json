@@ -8,6 +8,7 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./runs": "./src/runs.ts",
     "./setup": "./src/setup.ts"
   },
   "scripts": {

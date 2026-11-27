@@ -1,5 +1,7 @@
 export interface Sections {
   readonly directed: boolean;
+  /** Whether a `*Vertices` header is present (it may announce zero vertices). */
+  readonly hasVertexSection: boolean;
   /** Lines of the `*Vertices` section (after the header). */
   readonly vertices: readonly string[];
   /** Lines of the `*Edges` and `*Arcs` sections. */
@@ -23,6 +25,7 @@ export function splitSections(text: string): Sections {
 
   return {
     directed: headers.includes('*arcs'),
+    hasVertexSection: headers.includes('*vertices'),
     vertices: inSection(['*vertices']),
     rows: inSection(['*edges', '*arcs']),
   };
