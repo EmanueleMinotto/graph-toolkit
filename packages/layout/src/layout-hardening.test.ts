@@ -1,7 +1,14 @@
 import { GraphBuilder, vertexId, type Graph } from '@graph-sdk/core';
-import { pathGraph, starGraph } from '@graph-sdk/generators';
+import { completeGraph, pathGraph, starGraph } from '@graph-sdk/generators';
 import { describe, expect, it } from 'vitest';
-import { circularLayout, layeredLayout, radialLayout, tutteLayout, type Layout } from './index.js';
+import {
+  circularLayout,
+  forceLayout,
+  layeredLayout,
+  radialLayout,
+  tutteLayout,
+  type Layout,
+} from './index.js';
 
 const id = (name: string) => vertexId(name);
 
@@ -187,5 +194,93 @@ describe('tutteLayout', () => {
 
     expect(at(layout, 'h').x).toBeCloseTo(0);
     expect(at(layout, 'h').y).toBeCloseTo(0);
+  });
+});
+
+const distance = (layout: Layout, left: string, right: string): number =>
+  Math.hypot(at(layout, left).x - at(layout, right).x, at(layout, left).y - at(layout, right).y);
+
+const mean = (values: readonly number[]): number =>
+  values.reduce((sum, value) => sum + value, 0) / values.length;
+
+describe('forceLayout', () => {
+  const names = ['0', '1', '2', '3', '4', '5', '6', '7'];
+  const pairs = names.flatMap((left, index) =>
+    names.slice(index + 1).map((right) => [left, right] as const),
+  );
+
+  it('keeps linked vertices closer than unlinked ones but never on top of each other', () => {
+    const layout = forceLayout(pathGraph(8), { seed: 3 });
+    const linked = pairs.filter(([left, right]) => Number(right) - Number(left) === 1);
+    const apart = pairs.filter(([left, right]) => Number(right) - Number(left) > 1);
+
+    expect(mean(linked.map(([left, right]) => distance(layout, left, right)))).toBeLessThan(
+      mean(apart.map(([left, right]) => distance(layout, left, right))),
+    );
+
+    expect(
+      Math.min(...pairs.map(([left, right]) => distance(layout, left, right))),
+    ).toBeGreaterThan(0.01);
+  });
+
+  it('pulls two cliques into separate clusters', () => {
+    const builder = new GraphBuilder({ directed: false });
+
+    for (const name of ['a', 'b', 'c', 'd', 'e', 'f']) {
+      builder.addVertex(id(name));
+    }
+
+    for (const [from, to] of [
+      ['a', 'b'],
+      ['b', 'c'],
+      ['a', 'c'],
+      ['d', 'e'],
+      ['e', 'f'],
+      ['d', 'f'],
+    ] as const) {
+      builder.addEdge(id(from), id(to));
+    }
+
+    const layout = forceLayout(builder.build(), { seed: 5 });
+    const inside = [
+      distance(layout, 'a', 'b'),
+      distance(layout, 'b', 'c'),
+      distance(layout, 'a', 'c'),
+      distance(layout, 'd', 'e'),
+      distance(layout, 'e', 'f'),
+      distance(layout, 'd', 'f'),
+    ];
+    const between = [
+      distance(layout, 'a', 'd'),
+      distance(layout, 'b', 'e'),
+      distance(layout, 'c', 'f'),
+      distance(layout, 'a', 'f'),
+    ];
+
+    expect(mean(inside)).toBeLessThan(mean(between));
+  });
+
+  it('keeps moving with more iterations and stays in the unit square', () => {
+    const graph = completeGraph(5);
+    const start = forceLayout(graph, { iterations: 0, seed: 2 });
+    const one = forceLayout(graph, { iterations: 1, seed: 2 });
+    const many = forceLayout(graph, { iterations: 50, seed: 2 });
+
+    expect(one).not.toEqual(start);
+    expect(many).not.toEqual(one);
+
+    for (const point of [...start.values(), ...many.values()]) {
+      expect(point.x).toBeGreaterThanOrEqual(0);
+      expect(point.x).toBeLessThanOrEqual(1);
+      expect(point.y).toBeGreaterThanOrEqual(0);
+      expect(point.y).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it('spreads a clique over more than a point', () => {
+    const layout = forceLayout(completeGraph(6), { seed: 1 });
+    const spread = [...layout.values()].map(({ x, y }) => Math.hypot(x - 0.5, y - 0.5));
+
+    expect(Math.max(...spread)).toBeGreaterThan(0.1);
   });
 });
