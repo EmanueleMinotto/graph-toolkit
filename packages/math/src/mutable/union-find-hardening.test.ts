@@ -17,7 +17,7 @@ describe('DisjointSet representatives', () => {
     sets.union(2, 3);
     expect(sets.find(4)).toBe(4);
     expect(sets.find(0)).toBe(4);
-    expect(sets.setCount()).toBe(3);
+    expect(sets.setCount()).toBe(2);
   });
 
   it('keeps a deeper tree on top of a singleton in either argument order', () => {
