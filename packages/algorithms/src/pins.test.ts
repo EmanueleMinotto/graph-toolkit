@@ -11,32 +11,37 @@ import {
   pageRank,
 } from './index.js';
 
-const sparse = randomGraph(24, { probability: 0.15, seed: 11 });
-const dense = randomGraph(20, { probability: 0.35, seed: 12 });
 const pairs = (entries: Iterable<readonly [unknown, number]>): number[] =>
   [...entries].map(([, value]) => Math.round(value * 1e5) / 1e5);
 
-const cases = {
-  louvainSparse: [...louvain(sparse).values()],
-  louvainDense: [...louvain(dense).values()],
-  leidenSparse: [...leiden(sparse).values()],
-  leidenDense: [...leiden(dense).values()],
-  louvainFine: [...louvain(dense, { resolution: 2.5 }).values()],
-  leidenCoarse: [...leiden(dense, { resolution: 0.4 }).values()],
-  matchSparse: maximumMatching(sparse).pairs.map(([left, right]) => `${left}-${right}`),
-  matchDense: maximumMatching(dense).pairs.map(([left, right]) => `${left}-${right}`),
-  matchPetersen: maximumMatching(petersenGraph()).pairs.map(([left, right]) => `${left}-${right}`),
-  cliques: maximalCliques(dense).map((clique) => clique.join(',')),
-  betweenness: pairs(betweennessCentrality(sparse)),
-  closeness: pairs(closenessCentrality(sparse)),
-  pagerank: pairs(pageRank(dense)),
-  cutDense: [globalMinCut(dense).value, ...globalMinCut(dense).side],
-  cutClique: [globalMinCut(completeGraph(5)).value],
+const buildCases = () => {
+  const sparse = randomGraph(24, { probability: 0.15, seed: 11 });
+  const dense = randomGraph(20, { probability: 0.35, seed: 12 });
+
+  return {
+    louvainSparse: [...louvain(sparse).values()],
+    louvainDense: [...louvain(dense).values()],
+    leidenSparse: [...leiden(sparse).values()],
+    leidenDense: [...leiden(dense).values()],
+    louvainFine: [...louvain(dense, { resolution: 2.5 }).values()],
+    leidenCoarse: [...leiden(dense, { resolution: 0.4 }).values()],
+    matchSparse: maximumMatching(sparse).pairs.map(([left, right]) => `${left}-${right}`),
+    matchDense: maximumMatching(dense).pairs.map(([left, right]) => `${left}-${right}`),
+    matchPetersen: maximumMatching(petersenGraph()).pairs.map(
+      ([left, right]) => `${left}-${right}`,
+    ),
+    cliques: maximalCliques(dense).map((clique) => clique.join(',')),
+    betweenness: pairs(betweennessCentrality(sparse)),
+    closeness: pairs(closenessCentrality(sparse)),
+    pagerank: pairs(pageRank(dense)),
+    cutDense: [globalMinCut(dense).value, ...globalMinCut(dense).side],
+    cutClique: [globalMinCut(completeGraph(5)).value],
+  };
 };
 
 describe('pinned results', () => {
   it('keeps the seeded results of the kernels', () => {
-    expect(cases).toEqual({
+    expect(buildCases()).toEqual({
       betweenness: [
         25.72619, 15.33333, 15.45238, 9.26948, 24.94968, 19.47673, 13.60119, 0, 9.8171, 49.91613,
         11.40043, 6.88258, 7.6921, 17.42424, 16.81115, 15.91667, 19.93939, 3.75758, 29.05411,
