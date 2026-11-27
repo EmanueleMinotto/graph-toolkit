@@ -266,6 +266,13 @@ importers:
       '@graph-sdk/math':
         specifier: workspace:*
         version: link:../math
+    devDependencies:
+      '@graph-sdk/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
+      fast-check:
+        specifier: ^4.11.0
+        version: 4.11.0
 
   packages/graph-toolkit:
     dependencies:
