@@ -33,6 +33,7 @@ describe('VertexQuery', () => {
     expect(selectVertices(graph).count()).toBe(5);
     expect(selectVertices(graph, [c, a]).ids()).toEqual([c, a]);
     expect(() => selectVertices(graph, [vertexId('zzz')])).toThrow(UnknownVertexError);
+    expect(() => selectVertices(graph, [vertexId('zzz')])).toThrow('Unknown vertex: zzz');
   });
 
   it('filters by predicate and by attribute', () => {
@@ -56,6 +57,10 @@ describe('VertexQuery', () => {
     expect(selectVertices(graph, [a]).within(9).ids()).toEqual([a, b, c, d]);
     expect(() => selectVertices(graph).within(-1)).toThrow(GraphError);
     expect(() => selectVertices(graph).within(1.5)).toThrow(GraphError);
+
+    expect(() => selectVertices(graph).within(-1)).toThrow(
+      'hops must be a non-negative integer, got -1',
+    );
   });
 
   it('exposes the edges and the subgraph induced by the selection', () => {
@@ -82,6 +87,20 @@ describe('VertexQuery', () => {
 
   it('keeps vertices without attributes attribute-free', () => {
     expect(selectVertices(graph, [d]).subgraph().vertexAttributes(d)).toEqual({});
+  });
+});
+
+describe('parallel edges', () => {
+  const multi = new GraphBuilder({ directed: true, allowParallelEdges: true })
+    .addVertex(a)
+    .addVertex(b)
+    .addEdge(a, b, { weight: 1 })
+    .addEdge(a, b, { weight: 2 })
+    .build();
+
+  it('survive both subgraph and filterEdges', () => {
+    expect(selectVertices(multi).subgraph().edgeCount).toBe(2);
+    expect(filterEdges(multi, () => true).edgeCount).toBe(2);
   });
 });
 
